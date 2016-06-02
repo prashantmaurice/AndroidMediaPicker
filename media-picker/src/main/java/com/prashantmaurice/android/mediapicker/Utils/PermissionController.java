@@ -18,6 +18,9 @@ import static com.prashantmaurice.android.mediapicker.Utils.Constants.RequestCod
 public class PermissionController {
     private final AppCompatActivity activity;
 
+    static final int RESUEST_PERMISSION = 1002;
+
+
     private Map<String, ArrayList<TaskCallback>> pending = new HashMap<>();
 
 
