@@ -3,21 +3,27 @@ package com.prashantmaurice.android.mediapicker.Activities.SubFolderActivity;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 
-import com.prashantmaurice.android.mediapicker.Data.MainDataHandler;
 import com.prashantmaurice.android.mediapicker.Models.FolderObj;
 import com.prashantmaurice.android.mediapicker.Models.ImageObj;
 import com.prashantmaurice.android.mediapicker.R;
+import com.prashantmaurice.android.mediapicker.Utils.Logg;
 import com.prashantmaurice.android.mediapicker.Utils.PermissionController;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SubFolderActivity extends AppCompatActivity {
-
+public class SubFolderActivity extends AppCompatActivity implements android.support.v4.app.LoaderManager.LoaderCallbacks<Cursor> {
+    String TAG = "SUB_FOLDERACTIVITY";
+    public static final int RESULT_BACKPRESSED = 400;
     SubFolderActivityUIHandler uiHandler;
     PermissionController permissionController;
     IntentBuilder.IntentData intentData;
@@ -34,7 +40,7 @@ public class SubFolderActivity extends AppCompatActivity {
         permissionController.checkPermissionAndRun(Manifest.permission.READ_EXTERNAL_STORAGE, new PermissionController.TaskCallback(){
             @Override
             public void onGranted() {
-                setFolderData();
+                getSupportLoaderManager().initLoader(1, null, SubFolderActivity.this);
             }
 
             @Override
@@ -45,17 +51,46 @@ public class SubFolderActivity extends AppCompatActivity {
 
     }
 
-    private void setFolderData() {
-        List<ImageObj> list = new ArrayList<>();
-        list.addAll(MainDataHandler.getInstance().getFromFolder(this, new FolderObj(intentData.folderName)));
-        uiHandler.setData(list);
-    }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         permissionController.onRequestPermissionsResult(requestCode,permissions,grantResults);
     }
 
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        Logg.d(TAG,"onCreateLoader");
+        Uri u = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+        String[] projection = {MediaStore.Images.ImageColumns.DATA,MediaStore.Images.Media._ID};
+        return new CursorLoader(this,u, projection, null, null, null);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor c) {
+        Logg.d(TAG,"onLoadFinished");
+
+        List<ImageObj> images = new ArrayList<>();
+
+        c.moveToFirst();
+        while (!c.isAfterLast()) {
+            String fullName = c.getString(0);
+            String tempDir = fullName.substring(0, fullName.lastIndexOf("/"));
+
+            if(intentData.folderName.equals(tempDir)){
+                ImageObj imageObj = new ImageObj(fullName);
+                imageObj.id = c.getLong(1);
+                images.add(imageObj);
+            }
+
+            c.moveToNext();
+        }
+
+        uiHandler.setData(images);
+    }
+
+    @Override
+    public void onLoaderReset(Loader<Cursor> loader) {
+
+    }
 
 
     //Use this to build intent for calling this class

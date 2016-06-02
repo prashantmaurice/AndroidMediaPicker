@@ -1,6 +1,5 @@
 package com.prashantmaurice.android.mediapicker.Activities.SubFolderActivity;
 
-import android.app.Activity;
 import android.view.View;
 import android.widget.GridView;
 
@@ -41,7 +40,7 @@ public class SubFolderActivityUIHandler {
         viewHolder.btn_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                folderActivity.setResult(Activity.RESULT_CANCELED);
+                folderActivity.setResult(SubFolderActivity.RESULT_BACKPRESSED);
                 folderActivity.finish();
             }
         });

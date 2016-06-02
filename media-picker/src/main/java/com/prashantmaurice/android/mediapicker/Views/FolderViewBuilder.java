@@ -56,7 +56,7 @@ public class FolderViewBuilder {
 
 
         public void inflateData(final FolderObj folderObj){
-            Logg.d(TAG, "Inflating data in FolderObj view");
+            Logg.d(TAG, "Inflating data in FolderObj view : "+folderObj.getName());
             tv_foldername.setText(folderObj.getName());
             tv_foldernum.setText("" + folderObj.getItemCount());
         }
