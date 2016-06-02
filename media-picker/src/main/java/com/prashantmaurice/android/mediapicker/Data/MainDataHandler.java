@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.provider.MediaStore;
 
 import com.prashantmaurice.android.mediapicker.Models.FolderObj;
+import com.prashantmaurice.android.mediapicker.Models.ImageObj;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -55,8 +56,6 @@ public class MainDataHandler {
 
             }while (c.moveToNext());
 
-            c.close();
-
 
             Iterator<FolderObj> i = folders.values().iterator();
             FolderObj next;
@@ -65,9 +64,40 @@ public class MainDataHandler {
                 resultIAV.add(next);
             }
         }
+        if (c != null) c.close();
 
 
         return resultIAV;
+    }
+
+    //TODO : upgrade this to use CursorLoader
+    public List<ImageObj> getFromFolder(Activity activity, FolderObj folderObj){
+        Uri u = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+        String[] projection = {MediaStore.Images.ImageColumns.DATA,MediaStore.Images.Media._ID};
+        Cursor c = null;
+        List<ImageObj> images = new ArrayList<>();
+        if (u != null){
+            c = activity.managedQuery(u, projection, null, null, null);
+        }
+
+        if ((c != null) && (c.moveToFirst())){
+            do{
+                String fullName = c.getString(0);
+                String tempDir = fullName.substring(0, fullName.lastIndexOf("/"));
+
+                if(folderObj.getName().equals(tempDir)){
+                    ImageObj imageObj = new ImageObj(fullName);
+                    imageObj.id = c.getLong(1);
+                    images.add(imageObj);
+                }
+
+            }while (c.moveToNext());
+
+        }
+        if (c != null) c.close();
+
+
+        return images;
     }
 
 

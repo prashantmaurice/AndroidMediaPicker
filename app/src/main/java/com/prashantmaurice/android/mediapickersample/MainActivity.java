@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.prashantmaurice.android.mediapicker.MediaPicker;
+import com.prashantmaurice.android.mediapicker.Models.ImageObj;
 
 import java.util.List;
 
@@ -47,8 +48,8 @@ public class MainActivity extends AppCompatActivity {
         if(resultCode==RESULT_OK){
             switch (requestCode){
                 case REQUEST_PICK_MULTIPLE:
-                    MediaPicker.IntentBuilder.IntentData dataObject = MediaPicker.IntentBuilder.parseResult(data);
-                    List<String> pics = dataObject.getSelectedPics();
+                    MediaPicker.ResultParser.ResultData dataObject = MediaPicker.ResultParser.parseResult(data);
+                    List<ImageObj> pics = dataObject.getSelectedPics();
                     Utils.showToast(this,"Picked "+pics.size()+" images");
                     break;
             }

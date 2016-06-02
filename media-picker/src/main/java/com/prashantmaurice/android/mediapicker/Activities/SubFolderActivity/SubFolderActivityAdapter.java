@@ -1,11 +1,13 @@
 package com.prashantmaurice.android.mediapicker.Activities.SubFolderActivity;
 
+import android.graphics.Bitmap;
+import android.provider.MediaStore;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
-import com.prashantmaurice.android.mediapicker.Models.FolderObj;
-import com.prashantmaurice.android.mediapicker.Views.FolderViewBuilder;
+import com.prashantmaurice.android.mediapicker.Models.ImageObj;
+import com.prashantmaurice.android.mediapicker.Views.ImageViewBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +17,7 @@ import java.util.List;
  */
 public class SubFolderActivityAdapter extends BaseAdapter {
 
-    private final List<FolderObj> folders = new ArrayList<>();
+    private final List<ImageObj> folders = new ArrayList<>();
     private final SubFolderActivity activity;
 
     public SubFolderActivityAdapter(SubFolderActivity activity) {
@@ -28,7 +30,7 @@ public class SubFolderActivityAdapter extends BaseAdapter {
     }
 
     @Override
-    public FolderObj getItem(int position) {
+    public ImageObj getItem(int position) {
         return folders.get(position);
     }
 
@@ -43,23 +45,24 @@ public class SubFolderActivityAdapter extends BaseAdapter {
         //initialize view
         View view;
         if (convertView == null) {
-            view = FolderViewBuilder.getView(activity);
+            view = ImageViewBuilder.getView(activity);
         }
         else {
             view = convertView;
         }
 
-        FolderViewBuilder.ViewHolder holder = (FolderViewBuilder.ViewHolder) view.getTag();
+        ImageViewBuilder.ViewHolder holder = (ImageViewBuilder.ViewHolder) view.getTag();
 
 
         //set view
-        final FolderObj group = folders.get(position);
-        holder.inflateData(group);
+        final ImageObj imageObj = folders.get(position);
+        Bitmap bitmap = MediaStore.Images.Thumbnails.getThumbnail(activity.getContentResolver(), imageObj.getId(), MediaStore.Images.Thumbnails.MICRO_KIND, null);
+        holder.setBitmap(bitmap);
 
         return view;
     }
 
-    public void setData(List<FolderObj> data) {
+    public void setData(List<ImageObj> data) {
         folders.clear();
         folders.addAll(data);
     }

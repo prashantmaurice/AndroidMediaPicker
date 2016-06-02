@@ -1,14 +1,17 @@
 package com.prashantmaurice.android.mediapicker.Views;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.prashantmaurice.android.mediapicker.Models.FolderObj;
+import com.prashantmaurice.android.mediapicker.Models.ImageObj;
 import com.prashantmaurice.android.mediapicker.R;
 import com.prashantmaurice.android.mediapicker.Utils.Logg;
+
+import java.io.File;
 
 /**
  * Documented by maurice :
@@ -29,7 +32,7 @@ public class ImageViewBuilder {
                 
     }
 
-    public static View getView(Activity activity, FolderObj folderObj){
+    public static View getView(Activity activity, ImageObj folderObj){
         View view = getView(activity);
         ViewHolder holder = (ViewHolder) view.getTag();
         holder.inflateData(folderObj);
@@ -38,7 +41,6 @@ public class ImageViewBuilder {
 
     public static class ViewHolder{
         public View mainView;
-        public TextView tv_foldernum,tv_foldername;
         public ImageView imageview;
 
         Activity activity;
@@ -47,19 +49,27 @@ public class ImageViewBuilder {
             this.activity = activity;
             mainView = itemView;
             imageview = (ImageView) itemView.findViewById(R.id.imageview);
-            tv_foldername = (TextView) itemView.findViewById(R.id.tv_foldername);
-            tv_foldernum = (TextView) itemView.findViewById(R.id.tv_foldernum);
         }
 
 
 
 
-        public void inflateData(final FolderObj folderObj){
-            Logg.d(TAG, "Inflating data in FolderObj view");
-            tv_foldername.setText(folderObj.getName());
-            tv_foldernum.setText("" + folderObj.getItemCount());
+        public void inflateData(final ImageObj folderObj){
+            Logg.d(TAG, "Inflating data in ImageObj view");
+
+            File imgFile = new File(folderObj.getPath());
+            if(imgFile.exists()){
+
+                Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+                imageview.setImageBitmap(myBitmap);
+
+            }
+
         }
 
 
+        public void setBitmap(Bitmap bitmap) {
+            imageview.setImageBitmap(bitmap);
+        }
     }
 }

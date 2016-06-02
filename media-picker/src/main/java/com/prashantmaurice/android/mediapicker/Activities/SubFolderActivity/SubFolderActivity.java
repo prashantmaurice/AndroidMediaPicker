@@ -7,9 +7,9 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 
-import com.prashantmaurice.android.mediapicker.Activities.MainFolderActivity.FolderActivity;
 import com.prashantmaurice.android.mediapicker.Data.MainDataHandler;
 import com.prashantmaurice.android.mediapicker.Models.FolderObj;
+import com.prashantmaurice.android.mediapicker.Models.ImageObj;
 import com.prashantmaurice.android.mediapicker.R;
 import com.prashantmaurice.android.mediapicker.Utils.PermissionController;
 
@@ -20,6 +20,7 @@ public class SubFolderActivity extends AppCompatActivity {
 
     SubFolderActivityUIHandler uiHandler;
     PermissionController permissionController;
+    IntentBuilder.IntentData intentData;
 
 
     @Override
@@ -27,6 +28,7 @@ public class SubFolderActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_subfolder);
 
+        intentData = IntentBuilder.parseResult(getIntent());
         uiHandler =  new SubFolderActivityUIHandler(this);
         permissionController = new PermissionController(this);
         permissionController.checkPermissionAndRun(Manifest.permission.READ_EXTERNAL_STORAGE, new PermissionController.TaskCallback(){
@@ -44,8 +46,8 @@ public class SubFolderActivity extends AppCompatActivity {
     }
 
     private void setFolderData() {
-        List<FolderObj> list = new ArrayList<>();
-        list.addAll(MainDataHandler.getInstance().getAllDirectories(this));
+        List<ImageObj> list = new ArrayList<>();
+        list.addAll(MainDataHandler.getInstance().getFromFolder(this, new FolderObj(intentData.folderName)));
         uiHandler.setData(list);
     }
 
@@ -70,7 +72,7 @@ public class SubFolderActivity extends AppCompatActivity {
         }
 
         public Intent build(Context context){
-            Intent intent = new Intent(context, FolderActivity.class);
+            Intent intent = new Intent(context, SubFolderActivity.class);
             intent.putExtra(INTENT_FOLDER_NAME, intentData.folderName);
             return intent;
         }
