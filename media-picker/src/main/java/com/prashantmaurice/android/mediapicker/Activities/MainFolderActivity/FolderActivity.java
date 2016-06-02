@@ -103,7 +103,7 @@ public class FolderActivity extends AppCompatActivity implements android.support
         Logg.d(TAG,"onCreateLoader");
         Uri u = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
         String[] projection = {MediaStore.Images.ImageColumns.DATA,MediaStore.Images.Media._ID};
-        return new CursorLoader(this,u, projection, null, null, null);
+        return new CursorLoader(this,u, projection, null, null,  MediaStore.Images.ImageColumns.DATE_TAKEN+" DESC");
     }
 
     @Override
@@ -118,17 +118,19 @@ public class FolderActivity extends AppCompatActivity implements android.support
             String tempDir = fullName.substring(0, fullName.lastIndexOf("/"));
 
             if(!folders.containsKey(tempDir)){
-                folders.put(tempDir,new FolderObj(tempDir));
+
+                FolderObj folderObj = new FolderObj(tempDir);
+
+                //Set am imageObj as latest one
+                ImageObj imageObj = new ImageObj(fullName);
+                imageObj.id = c.getLong(1);
+                folderObj.setLatestImageObj(imageObj);
+
+                folders.put(tempDir,folderObj);
             }
 
             FolderObj folderObj = folders.get(tempDir);
             folderObj.setItemCount(folderObj.getItemCount()+1);
-
-            //Set am inageObj as latest one
-            ImageObj imageObj = new ImageObj(fullName);
-            imageObj.id = c.getLong(1);
-            folderObj.setLatestImageObj(imageObj);
-
             c.moveToNext();
         }
 

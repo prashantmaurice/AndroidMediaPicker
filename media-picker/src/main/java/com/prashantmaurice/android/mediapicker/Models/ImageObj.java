@@ -1,9 +1,12 @@
 package com.prashantmaurice.android.mediapicker.Models;
 
+import android.net.Uri;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,13 +32,15 @@ public class ImageObj {
         return id;
     }
 
-
-
+    public Uri getURI(){
+        return Uri.fromFile(new File("/document/image:"+id));
+    }
 
     public static ImageObj decodeFromServer(JSONObject obj){
         ImageObj activityObject = new ImageObj();
         try {
             activityObject.path = (obj.has("path"))?obj.getString("path"):null;
+            activityObject.id = (obj.has("id"))?obj.getLong("id"):0;
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -57,6 +62,7 @@ public class ImageObj {
         JSONObject obj = new JSONObject();
         try {
             obj.put("path",path);
+            obj.put("id",id);
         } catch (JSONException e) {
             e.printStackTrace();
         }

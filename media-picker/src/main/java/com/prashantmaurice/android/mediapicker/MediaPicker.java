@@ -42,11 +42,10 @@ public class MediaPicker {
         public static ResultData parseResult(Intent data) {
             ResultData intentData = new ResultData();
 
-            if(data.hasExtra(IntentBuilder.INTENT_SELECTMULTIPLE)){
+            if(data.hasExtra(INTENT_SELECTED)){
                 String jsonArrStr =  data.getStringExtra(INTENT_SELECTED);
-                JSONArray jsonArr = null;
                 try {
-                    jsonArr = new JSONArray(jsonArrStr);
+                    JSONArray jsonArr = new JSONArray(jsonArrStr);
                     intentData.images.addAll(ImageObj.decodeFromServer(jsonArr));
                 } catch (JSONException e) {e.printStackTrace();}
             }

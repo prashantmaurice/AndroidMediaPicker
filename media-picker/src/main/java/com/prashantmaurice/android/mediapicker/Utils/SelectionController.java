@@ -34,6 +34,10 @@ public class SelectionController {
     }
 
     public int getSelectNumber(ImageObj imageObj) {
-        return selected.indexOf(imageObj);
+        return 1+selected.indexOf(imageObj);
+    }
+
+    public void clearSelection() {
+        selected.clear();
     }
 }

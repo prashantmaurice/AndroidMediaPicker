@@ -61,6 +61,7 @@ public class SubFolderActivityAdapter extends BaseAdapter {
             public void onSingleClick(View view) {
                 SelectionController.getInstance().toggle(imageObj);
                 notifyDataSetChanged();
+                activity.refreshActionbarState();
             }
         });
         if(SelectionController.getInstance().isSelected(imageObj)){

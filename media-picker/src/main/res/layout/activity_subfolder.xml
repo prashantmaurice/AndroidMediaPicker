@@ -11,7 +11,7 @@
         android:layout_height="56dp"
         android:orientation="horizontal"
         android:background="@color/ColorPrimary"
-        android:id="@+id/each_chat_profile_top"
+        android:id="@+id/actionbar_unselected"
         android:gravity="center_vertical"
         android:visibility="visible">
 
@@ -63,7 +63,7 @@
                     android:layout_height="match_parent"
                     android:text="Folders"
                     android:singleLine="true"
-                    android:id="@+id/tv_eachchat_title"
+                    android:id="@+id/tv_title"
                     android:textColor="#ffffffff"
                     android:textSize="18dp"
                     android:gravity="center_vertical" />
@@ -93,6 +93,99 @@
                 android:paddingLeft="10dp"
                 android:paddingRight="4dp"
                 android:paddingBottom="4dp" />
+        </com.balysv.materialripple.MaterialRippleLayout>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:orientation="horizontal"
+        android:background="@color/ColorPrimary"
+        android:id="@+id/actionbar_selected"
+        android:gravity="center_vertical"
+        android:visibility="visible">
+
+        <com.balysv.materialripple.MaterialRippleLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            app:mrl_rippleDuration="300"
+            app:mrl_rippleOverlay="true"
+            app:mrl_rippleColor="#ffffff"
+            android:id="@+id/btn_remove_selected">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <ImageView
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:src="@drawable/abc_ic_clear_mtrl_alpha"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:scaleType="fitCenter"
+                    android:paddingLeft="10dp" />
+
+            </LinearLayout>
+        </com.balysv.materialripple.MaterialRippleLayout>
+
+        <com.balysv.materialripple.MaterialRippleLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical"
+            app:mrl_rippleDuration="300"
+            app:mrl_rippleOverlay="true"
+            app:mrl_rippleColor="#ffffff"
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_centerInParent="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="Folders"
+                    android:singleLine="true"
+                    android:id="@+id/tv_selected"
+                    android:textColor="#ffffffff"
+                    android:textSize="18dp"
+                    android:gravity="center_vertical" />
+            </LinearLayout>
+        </com.balysv.materialripple.MaterialRippleLayout>
+
+
+        <com.balysv.materialripple.MaterialRippleLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            app:mrl_rippleDuration="300"
+            app:mrl_rippleOverlay="true"
+            app:mrl_rippleColor="#ffffff"
+            android:id="@+id/btn_done">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:padding="10dp">
+
+                <TextView
+                    android:layout_centerInParent="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="DONE"
+                    android:singleLine="true"
+                    android:textColor="#ffffffff"
+                    android:textSize="18dp"
+                    android:gravity="center_vertical" />
+            </LinearLayout>
         </com.balysv.materialripple.MaterialRippleLayout>
 
     </LinearLayout>

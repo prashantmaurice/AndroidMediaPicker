@@ -36,6 +36,7 @@ public class SubFolderActivity extends AppCompatActivity implements android.supp
 
         intentData = IntentBuilder.parseResult(getIntent());
         uiHandler =  new SubFolderActivityUIHandler(this);
+        uiHandler.setTitle(intentData.folderName);
         permissionController = new PermissionController(this);
         permissionController.checkPermissionAndRun(Manifest.permission.READ_EXTERNAL_STORAGE, new PermissionController.TaskCallback(){
             @Override
@@ -61,7 +62,7 @@ public class SubFolderActivity extends AppCompatActivity implements android.supp
         Logg.d(TAG,"onCreateLoader");
         Uri u = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
         String[] projection = {MediaStore.Images.ImageColumns.DATA,MediaStore.Images.Media._ID};
-        return new CursorLoader(this,u, projection, null, null, null);
+        return new CursorLoader(this,u, projection, null, null, MediaStore.Images.ImageColumns.DATE_TAKEN+" DESC");
     }
 
     @Override
@@ -75,7 +76,7 @@ public class SubFolderActivity extends AppCompatActivity implements android.supp
             String fullName = c.getString(0);
             String tempDir = fullName.substring(0, fullName.lastIndexOf("/"));
 
-            if(intentData.folderName.equals(tempDir)){
+            if(intentData.folderPath.equals(tempDir)){
                 ImageObj imageObj = new ImageObj(fullName);
                 imageObj.id = c.getLong(1);
                 images.add(imageObj);
@@ -92,10 +93,15 @@ public class SubFolderActivity extends AppCompatActivity implements android.supp
 
     }
 
+    public void refreshActionbarState() {
+        uiHandler.refreshActionbarState();
+    }
+
 
     //Use this to build intent for calling this class
     public static class IntentBuilder{
         private static String INTENT_FOLDER_NAME = "folder-name";
+        private static String INTENT_FOLDER_PATH = "folder-path";
 
         IntentData intentData = new IntentData();
 
@@ -103,12 +109,14 @@ public class SubFolderActivity extends AppCompatActivity implements android.supp
 
         public IntentBuilder setFolderObj(FolderObj folderObj) {
             intentData.folderName = folderObj.getName();
+            intentData.folderPath = folderObj.getPath();
             return this;
         }
 
         public Intent build(Context context){
             Intent intent = new Intent(context, SubFolderActivity.class);
             intent.putExtra(INTENT_FOLDER_NAME, intentData.folderName);
+            intent.putExtra(INTENT_FOLDER_PATH, intentData.folderPath);
             return intent;
         }
 
@@ -119,7 +127,9 @@ public class SubFolderActivity extends AppCompatActivity implements android.supp
             if(data.hasExtra(IntentBuilder.INTENT_FOLDER_NAME)){
                 intentData.folderName = data.getStringExtra(IntentBuilder.INTENT_FOLDER_NAME);
             }
-
+            if(data.hasExtra(IntentBuilder.INTENT_FOLDER_PATH)){
+                intentData.folderPath = data.getStringExtra(IntentBuilder.INTENT_FOLDER_PATH);
+            }
 
             return intentData;
         }
@@ -127,6 +137,7 @@ public class SubFolderActivity extends AppCompatActivity implements android.supp
         //Main data object that is created with this builder
         public static class IntentData{
             public String folderName;
+            public String folderPath;
         }
     }
 

@@ -22,6 +22,14 @@ public class FolderObj {
     }
 
     public String getName() {
+        if(!directory.contains("/")){
+            return directory;
+        }else{
+            return directory.substring(directory.lastIndexOf("/")+1, directory.length());
+        }
+    }
+
+    public String getPath() {
         return ""+directory;
     }
 

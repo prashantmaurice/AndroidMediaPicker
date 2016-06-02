@@ -1,6 +1,7 @@
 package com.prashantmaurice.android.mediapickersample;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -12,9 +13,10 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    View btn_selectmultiple;
+    View btn_selectmultiple, btn_selectdefault;
 
     static final int REQUEST_PICK_MULTIPLE = 1001;
+    static final int REQUEST_PICK_DEFAULTGALLERY = 1002;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void initializeViews() {
         btn_selectmultiple = findViewById(R.id.btn_selectmultiple);
+        btn_selectdefault = findViewById(R.id.btn_selectdefault);
     }
 
     private void initializeListeners() {
@@ -37,6 +40,15 @@ public class MainActivity extends AppCompatActivity {
                         .selectMultiple(true)
                         .build(MainActivity.this);
                 startActivityForResult(intent, REQUEST_PICK_MULTIPLE);
+            }
+        });
+        btn_selectdefault.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                intent.setType("image/*");
+                startActivityForResult(intent, REQUEST_PICK_DEFAULTGALLERY);
             }
         });
     }
@@ -50,8 +62,15 @@ public class MainActivity extends AppCompatActivity {
                 case REQUEST_PICK_MULTIPLE:
                     MediaPicker.ResultParser.ResultData dataObject = MediaPicker.ResultParser.parseResult(data);
                     List<ImageObj> pics = dataObject.getSelectedPics();
+                    if(pics.size()>0){
+                        Uri uri = pics.get(0).getURI();
+                        Utils.showToast(this,"Picked "+uri.getPath());
+                    }
                     Utils.showToast(this,"Picked "+pics.size()+" images");
                     break;
+                case REQUEST_PICK_DEFAULTGALLERY:
+                    Uri uri = data.getData();
+                    Utils.showToast(this,"Picked "+uri.getPath());
             }
         }else{
             Utils.showToast(this,"Cancelled Request");
