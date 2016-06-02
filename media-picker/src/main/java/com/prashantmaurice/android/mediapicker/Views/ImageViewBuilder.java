@@ -9,6 +9,7 @@ import android.widget.ImageView;
 
 import com.prashantmaurice.android.mediapicker.Models.ImageObj;
 import com.prashantmaurice.android.mediapicker.R;
+import com.prashantmaurice.android.mediapicker.Utils.BitmapLoaderController;
 import com.prashantmaurice.android.mediapicker.Utils.Logg;
 
 import java.io.File;
@@ -71,5 +72,11 @@ public class ImageViewBuilder {
         public void setBitmap(Bitmap bitmap) {
             imageview.setImageBitmap(bitmap);
         }
+
+        public void loadImage(ImageObj imageObj) {
+            BitmapLoaderController.getInstance().loadImage(imageObj,imageview, activity);
+        }
     }
+
+
 }

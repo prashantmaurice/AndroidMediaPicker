@@ -1,18 +1,12 @@
 package com.prashantmaurice.android.mediapicker.Activities.SubFolderActivity;
 
-import android.graphics.Bitmap;
-import android.os.AsyncTask;
-import android.provider.MediaStore;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 
 import com.prashantmaurice.android.mediapicker.Models.ImageObj;
-import com.prashantmaurice.android.mediapicker.R;
 import com.prashantmaurice.android.mediapicker.Views.ImageViewBuilder;
 
-import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -59,51 +53,15 @@ public class SubFolderActivityAdapter extends BaseAdapter {
 
         //set view
         final ImageObj imageObj = folders.get(position);
-        loadImage(imageObj,holder.imageview);
+        holder.loadImage(imageObj);
 
         return view;
     }
-
-    private void loadImage(ImageObj imageObj, ImageView imageview){
-        imageview.setImageResource(R.drawable.empty);
-        imageview.setTag(R.string.tag_imagetoload,imageObj.getPath());
-        BitmapWorkerTask task = new BitmapWorkerTask(imageview);
-        task.execute(imageObj);
-    }
-
 
     public void setData(List<ImageObj> data) {
         folders.clear();
         folders.addAll(data);
     }
 
-    //Load images in Background
-    class BitmapWorkerTask extends AsyncTask<ImageObj, Void, Bitmap> {
-        private final WeakReference<ImageView> imageViewReference;
-        private ImageObj imageObj;
 
-        public BitmapWorkerTask(ImageView imageView) {
-            // Use a WeakReference to ensure the ImageView can be garbage collected
-            imageViewReference = new WeakReference<ImageView>(imageView);
-        }
-
-        // Decode image in background.
-        @Override
-        protected Bitmap doInBackground(ImageObj... params) {
-            imageObj = params[0];
-            return MediaStore.Images.Thumbnails.getThumbnail(activity.getContentResolver(), imageObj.getId(), MediaStore.Images.Thumbnails.MINI_KIND, null);
-        }
-
-
-        // Once complete, see if ImageView is still around and set bitmap.
-        @Override
-        protected void onPostExecute(Bitmap bitmap) {
-            if (imageViewReference != null && bitmap != null) {
-                final ImageView imageView = imageViewReference.get();
-                if (imageView != null && imageObj.getPath().equals(imageView.getTag(R.string.tag_imagetoload))) {
-                    imageView.setImageBitmap(bitmap);
-                }
-            }
-        }
-    }
 }
