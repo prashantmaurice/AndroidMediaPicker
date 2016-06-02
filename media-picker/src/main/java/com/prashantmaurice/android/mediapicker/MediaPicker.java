@@ -3,7 +3,7 @@ package com.prashantmaurice.android.mediapicker;
 import android.content.Context;
 import android.content.Intent;
 
-import com.prashantmaurice.android.mediapicker.Activities.FolderActivity;
+import com.prashantmaurice.android.mediapicker.Activities.MainFolderActivity.FolderActivity;
 
 import java.util.ArrayList;
 import java.util.List;

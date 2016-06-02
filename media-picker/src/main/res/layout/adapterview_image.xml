@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+    <com.prashantmaurice.android.mediapicker.Views.SquareImageView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:id="@+id/imageview"
+        android:src="@android:drawable/sym_contact_card" />
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/gradient_folderview"
+        android:visibility="visible"
+        android:layout_alignTop="@+id/imageview"
+        android:layout_alignBottom="@+id/imageview"
+        android:id="@+id/cont_map_text"
+        android:gravity="bottom"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="26dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Folder Name"
+            android:id="@+id/tv_foldername"
+            android:textColor="#fff"
+            android:textStyle="bold"
+            android:layout_weight="1" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:id="@+id/tv_foldernum"
+            android:textColor="#fff"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+</RelativeLayout>
