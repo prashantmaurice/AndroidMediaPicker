@@ -8,7 +8,7 @@ ext {
     libraryName = 'Media Picker'
     artifact = 'media-picker'
 
-    libraryDescription = 'A wrapper for Facebook Native Like Button (LikeView) on Android'
+    libraryDescription = 'A Dummy Picker'
 
     siteUrl = 'https://github.com/prashantmaurice/AndroidMediaPicker'
     gitUrl = 'https://github.com/prashantmaurice/AndroidMediaPicker.git'
