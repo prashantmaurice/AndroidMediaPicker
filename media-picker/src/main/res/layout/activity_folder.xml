@@ -106,6 +106,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/gridView"
-            android:numColumns="2" />
+            android:verticalSpacing="2dp"
+            android:horizontalSpacing="2dp"
+            android:numColumns="2"
+            android:padding="2dp" />
     </LinearLayout>
 </LinearLayout>

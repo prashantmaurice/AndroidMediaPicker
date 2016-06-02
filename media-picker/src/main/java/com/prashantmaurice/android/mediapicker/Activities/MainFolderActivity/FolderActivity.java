@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import com.prashantmaurice.android.mediapicker.MediaPicker;
 import com.prashantmaurice.android.mediapicker.Models.FolderObj;
+import com.prashantmaurice.android.mediapicker.Models.ImageObj;
 import com.prashantmaurice.android.mediapicker.R;
 import com.prashantmaurice.android.mediapicker.Utils.Constants;
 import com.prashantmaurice.android.mediapicker.Utils.Logg;
@@ -101,7 +102,7 @@ public class FolderActivity extends AppCompatActivity implements android.support
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         Logg.d(TAG,"onCreateLoader");
         Uri u = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-        String[] projection = {MediaStore.Images.ImageColumns.DATA};
+        String[] projection = {MediaStore.Images.ImageColumns.DATA,MediaStore.Images.Media._ID};
         return new CursorLoader(this,u, projection, null, null, null);
     }
 
@@ -113,8 +114,8 @@ public class FolderActivity extends AppCompatActivity implements android.support
 
         c.moveToFirst();
         while (!c.isAfterLast()) {
-            String tempDir = c.getString(0);
-            tempDir = tempDir.substring(0, tempDir.lastIndexOf("/"));
+            String fullName = c.getString(0);
+            String tempDir = fullName.substring(0, fullName.lastIndexOf("/"));
 
             if(!folders.containsKey(tempDir)){
                 folders.put(tempDir,new FolderObj(tempDir));
@@ -122,6 +123,11 @@ public class FolderActivity extends AppCompatActivity implements android.support
 
             FolderObj folderObj = folders.get(tempDir);
             folderObj.setItemCount(folderObj.getItemCount()+1);
+
+            //Set am inageObj as latest one
+            ImageObj imageObj = new ImageObj(fullName);
+            imageObj.id = c.getLong(1);
+            folderObj.setLatestImageObj(imageObj);
 
             c.moveToNext();
         }

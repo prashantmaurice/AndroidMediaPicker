@@ -13,6 +13,7 @@ public class FolderObj {
 
     private String directory = "Dummy";
     private int itemCount = 0;
+    private ImageObj latestImageObj;
 
 
     public FolderObj(){}
@@ -61,5 +62,13 @@ public class FolderObj {
             e.printStackTrace();
         }
         return obj;
+    }
+
+    public void setLatestImageObj(ImageObj latestImageObj) {
+        this.latestImageObj = latestImageObj;
+    }
+
+    public ImageObj getLatestImgObj() {
+        return latestImageObj;
     }
 }

@@ -33,12 +33,6 @@ public class ImageViewBuilder {
                 
     }
 
-    public static View getView(Activity activity, ImageObj folderObj){
-        View view = getView(activity);
-        ViewHolder holder = (ViewHolder) view.getTag();
-        holder.inflateData(folderObj);
-        return view;
-    }
 
     public static class ViewHolder{
         public View mainView;
@@ -68,10 +62,6 @@ public class ImageViewBuilder {
 
         }
 
-
-        public void setBitmap(Bitmap bitmap) {
-            imageview.setImageBitmap(bitmap);
-        }
 
         public void loadImage(ImageObj imageObj) {
             BitmapLoaderController.getInstance().loadImage(imageObj,imageview, activity);

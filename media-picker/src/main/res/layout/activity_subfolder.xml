@@ -109,7 +109,6 @@
             android:verticalSpacing="2dp"
             android:horizontalSpacing="2dp"
             android:numColumns="3"
-            android:paddingLeft="2dp"
-            android:paddingRight="2dp" />
+            android:padding="2dp" />
     </LinearLayout>
 </LinearLayout>
