@@ -3,4 +3,5 @@
 
     <!-- Helper tags -->
     <string name="tag_imagetoload">imagetoload</string>
+    <string name="tag_bitmaploadertask">loadertask</string>
 </resources>
