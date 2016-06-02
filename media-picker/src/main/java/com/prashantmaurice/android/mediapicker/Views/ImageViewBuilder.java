@@ -6,11 +6,13 @@ import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.prashantmaurice.android.mediapicker.Models.ImageObj;
 import com.prashantmaurice.android.mediapicker.R;
 import com.prashantmaurice.android.mediapicker.Utils.BitmapLoaderController;
 import com.prashantmaurice.android.mediapicker.Utils.Logg;
+import com.prashantmaurice.android.mediapicker.Utils.SingleClickListener;
 
 import java.io.File;
 
@@ -35,8 +37,9 @@ public class ImageViewBuilder {
 
 
     public static class ViewHolder{
-        public View mainView;
+        public View mainView, cont_select_overlay;
         public ImageView imageview;
+        public TextView tv_number;
 
         Activity activity;
 
@@ -44,6 +47,8 @@ public class ImageViewBuilder {
             this.activity = activity;
             mainView = itemView;
             imageview = (ImageView) itemView.findViewById(R.id.imageview);
+            tv_number = (TextView) itemView.findViewById(R.id.tv_number);
+            cont_select_overlay = itemView.findViewById(R.id.cont_select_overlay);
         }
 
 
@@ -65,6 +70,20 @@ public class ImageViewBuilder {
 
         public void loadImage(ImageObj imageObj) {
             BitmapLoaderController.getInstance().loadImage(imageObj,imageview, activity);
+        }
+
+        public void setOnClickListener(SingleClickListener listener) {
+            mainView.setOnClickListener(listener);
+        }
+
+
+        public void setSelected(int selectNumber) {
+            cont_select_overlay.setVisibility(View.VISIBLE);
+            tv_number.setText(""+selectNumber);
+        }
+
+        public void setUnSelected() {
+            cont_select_overlay.setVisibility(View.GONE);
         }
     }
 

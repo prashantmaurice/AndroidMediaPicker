@@ -20,14 +20,20 @@ public class SelectionController {
 
     SelectionController(){}
 
-    public void addInSelected(ImageObj imageObj){
-        selected.add(imageObj);
-    }
-    public void removeFromSelected(ImageObj imageObj){
-        selected.remove(imageObj);
-    }
-
     public List<ImageObj> getSelectedPics() {
         return selected;
+    }
+
+    public void toggle(ImageObj imageObj) {
+        if(selected.contains(imageObj)) selected.remove(imageObj);
+        else selected.add(imageObj);
+    }
+
+    public boolean isSelected(ImageObj imageObj) {
+        return selected.contains(imageObj);
+    }
+
+    public int getSelectNumber(ImageObj imageObj) {
+        return selected.indexOf(imageObj);
     }
 }

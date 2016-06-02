@@ -68,4 +68,14 @@ public class ImageObj {
         for(ImageObj imageObj : imagesList) arr.put(imageObj.encode());
         return arr;
     }
+
+    @Override
+    public boolean equals(Object o){
+        if (o instanceof ImageObj){
+            ImageObj c = (ImageObj) o;
+            if (this.getId()==c.getId()) return true;
+        }
+        return false;
+    }
+
 }

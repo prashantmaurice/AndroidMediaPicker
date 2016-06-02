@@ -5,6 +5,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 import com.prashantmaurice.android.mediapicker.Models.ImageObj;
+import com.prashantmaurice.android.mediapicker.Utils.SelectionController;
+import com.prashantmaurice.android.mediapicker.Utils.SingleClickListener;
 import com.prashantmaurice.android.mediapicker.Views.ImageViewBuilder;
 
 import java.util.ArrayList;
@@ -54,6 +56,18 @@ public class SubFolderActivityAdapter extends BaseAdapter {
         //set view
         final ImageObj imageObj = folders.get(position);
         holder.loadImage(imageObj);
+        holder.setOnClickListener(new SingleClickListener() {
+            @Override
+            public void onSingleClick(View view) {
+                SelectionController.getInstance().toggle(imageObj);
+                notifyDataSetChanged();
+            }
+        });
+        if(SelectionController.getInstance().isSelected(imageObj)){
+            holder.setSelected(SelectionController.getInstance().getSelectNumber(imageObj));
+        }else{
+            holder.setUnSelected();
+        }
 
         return view;
     }
