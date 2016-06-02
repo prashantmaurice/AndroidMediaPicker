@@ -1,12 +1,111 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.prashantmaurice.android.mediapicker.Activities.FolderActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
 
-</RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:orientation="horizontal"
+        android:background="@color/ColorPrimary"
+        android:id="@+id/each_chat_profile_top"
+        android:gravity="center_vertical"
+        android:visibility="visible">
+
+        <com.balysv.materialripple.MaterialRippleLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            app:mrl_rippleDuration="300"
+            app:mrl_rippleOverlay="true"
+            app:mrl_rippleColor="#ffffff"
+            android:id="@+id/btn_back">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <ImageView
+                    android:layout_width="56dp"
+                    android:layout_height="56dp"
+                    android:src="@drawable/abc_ic_ab_back_mtrl_am_alpha"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:scaleType="fitCenter"
+                    android:paddingLeft="10dp" />
+
+            </LinearLayout>
+        </com.balysv.materialripple.MaterialRippleLayout>
+
+        <com.balysv.materialripple.MaterialRippleLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical"
+            app:mrl_rippleDuration="300"
+            app:mrl_rippleOverlay="true"
+            app:mrl_rippleColor="#ffffff"
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:id="@+id/ll_each_chat_title_pic">
+
+                <TextView
+                    android:layout_centerInParent="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="Folders"
+                    android:singleLine="true"
+                    android:id="@+id/tv_eachchat_title"
+                    android:textColor="#ffffffff"
+                    android:textSize="18dp"
+                    android:gravity="center_vertical" />
+            </LinearLayout>
+        </com.balysv.materialripple.MaterialRippleLayout>
+
+
+        <com.balysv.materialripple.MaterialRippleLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            app:mrl_rippleDuration="300"
+            app:mrl_rippleOverlay="true"
+            app:mrl_rippleColor="#ffffff">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:id="@+id/btn_settings"
+                android:layout_alignParentRight="false"
+                android:layout_toLeftOf="@+id/civ_eachchat_pic"
+                android:background="#00000000"
+                android:src="@drawable/abc_ic_menu_moreoverflow_mtrl_alpha"
+                android:visibility="visible"
+                android:paddingTop="4dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="4dp"
+                android:paddingBottom="4dp" />
+        </com.balysv.materialripple.MaterialRippleLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <GridView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/gridView"
+            android:numColumns="2" />
+    </LinearLayout>
+</LinearLayout>
