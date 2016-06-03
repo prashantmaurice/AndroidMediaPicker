@@ -48,7 +48,7 @@ public class ResultDataBuilder {
     public static SelectionObject generateSelectionObject(MImageObj obj){
         SelectionObject selection = new SelectionObject();
         selection.uri = obj.getURI();
-        selection.type = SelectionObject.Type.IMAGE;
+        selection.type = Type.IMAGE;
         return selection;
     }
 
@@ -95,7 +95,7 @@ public class ResultDataBuilder {
             try {
                 if(!obj.has("type") || !obj.has("uri")) return null;
                 else{
-                    activityObject.type = SelectionObject.Type.fromString( obj.getString("type"));
+                    activityObject.type = Type.fromString( obj.getString("type"));
                     activityObject.uri = Uri.parse(obj.getString("uri"));
                 }
             } catch (JSONException e) {
