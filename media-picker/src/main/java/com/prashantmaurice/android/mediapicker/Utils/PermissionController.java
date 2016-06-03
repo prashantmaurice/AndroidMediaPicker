@@ -1,16 +1,11 @@
 package com.prashantmaurice.android.mediapicker.Utils;
 
-import android.Manifest;
 import android.content.pm.PackageManager;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-
-import static com.prashantmaurice.android.mediapicker.Utils.Constants.RequestCodes.PermissionController.RESUEST_PERMISSION;
 
 /**
  * Created by maurice on 02/06/16.
@@ -35,14 +30,15 @@ public class PermissionController {
 
 
     public void checkPermissionAndRun(String permission, TaskCallback taskCallback) {
-        int permissionCheck = ContextCompat.checkSelfPermission(activity, permission);
-        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, RESUEST_PERMISSION);
-            addPendingtask(permission,taskCallback);
-        } else {
-            //set some data
-            taskCallback.onGranted();
-        }
+        taskCallback.onGranted();
+//        int permissionCheck = ContextCompat.checkSelfPermission(activity, permission);
+//        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+//            ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, RESUEST_PERMISSION);
+//            addPendingtask(permission,taskCallback);
+//        } else {
+//            //set some data
+//            taskCallback.onGranted();
+//        }
     }
 
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {

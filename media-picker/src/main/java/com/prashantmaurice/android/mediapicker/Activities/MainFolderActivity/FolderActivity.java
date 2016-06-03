@@ -1,14 +1,13 @@
 package com.prashantmaurice.android.mediapicker.Activities.MainFolderActivity;
 
 import android.Manifest;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 
 import com.prashantmaurice.android.mediapicker.MediaPicker;
@@ -64,10 +63,10 @@ public class FolderActivity extends AppCompatActivity implements android.support
         uiHandler.setData(list);
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        permissionController.onRequestPermissionsResult(requestCode,permissions,grantResults);
-    }
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+//        permissionController.onRequestPermissionsResult(requestCode,permissions,grantResults);
+//    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
