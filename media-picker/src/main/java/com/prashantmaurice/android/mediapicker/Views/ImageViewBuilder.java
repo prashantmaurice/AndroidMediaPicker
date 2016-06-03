@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.prashantmaurice.android.mediapicker.Models.ImageObj;
+import com.prashantmaurice.android.mediapicker.Models.MImageObj;
 import com.prashantmaurice.android.mediapicker.R;
 import com.prashantmaurice.android.mediapicker.Utils.BitmapLoaderController;
 import com.prashantmaurice.android.mediapicker.Utils.Logg;
@@ -54,7 +54,7 @@ public class ImageViewBuilder {
 
 
 
-        public void inflateData(final ImageObj folderObj){
+        public void inflateData(final MImageObj folderObj){
             Logg.d(TAG, "Inflating data in ImageObj view");
 
             File imgFile = new File(folderObj.getPath());
@@ -68,8 +68,8 @@ public class ImageViewBuilder {
         }
 
 
-        public void loadImage(ImageObj imageObj) {
-            BitmapLoaderController.getInstance().loadImage(imageObj,imageview, activity);
+        public void loadImage(MImageObj MImageObj) {
+            BitmapLoaderController.getInstance().loadImage(MImageObj,imageview, activity);
         }
 
         public void setOnClickListener(SingleClickListener listener) {

@@ -6,8 +6,9 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
+import com.prashantmaurice.android.mediapicker.ExternalInterface.ResultData;
+import com.prashantmaurice.android.mediapicker.ExternalInterface.SelectionObject;
 import com.prashantmaurice.android.mediapicker.MediaPicker;
-import com.prashantmaurice.android.mediapicker.Models.ImageObj;
 
 import java.util.List;
 
@@ -60,10 +61,10 @@ public class MainActivity extends AppCompatActivity {
         if(resultCode==RESULT_OK){
             switch (requestCode){
                 case REQUEST_PICK_MULTIPLE:
-                    MediaPicker.ResultParser.ResultData dataObject = MediaPicker.ResultParser.parseResult(data);
-                    List<ImageObj> pics = dataObject.getSelectedPics();
+                    ResultData dataObject = MediaPicker.getResultData(data);
+                    List<SelectionObject> pics = dataObject.getSelectedPics();
                     if(pics.size()>0){
-                        Uri uri = pics.get(0).getURI();
+                        Uri uri = pics.get(0).getUri();
                         Utils.showToast(this,"Picked "+uri.getPath());
                     }
                     Utils.showToast(this,"Picked "+pics.size()+" images");
@@ -75,7 +76,5 @@ public class MainActivity extends AppCompatActivity {
         }else{
             Utils.showToast(this,"Cancelled Request");
         }
-
-
     }
 }

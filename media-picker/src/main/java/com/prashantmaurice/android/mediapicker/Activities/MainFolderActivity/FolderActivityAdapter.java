@@ -6,7 +6,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 import com.prashantmaurice.android.mediapicker.Activities.SubFolderActivity.SubFolderActivity;
-import com.prashantmaurice.android.mediapicker.Models.FolderObj;
+import com.prashantmaurice.android.mediapicker.Models.MFolderObj;
 import com.prashantmaurice.android.mediapicker.Utils.Constants;
 import com.prashantmaurice.android.mediapicker.Utils.SingleClickListener;
 import com.prashantmaurice.android.mediapicker.Views.FolderViewBuilder;
@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class FolderActivityAdapter extends BaseAdapter {
 
-    private final List<FolderObj> folders = new ArrayList<>();
+    private final List<MFolderObj> folders = new ArrayList<>();
     private final FolderActivity activity;
 
     public FolderActivityAdapter(FolderActivity activity) {
@@ -32,7 +32,7 @@ public class FolderActivityAdapter extends BaseAdapter {
     }
 
     @Override
-    public FolderObj getItem(int position) {
+    public MFolderObj getItem(int position) {
         return folders.get(position);
     }
 
@@ -57,7 +57,7 @@ public class FolderActivityAdapter extends BaseAdapter {
 
 
         //set view
-        final FolderObj group = folders.get(position);
+        final MFolderObj group = folders.get(position);
         holder.inflateData(group);
         holder.setOnClickListener(new SingleClickListener() {
             @Override
@@ -72,7 +72,7 @@ public class FolderActivityAdapter extends BaseAdapter {
         return view;
     }
 
-    public void setData(List<FolderObj> data) {
+    public void setData(List<MFolderObj> data) {
         folders.clear();
         folders.addAll(data);
     }

@@ -11,8 +11,8 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 
-import com.prashantmaurice.android.mediapicker.Models.FolderObj;
-import com.prashantmaurice.android.mediapicker.Models.ImageObj;
+import com.prashantmaurice.android.mediapicker.Models.MFolderObj;
+import com.prashantmaurice.android.mediapicker.Models.MImageObj;
 import com.prashantmaurice.android.mediapicker.R;
 import com.prashantmaurice.android.mediapicker.Utils.Logg;
 import com.prashantmaurice.android.mediapicker.Utils.PermissionController;
@@ -74,7 +74,7 @@ public class SubFolderActivity extends AppCompatActivity implements android.supp
     public void onLoadFinished(Loader<Cursor> loader, Cursor c) {
         Logg.d(TAG,"onLoadFinished");
 
-        List<ImageObj> images = new ArrayList<>();
+        List<MImageObj> images = new ArrayList<>();
 
         c.moveToFirst();
         while (!c.isAfterLast()) {
@@ -82,9 +82,9 @@ public class SubFolderActivity extends AppCompatActivity implements android.supp
             String tempDir = fullName.substring(0, fullName.lastIndexOf("/"));
 
             if(intentData.folderPath.equals(tempDir)){
-                ImageObj imageObj = new ImageObj(fullName);
-                imageObj.setId(c.getLong(1));
-                images.add(imageObj);
+                MImageObj MImageObj = new MImageObj(fullName);
+                MImageObj.setId(c.getLong(1));
+                images.add(MImageObj);
             }
 
             c.moveToNext();
@@ -112,9 +112,9 @@ public class SubFolderActivity extends AppCompatActivity implements android.supp
 
         public IntentBuilder(){};
 
-        public IntentBuilder setFolderObj(FolderObj folderObj) {
-            intentData.folderName = folderObj.getName();
-            intentData.folderPath = folderObj.getPath();
+        public IntentBuilder setFolderObj(MFolderObj MFolderObj) {
+            intentData.folderName = MFolderObj.getName();
+            intentData.folderPath = MFolderObj.getPath();
             return this;
         }
 

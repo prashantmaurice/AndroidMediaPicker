@@ -6,7 +6,7 @@ import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.widget.ImageView;
 
-import com.prashantmaurice.android.mediapicker.Models.ImageObj;
+import com.prashantmaurice.android.mediapicker.Models.MImageObj;
 import com.prashantmaurice.android.mediapicker.R;
 
 import java.lang.ref.WeakReference;
@@ -30,10 +30,10 @@ public class BitmapLoaderController {
         cache = new Cache();
     }
 
-    public void loadImage(ImageObj imageObj, ImageView imageview, Activity activity){
-        imageview.setTag(R.string.tag_imagetoload,imageObj.getPath());
-        if(cache.containsBitmap(imageObj)){
-            imageview.setImageBitmap(cache.getBitmap(imageObj));
+    public void loadImage(MImageObj MImageObj, ImageView imageview, Activity activity){
+        imageview.setTag(R.string.tag_imagetoload, MImageObj.getPath());
+        if(cache.containsBitmap(MImageObj)){
+            imageview.setImageBitmap(cache.getBitmap(MImageObj));
         }else{
             imageview.setImageResource(R.drawable.empty);
             BitmapWorkerTask task = new BitmapWorkerTask(imageview,activity);
@@ -45,16 +45,16 @@ public class BitmapLoaderController {
             }
 
             imageview.setTag(R.string.tag_bitmaploadertask,task);
-            task.execute(imageObj);
+            task.execute(MImageObj);
         }
     }
 
 
     //Load images in Background
-    class BitmapWorkerTask extends AsyncTask<ImageObj, Void, Bitmap> {
+    class BitmapWorkerTask extends AsyncTask<MImageObj, Void, Bitmap> {
         private final WeakReference<ImageView> imageViewReference;
         private final Activity activity;
-        private ImageObj imageObj;
+        private MImageObj MImageObj;
 
         public BitmapWorkerTask(ImageView imageView, Activity activity) {
             this.activity = activity;
@@ -65,9 +65,9 @@ public class BitmapLoaderController {
 
         // Decode image in background.
         @Override
-        protected Bitmap doInBackground(ImageObj... params) {
-            imageObj = params[0];
-            return MediaStore.Images.Thumbnails.getThumbnail(activity.getContentResolver(), imageObj.getId(), MediaStore.Images.Thumbnails.MINI_KIND, null);
+        protected Bitmap doInBackground(MImageObj... params) {
+            MImageObj = params[0];
+            return MediaStore.Images.Thumbnails.getThumbnail(activity.getContentResolver(), MImageObj.getId(), MediaStore.Images.Thumbnails.MINI_KIND, null);
         }
 
 
@@ -75,9 +75,9 @@ public class BitmapLoaderController {
         @Override
         protected void onPostExecute(Bitmap bitmap) {
             if (bitmap != null) {
-                cache.storeInCache(imageObj,bitmap);
+                cache.storeInCache(MImageObj,bitmap);
                 final ImageView imageView = imageViewReference.get();
-                if (imageView != null && imageObj.getPath().equals(imageView.getTag(R.string.tag_imagetoload))) {
+                if (imageView != null && MImageObj.getPath().equals(imageView.getTag(R.string.tag_imagetoload))) {
                     imageView.setImageBitmap(bitmap);
                 }
             }
@@ -90,29 +90,29 @@ public class BitmapLoaderController {
         private Map<String, Bitmap> cacheData = new HashMap<>();
         private Stack<String> usedQueue = new Stack<>();
 
-        public boolean containsBitmap(ImageObj imageObj){
-            return cacheData.containsKey(imageObj.getPath());
+        public boolean containsBitmap(MImageObj MImageObj){
+            return cacheData.containsKey(MImageObj.getPath());
         }
 
-        public Bitmap getBitmap(ImageObj imageObj) {
-            Logg.d(TAG,"Used from cache : "+imageObj.getPath());
-            usedQueue.remove(imageObj.getPath());
-            usedQueue.add(0,imageObj.getPath());
-            return cacheData.get(imageObj.getPath());
+        public Bitmap getBitmap(MImageObj MImageObj) {
+            Logg.d(TAG,"Used from cache : "+ MImageObj.getPath());
+            usedQueue.remove(MImageObj.getPath());
+            usedQueue.add(0, MImageObj.getPath());
+            return cacheData.get(MImageObj.getPath());
         }
 
-        public void storeInCache(ImageObj imageObj, Bitmap bitmap) {
+        public void storeInCache(MImageObj MImageObj, Bitmap bitmap) {
             //Remove least used resource
-            if(!usedQueue.isEmpty() && usedQueue.size()>CACHE_SIZE_LIMIT && !usedQueue.contains(imageObj.getPath())){
+            if(!usedQueue.isEmpty() && usedQueue.size()>CACHE_SIZE_LIMIT && !usedQueue.contains(MImageObj.getPath())){
                 String toremove = usedQueue.pop();
                 Logg.d(TAG,"Removed from cache : "+toremove);
                 cacheData.remove(toremove);
             }
 
             //add this
-            Logg.d(TAG,"Stored in cache : "+imageObj.getPath());
-            usedQueue.add(0,imageObj.getPath());
-            cacheData.put(imageObj.getPath(),bitmap);
+            Logg.d(TAG,"Stored in cache : "+ MImageObj.getPath());
+            usedQueue.add(0, MImageObj.getPath());
+            cacheData.put(MImageObj.getPath(),bitmap);
         }
     }
 

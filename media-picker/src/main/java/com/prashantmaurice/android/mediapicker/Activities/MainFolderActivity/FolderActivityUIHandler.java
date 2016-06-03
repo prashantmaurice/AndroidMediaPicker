@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.view.View;
 import android.widget.GridView;
 
-import com.prashantmaurice.android.mediapicker.Models.FolderObj;
+import com.prashantmaurice.android.mediapicker.Models.MFolderObj;
 import com.prashantmaurice.android.mediapicker.R;
 
 import java.util.List;
@@ -54,7 +54,7 @@ public class FolderActivityUIHandler {
         });
     }
 
-    public void setData(List<FolderObj> foldersList){
+    public void setData(List<MFolderObj> foldersList){
         adapter.setData(foldersList);
         adapter.notifyDataSetChanged();
     }

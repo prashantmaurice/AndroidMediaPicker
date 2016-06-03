@@ -2,6 +2,9 @@ package com.prashantmaurice.android.mediapicker.Models;
 
 import android.net.Uri;
 
+import com.prashantmaurice.android.mediapicker.ExternalInterface.ResultDataBuilder;
+import com.prashantmaurice.android.mediapicker.ExternalInterface.SelectionObject;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,14 +16,14 @@ import java.util.List;
 /**
  * Created by maurice on 02/06/16.
  */
-public class ImageObj {
+public class MImageObj {
 
     private String path = "Dummy";
     private long id;
 
 
-    public ImageObj(){}
-    public ImageObj(String path){
+    public MImageObj(){}
+    public MImageObj(String path){
         this.path = path;
     }
 
@@ -42,8 +45,8 @@ public class ImageObj {
         return Uri.fromFile(new File(getPath()));
     }
 
-    public static ImageObj decodeFromServer(JSONObject obj){
-        ImageObj activityObject = new ImageObj();
+    public static MImageObj decodeFromServer(JSONObject obj){
+        MImageObj activityObject = new MImageObj();
         try {
             activityObject.path = (obj.has("path"))?obj.getString("path"):null;
             activityObject.id = (obj.has("id"))?obj.getLong("id"):0;
@@ -54,8 +57,8 @@ public class ImageObj {
     }
 
 
-    public static ArrayList<ImageObj> decodeFromServer(JSONArray obj){
-        ArrayList<ImageObj> list = new ArrayList<>();
+    public static ArrayList<MImageObj> decodeFromServer(JSONArray obj){
+        ArrayList<MImageObj> list = new ArrayList<>();
         for(int i=0;i<obj.length();i++){
             try {
                 list.add(decodeFromServer(obj.getJSONObject(i)));
@@ -75,24 +78,28 @@ public class ImageObj {
         return obj;
     }
 
-    public static JSONArray encode(List<ImageObj> imagesList){
+    public static JSONArray encode(List<MImageObj> imagesList){
         JSONArray arr = new JSONArray();
-        for(ImageObj imageObj : imagesList) arr.put(imageObj.encode());
+        for(MImageObj MImageObj : imagesList) arr.put(MImageObj.encode());
         return arr;
     }
 
     @Override
     public boolean equals(Object o){
-        if (o instanceof ImageObj){
-            ImageObj c = (ImageObj) o;
+        if (o instanceof MImageObj){
+            MImageObj c = (MImageObj) o;
             if (this.getId()==c.getId()) return true;
         }
         return false;
     }
 
-    public static ImageObj initializeFromUri(Uri uri) {
-        ImageObj imageObj = new ImageObj();
-        imageObj.setPath(uri.getPath());
-        return imageObj;
+    public static MImageObj initializeFromUri(Uri uri) {
+        MImageObj MImageObj = new MImageObj();
+        MImageObj.setPath(uri.getPath());
+        return MImageObj;
+    }
+
+    public SelectionObject toImageObject(){
+        return ResultDataBuilder.generateSelectionObject(this);
     }
 }

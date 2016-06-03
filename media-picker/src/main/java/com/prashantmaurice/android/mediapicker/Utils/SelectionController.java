@@ -1,6 +1,6 @@
 package com.prashantmaurice.android.mediapicker.Utils;
 
-import com.prashantmaurice.android.mediapicker.Models.ImageObj;
+import com.prashantmaurice.android.mediapicker.Models.MImageObj;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +11,7 @@ import java.util.List;
 public class SelectionController {
     static SelectionController instance;
 
-    List<ImageObj> selected = new ArrayList<>();
+    List<MImageObj> selected = new ArrayList<>();
 
     public static SelectionController getInstance(){
         if(instance==null) instance = new SelectionController();
@@ -20,21 +20,21 @@ public class SelectionController {
 
     SelectionController(){}
 
-    public List<ImageObj> getSelectedPics() {
+    public List<MImageObj> getSelectedPics() {
         return selected;
     }
 
-    public void toggle(ImageObj imageObj) {
-        if(selected.contains(imageObj)) selected.remove(imageObj);
-        else selected.add(imageObj);
+    public void toggle(MImageObj MImageObj) {
+        if(selected.contains(MImageObj)) selected.remove(MImageObj);
+        else selected.add(MImageObj);
     }
 
-    public boolean isSelected(ImageObj imageObj) {
-        return selected.contains(imageObj);
+    public boolean isSelected(MImageObj MImageObj) {
+        return selected.contains(MImageObj);
     }
 
-    public int getSelectNumber(ImageObj imageObj) {
-        return 1+selected.indexOf(imageObj);
+    public int getSelectNumber(MImageObj MImageObj) {
+        return 1+selected.indexOf(MImageObj);
     }
 
     public void clearSelection() {

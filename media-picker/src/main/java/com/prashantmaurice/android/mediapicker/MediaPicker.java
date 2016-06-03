@@ -3,92 +3,45 @@ package com.prashantmaurice.android.mediapicker;
 import android.content.Context;
 import android.content.Intent;
 
-import com.prashantmaurice.android.mediapicker.Activities.MainFolderActivity.FolderActivity;
-import com.prashantmaurice.android.mediapicker.Models.ImageObj;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.prashantmaurice.android.mediapicker.ExternalInterface.Configuration;
+import com.prashantmaurice.android.mediapicker.ExternalInterface.ResultData;
+import com.prashantmaurice.android.mediapicker.ExternalInterface.ResultDataBuilder;
 
 /**
- * Created by maurice on 02/06/16.
+ * This is the main Interface to use this library. Don't call any other activity directly
  */
 public class MediaPicker {
 
-    public static class ResultParser{
-        private static String INTENT_SELECTED = "selected";
-
-        //Main data object that is created with this builder
-        public static class ResultData{
-            List<ImageObj> images = new ArrayList<>();
-            public List<ImageObj> getSelectedPics() {
-                return images;
-            }
-            public void setSelectedPics(List<ImageObj> images){
-                this.images.clear();
-                this.images.addAll(images);
-            }
-
-            public Intent build() {
-                Intent intent = new Intent();
-                intent.putExtra(INTENT_SELECTED, ImageObj.encode(images).toString());
-                return intent;
-            }
-        }
-
-        //Use this to parse returned data
-        public static ResultData parseResult(Intent data) {
-            ResultData intentData = new ResultData();
-
-            if(data.hasExtra(INTENT_SELECTED)){
-                String jsonArrStr =  data.getStringExtra(INTENT_SELECTED);
-                try {
-                    JSONArray jsonArr = new JSONArray(jsonArrStr);
-                    intentData.images.addAll(ImageObj.decodeFromServer(jsonArr));
-                } catch (JSONException e) {e.printStackTrace();}
-            }
-
-            return intentData;
-        }
+    /**
+     * This is used to parse the Result generated from this Picker.
+     * It gives you a neatly formatted object through which you can
+     * retrieve all the information you need
+     *
+     */
+    public static ResultData getResultData(Intent data){
+        return ResultDataBuilder.parseResult(data);
     }
 
-
-    //Use this to build intent for calling this class
+    /**
+     * THis is the main Builder to build an intent object to call this library
+     */
     public static class IntentBuilder{
-        private static String INTENT_SELECTMULTIPLE = "selectmultiple";
-
-        IntentData intentData = new IntentData();
-
+        Configuration config = new Configuration();
         public IntentBuilder(){};
 
+        /**
+         * Select multiple media or single media
+         */
         public IntentBuilder selectMultiple(boolean selectMultiple) {
-            intentData.selectMultiple = selectMultiple;
+            config.setSelectMultiple(selectMultiple);
             return this;
         }
 
+        /**
+         * Generate Intent with selected parameters
+         */
         public Intent build(Context context){
-            Intent intent = new Intent(context, FolderActivity.class);
-            intent.putExtra(INTENT_SELECTMULTIPLE, intentData.selectMultiple);
-            return intent;
-        }
-
-        //Use this to parse returned data
-        protected static IntentData parseResult(Intent data) {
-            IntentData intentData = new IntentData();
-
-            if(data.hasExtra(IntentBuilder.INTENT_SELECTMULTIPLE)){
-                intentData.selectMultiple = data.getBooleanExtra(IntentBuilder.INTENT_SELECTMULTIPLE, false);
-            }
-
-
-            return intentData;
-        }
-
-        //Main data object that is created with this builder
-        public static class IntentData{
-            private boolean selectMultiple = false;//show invite Dialog on open
+            return config.build(context);
         }
     }
 }

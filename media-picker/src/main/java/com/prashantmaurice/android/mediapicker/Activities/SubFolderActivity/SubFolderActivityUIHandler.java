@@ -4,7 +4,7 @@ import android.view.View;
 import android.widget.GridView;
 import android.widget.TextView;
 
-import com.prashantmaurice.android.mediapicker.Models.ImageObj;
+import com.prashantmaurice.android.mediapicker.Models.MImageObj;
 import com.prashantmaurice.android.mediapicker.R;
 import com.prashantmaurice.android.mediapicker.Utils.SelectionController;
 
@@ -75,7 +75,7 @@ public class SubFolderActivityUIHandler {
     public void setTitle(String title){
         viewHolder.tv_title.setText(title);
     }
-    public void setData(List<ImageObj> foldersList){
+    public void setData(List<MImageObj> foldersList){
         adapter.setData(foldersList);
         adapter.notifyDataSetChanged();
     }

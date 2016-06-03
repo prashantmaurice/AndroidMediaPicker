@@ -1,19 +1,20 @@
 package com.prashantmaurice.android.mediapicker.Activities.MainFolderActivity;
 
 import android.Manifest;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 
-import com.prashantmaurice.android.mediapicker.MediaPicker;
-import com.prashantmaurice.android.mediapicker.Models.FolderObj;
-import com.prashantmaurice.android.mediapicker.Models.ImageObj;
+import com.prashantmaurice.android.mediapicker.Models.MFolderObj;
+import com.prashantmaurice.android.mediapicker.Models.MImageObj;
 import com.prashantmaurice.android.mediapicker.R;
+import com.prashantmaurice.android.mediapicker.ExternalInterface.ResultData;
+import com.prashantmaurice.android.mediapicker.ExternalInterface.ResultDataBuilder;
 import com.prashantmaurice.android.mediapicker.Utils.Constants;
 import com.prashantmaurice.android.mediapicker.Utils.Logg;
 import com.prashantmaurice.android.mediapicker.Utils.PermissionController;
@@ -58,8 +59,8 @@ public class FolderActivity extends AppCompatActivity implements android.support
         });
     }
 
-    private void setFolderData(List<FolderObj> folders) {
-        List<FolderObj> list = new ArrayList<>();
+    private void setFolderData(List<MFolderObj> folders) {
+        List<MFolderObj> list = new ArrayList<>();
         list.addAll(folders);
         uiHandler.setData(list);
     }
@@ -76,9 +77,8 @@ public class FolderActivity extends AppCompatActivity implements android.support
         if(requestCode == Constants.RequestCodes.FolderActivity.REQUEST_SUBFOLDER){
             switch (resultCode){
                 case RESULT_OK:
-                    MediaPicker.ResultParser.ResultData data2 = new MediaPicker.ResultParser.ResultData();
-                    data2.setSelectedPics(selectionController.getSelectedPics());
-                    setResult(RESULT_OK, data2.build());
+                    ResultData data2 = ResultDataBuilder.getDataForPics(selectionController.getSelectedPics());
+                    setResult(RESULT_OK, ResultDataBuilder.toIntent(data2));
                     finish();
                     break;
                 case RESULT_CANCELED:
@@ -93,11 +93,10 @@ public class FolderActivity extends AppCompatActivity implements android.support
         if(requestCode == Constants.RequestCodes.FolderActivity.REQUEST_CAMERA){
             switch (resultCode){
                 case RESULT_OK:
-                    MediaPicker.ResultParser.ResultData data2 = new MediaPicker.ResultParser.ResultData();
-                    List<ImageObj> list = new ArrayList<>();
-                    list.add(ImageObj.initializeFromUri(cameraURI));
-                    data2.setSelectedPics(list);
-                    setResult(RESULT_OK, data2.build());
+                    List<MImageObj> list = new ArrayList<>();
+                    list.add(MImageObj.initializeFromUri(cameraURI));
+                    ResultData data2 = ResultDataBuilder.getDataForPics(list);
+                    setResult(RESULT_OK, ResultDataBuilder.toIntent(data2));
                     finish();
                     break;
                 case RESULT_CANCELED: break;
@@ -123,7 +122,7 @@ public class FolderActivity extends AppCompatActivity implements android.support
     public void onLoadFinished(android.support.v4.content.Loader<Cursor> loader, Cursor c) {
         Logg.d(TAG,"onLoadFinished");
 
-        Map<String, FolderObj> folders = new HashMap<>();
+        Map<String, MFolderObj> folders = new HashMap<>();
 
         c.moveToFirst();
         while (!c.isAfterLast()) {
@@ -132,24 +131,24 @@ public class FolderActivity extends AppCompatActivity implements android.support
 
             if(!folders.containsKey(tempDir)){
 
-                FolderObj folderObj = new FolderObj(tempDir);
+                MFolderObj MFolderObj = new MFolderObj(tempDir);
 
                 //Set am imageObj as latest one
-                ImageObj imageObj = new ImageObj(fullName);
-                imageObj.setId(c.getLong(1));
-                folderObj.setLatestImageObj(imageObj);
+                MImageObj MImageObj = new MImageObj(fullName);
+                MImageObj.setId(c.getLong(1));
+                MFolderObj.setLatestMImageObj(MImageObj);
 
-                folders.put(tempDir,folderObj);
+                folders.put(tempDir, MFolderObj);
             }
 
-            FolderObj folderObj = folders.get(tempDir);
-            folderObj.setItemCount(folderObj.getItemCount()+1);
+            MFolderObj MFolderObj = folders.get(tempDir);
+            MFolderObj.setItemCount(MFolderObj.getItemCount()+1);
             c.moveToNext();
         }
 
-        List<FolderObj> resultIAV = new ArrayList<>();
-        Iterator<FolderObj> i = folders.values().iterator();
-        FolderObj next;
+        List<MFolderObj> resultIAV = new ArrayList<>();
+        Iterator<MFolderObj> i = folders.values().iterator();
+        MFolderObj next;
         while(i.hasNext()){
             next = i.next();
             resultIAV.add(next);

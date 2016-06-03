@@ -6,7 +6,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.prashantmaurice.android.mediapicker.Models.FolderObj;
+import com.prashantmaurice.android.mediapicker.Models.MFolderObj;
 import com.prashantmaurice.android.mediapicker.R;
 import com.prashantmaurice.android.mediapicker.Utils.BitmapLoaderController;
 import com.prashantmaurice.android.mediapicker.Utils.Logg;
@@ -31,10 +31,10 @@ public class FolderViewBuilder {
                 
     }
 
-    public static View getView(Activity activity, FolderObj folderObj){
+    public static View getView(Activity activity, MFolderObj MFolderObj){
         View view = getView(activity);
         ViewHolder holder = (ViewHolder) view.getTag();
-        holder.inflateData(folderObj);
+        holder.inflateData(MFolderObj);
         return view;
     }
 
@@ -56,11 +56,11 @@ public class FolderViewBuilder {
 
 
 
-        public void inflateData(final FolderObj folderObj){
-            Logg.d(TAG, "Inflating data in FolderObj view : "+folderObj.getName());
-            tv_foldername.setText(folderObj.getName());
-            tv_foldernum.setText("" + folderObj.getItemCount());
-            if(folderObj.getLatestImgObj()!=null) BitmapLoaderController.getInstance().loadImage(folderObj.getLatestImgObj(),imageview, activity);
+        public void inflateData(final MFolderObj MFolderObj){
+            Logg.d(TAG, "Inflating data in FolderObj view : "+ MFolderObj.getName());
+            tv_foldername.setText(MFolderObj.getName());
+            tv_foldernum.setText("" + MFolderObj.getItemCount());
+            if(MFolderObj.getLatestImgObj()!=null) BitmapLoaderController.getInstance().loadImage(MFolderObj.getLatestImgObj(),imageview, activity);
         }
 
         public void setOnClickListener(SingleClickListener listener) {

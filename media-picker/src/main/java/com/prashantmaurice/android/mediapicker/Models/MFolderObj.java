@@ -9,15 +9,15 @@ import java.util.ArrayList;
 /**
  * Created by maurice on 02/06/16.
  */
-public class FolderObj {
+public class MFolderObj {
 
     private String directory = "Dummy";
     private int itemCount = 0;
-    private ImageObj latestImageObj;
+    private MImageObj latestMImageObj;
 
 
-    public FolderObj(){}
-    public FolderObj(String directory){
+    public MFolderObj(){}
+    public MFolderObj(String directory){
         this.directory = directory;
     }
 
@@ -41,8 +41,8 @@ public class FolderObj {
         this.itemCount = itemCount;
     }
 
-    public static FolderObj decodeFromServer(JSONObject obj){
-        FolderObj activityObject = new FolderObj();
+    public static MFolderObj decodeFromServer(JSONObject obj){
+        MFolderObj activityObject = new MFolderObj();
         try {
             activityObject.directory = (obj.has("directory"))?obj.getString("directory"):null;
         } catch (JSONException e) {
@@ -52,8 +52,8 @@ public class FolderObj {
     }
 
 
-    public static ArrayList<FolderObj> decodeFromServer(JSONArray obj){
-        ArrayList<FolderObj> list = new ArrayList<>();
+    public static ArrayList<MFolderObj> decodeFromServer(JSONArray obj){
+        ArrayList<MFolderObj> list = new ArrayList<>();
         for(int i=0;i<obj.length();i++){
             try {
                 list.add(decodeFromServer(obj.getJSONObject(i)));
@@ -72,11 +72,11 @@ public class FolderObj {
         return obj;
     }
 
-    public void setLatestImageObj(ImageObj latestImageObj) {
-        this.latestImageObj = latestImageObj;
+    public void setLatestMImageObj(MImageObj latestMImageObj) {
+        this.latestMImageObj = latestMImageObj;
     }
 
-    public ImageObj getLatestImgObj() {
-        return latestImageObj;
+    public MImageObj getLatestImgObj() {
+        return latestMImageObj;
     }
 }

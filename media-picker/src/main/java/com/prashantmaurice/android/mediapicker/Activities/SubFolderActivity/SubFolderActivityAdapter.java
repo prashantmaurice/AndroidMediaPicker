@@ -4,7 +4,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
-import com.prashantmaurice.android.mediapicker.Models.ImageObj;
+import com.prashantmaurice.android.mediapicker.Models.MImageObj;
 import com.prashantmaurice.android.mediapicker.Utils.SelectionController;
 import com.prashantmaurice.android.mediapicker.Utils.SingleClickListener;
 import com.prashantmaurice.android.mediapicker.Views.ImageViewBuilder;
@@ -16,7 +16,7 @@ import java.util.List;
  * Created by maurice on 01/09/15.
  */
 public class SubFolderActivityAdapter extends BaseAdapter {
-    private final List<ImageObj> folders = new ArrayList<>();
+    private final List<MImageObj> folders = new ArrayList<>();
     private final SubFolderActivity activity;
 
     public SubFolderActivityAdapter(SubFolderActivity activity) {
@@ -29,7 +29,7 @@ public class SubFolderActivityAdapter extends BaseAdapter {
     }
 
     @Override
-    public ImageObj getItem(int position) {
+    public MImageObj getItem(int position) {
         return folders.get(position);
     }
 
@@ -54,18 +54,18 @@ public class SubFolderActivityAdapter extends BaseAdapter {
 
 
         //set view
-        final ImageObj imageObj = folders.get(position);
-        holder.loadImage(imageObj);
+        final MImageObj MImageObj = folders.get(position);
+        holder.loadImage(MImageObj);
         holder.setOnClickListener(new SingleClickListener() {
             @Override
             public void onSingleClick(View view) {
-                SelectionController.getInstance().toggle(imageObj);
+                SelectionController.getInstance().toggle(MImageObj);
                 notifyDataSetChanged();
                 activity.refreshActionbarState();
             }
         });
-        if(SelectionController.getInstance().isSelected(imageObj)){
-            holder.setSelected(SelectionController.getInstance().getSelectNumber(imageObj));
+        if(SelectionController.getInstance().isSelected(MImageObj)){
+            holder.setSelected(SelectionController.getInstance().getSelectNumber(MImageObj));
         }else{
             holder.setUnSelected();
         }
@@ -73,7 +73,7 @@ public class SubFolderActivityAdapter extends BaseAdapter {
         return view;
     }
 
-    public void setData(List<ImageObj> data) {
+    public void setData(List<MImageObj> data) {
         folders.clear();
         folders.addAll(data);
     }
