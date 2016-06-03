@@ -8,12 +8,12 @@ ext {
     libraryName = 'Media Picker'
     artifact = 'media-picker'
 
-    libraryDescription = 'A Dummy Picker'
+    libraryDescription = 'A simple Media Picker'
 
     siteUrl = 'https://github.com/prashantmaurice/AndroidMediaPicker'
     gitUrl = 'https://github.com/prashantmaurice/AndroidMediaPicker.git'
 
-    libraryVersion = '0.0.0.2'
+    libraryVersion = '0.0.0.3'
 
     developerId = 'prashantmaurice'
     developerName = 'Prashant Maurice'
@@ -32,7 +32,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 22
         versionCode 1
-        versionName "0.0.0.2"
+        versionName "0.0.0.3"
     }
     buildTypes {
         release {
