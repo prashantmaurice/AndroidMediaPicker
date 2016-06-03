@@ -51,7 +51,13 @@ public class SubFolderActivity extends AppCompatActivity implements android.supp
 
     }
 
-//    @Override
+    @Override
+    public void onBackPressed() {
+        setResult(SubFolderActivity.RESULT_BACKPRESSED);
+        finish();
+    }
+
+    //    @Override
 //    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 //        permissionController.onRequestPermissionsResult(requestCode,permissions,grantResults);
 //    }
@@ -77,7 +83,7 @@ public class SubFolderActivity extends AppCompatActivity implements android.supp
 
             if(intentData.folderPath.equals(tempDir)){
                 ImageObj imageObj = new ImageObj(fullName);
-                imageObj.id = c.getLong(1);
+                imageObj.setId(c.getLong(1));
                 images.add(imageObj);
             }
 

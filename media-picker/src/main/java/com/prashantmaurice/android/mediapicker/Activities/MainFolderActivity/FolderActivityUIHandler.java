@@ -27,6 +27,7 @@ public class FolderActivityUIHandler {
 
     private void initializeViews() {
         viewHolder.btn_back = folderActivity.findViewById(R.id.btn_back);
+        viewHolder.btn_camera = folderActivity.findViewById(R.id.btn_camera);
         viewHolder.gridView = (GridView) folderActivity.findViewById(R.id.gridView);
 
         initializeGridView(viewHolder.gridView);
@@ -45,6 +46,12 @@ public class FolderActivityUIHandler {
                 folderActivity.finish();
             }
         });
+        viewHolder.btn_camera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                folderActivity.captureFromCamera();
+            }
+        });
     }
 
     public void setData(List<FolderObj> foldersList){
@@ -55,7 +62,7 @@ public class FolderActivityUIHandler {
 
     //Main View Holder for all the views in this activity
     class ViewHolder{
-        View btn_back;
+        View btn_back, btn_camera;
         GridView gridView;
     }
 }

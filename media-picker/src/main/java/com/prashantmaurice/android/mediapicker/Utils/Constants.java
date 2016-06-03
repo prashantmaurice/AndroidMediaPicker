@@ -8,6 +8,7 @@ public class Constants {
     public static class RequestCodes{
         public static class FolderActivity{
             public static int REQUEST_SUBFOLDER = 1002;
+            public static int REQUEST_CAMERA = 1003;
         }
         public static class PermissionController{
             static final int RESUEST_PERMISSION = 2002;

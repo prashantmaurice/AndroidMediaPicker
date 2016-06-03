@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:orientation="horizontal"
-        android:background="@color/ColorPrimary"
+        android:background="@color/ActionBar_background"
         android:id="@+id/each_chat_profile_top"
         android:gravity="center_vertical"
         android:visibility="visible">
@@ -64,7 +64,7 @@
                     android:text="Folders"
                     android:singleLine="true"
                     android:id="@+id/tv_eachchat_title"
-                    android:textColor="#ffffffff"
+                    android:textColor="@color/ActionBar_text"
                     android:textSize="18dp"
                     android:gravity="center_vertical" />
             </LinearLayout>
@@ -79,7 +79,8 @@
             android:layout_centerVertical="true"
             app:mrl_rippleDuration="300"
             app:mrl_rippleOverlay="true"
-            app:mrl_rippleColor="#ffffff">
+            app:mrl_rippleColor="#ffffff"
+            android:id="@+id/btn_camera">
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -87,7 +88,7 @@
                 android:layout_alignParentRight="false"
                 android:layout_toLeftOf="@+id/civ_eachchat_pic"
                 android:background="#00000000"
-                android:src="@drawable/abc_ic_menu_moreoverflow_mtrl_alpha"
+                android:src="@android:drawable/ic_menu_camera"
                 android:visibility="visible"
                 android:paddingTop="4dp"
                 android:paddingLeft="10dp"

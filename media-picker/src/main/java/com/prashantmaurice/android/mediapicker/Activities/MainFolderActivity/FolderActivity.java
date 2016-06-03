@@ -18,6 +18,8 @@ import com.prashantmaurice.android.mediapicker.Utils.Constants;
 import com.prashantmaurice.android.mediapicker.Utils.Logg;
 import com.prashantmaurice.android.mediapicker.Utils.PermissionController;
 import com.prashantmaurice.android.mediapicker.Utils.SelectionController;
+import com.prashantmaurice.android.mediapicker.Utils.ToastMain;
+import com.prashantmaurice.android.mediapicker.Utils.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,8 +34,7 @@ public class FolderActivity extends AppCompatActivity implements android.support
     FolderActivityUIHandler uiHandler;
     PermissionController permissionController;
     SelectionController selectionController;
-    List<FolderObj> folder = new ArrayList<>();
-
+    Uri cameraURI;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,7 +87,20 @@ public class FolderActivity extends AppCompatActivity implements android.support
                     break;
                 case RESULT_BACKPRESSED:
                     break;
+            }
+        }
 
+        if(requestCode == Constants.RequestCodes.FolderActivity.REQUEST_CAMERA){
+            switch (resultCode){
+                case RESULT_OK:
+                    MediaPicker.ResultParser.ResultData data2 = new MediaPicker.ResultParser.ResultData();
+                    List<ImageObj> list = new ArrayList<>();
+                    list.add(ImageObj.initializeFromUri(cameraURI));
+                    data2.setSelectedPics(list);
+                    setResult(RESULT_OK, data2.build());
+                    finish();
+                    break;
+                case RESULT_CANCELED: break;
             }
         }
     }
@@ -122,7 +136,7 @@ public class FolderActivity extends AppCompatActivity implements android.support
 
                 //Set am imageObj as latest one
                 ImageObj imageObj = new ImageObj(fullName);
-                imageObj.id = c.getLong(1);
+                imageObj.setId(c.getLong(1));
                 folderObj.setLatestImageObj(imageObj);
 
                 folders.put(tempDir,folderObj);
@@ -149,4 +163,13 @@ public class FolderActivity extends AppCompatActivity implements android.support
         Logg.d(TAG,"onLoaderReset");
     }
 
+    public void captureFromCamera() {
+        Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+        cameraURI = Utils.FileStorage.getOutputMediaFileUri();
+        if(cameraURI ==null){
+            ToastMain.showSmarterToast(this,null,"Error storing image");return;
+        }
+        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, cameraURI);
+        startActivityForResult(cameraIntent, Constants.RequestCodes.FolderActivity.REQUEST_CAMERA);
+    }
 }

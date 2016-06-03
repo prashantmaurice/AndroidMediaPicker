@@ -2,4 +2,9 @@
 <resources>
     <color name="ColorPrimary">#00bcd4</color>
     <color name="ColorPrimaryDark">#008a9e</color>
+
+
+    <!-- Main Folder Options -->
+    <color name="ActionBar_background">#ececec</color>
+    <color name="ActionBar_text">#283544</color>
 </resources>

@@ -16,7 +16,7 @@ import java.util.List;
 public class ImageObj {
 
     private String path = "Dummy";
-    public long id;
+    private long id;
 
 
     public ImageObj(){}
@@ -27,13 +27,19 @@ public class ImageObj {
     public String getPath() {
         return ""+path;
     }
-
     public long getId() {
         return id;
     }
+    public void setPath(String path) {
+        this.path = path;
+    }
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public Uri getURI(){
-        return Uri.fromFile(new File("/document/image:"+id));
+        if(id!=0) return Uri.fromFile(new File("/document/image:"+id));
+        return Uri.fromFile(new File(getPath()));
     }
 
     public static ImageObj decodeFromServer(JSONObject obj){
@@ -84,4 +90,9 @@ public class ImageObj {
         return false;
     }
 
+    public static ImageObj initializeFromUri(Uri uri) {
+        ImageObj imageObj = new ImageObj();
+        imageObj.setPath(uri.getPath());
+        return imageObj;
+    }
 }
