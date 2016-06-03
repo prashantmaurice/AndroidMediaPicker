@@ -38,7 +38,7 @@ public class BitmapLoaderController {
             imageview.setImageResource(R.drawable.empty);
             BitmapWorkerTask task = new BitmapWorkerTask(imageview,activity);
 
-            //remove any pending tasks
+            //remove any pending image load tasks
             if(imageview.getTag(R.string.tag_bitmaploadertask)!=null){
                 BitmapWorkerTask previoustask = (BitmapWorkerTask) imageview.getTag(R.string.tag_bitmaploadertask);
                 previoustask.cancel(true);
