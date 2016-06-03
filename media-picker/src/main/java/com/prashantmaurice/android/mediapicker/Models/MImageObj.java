@@ -1,6 +1,7 @@
 package com.prashantmaurice.android.mediapicker.Models;
 
 import android.net.Uri;
+import android.provider.MediaStore;
 
 import com.prashantmaurice.android.mediapicker.ExternalInterface.ResultDataBuilder;
 import com.prashantmaurice.android.mediapicker.ExternalInterface.SelectionObject;
@@ -9,7 +10,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,8 +41,10 @@ public class MImageObj {
     }
 
     public Uri getURI(){
-        if(id!=0) return Uri.fromFile(new File("/document/image:"+id));
-        return Uri.fromFile(new File(getPath()));
+        return Uri.withAppendedPath( MediaStore.Images.Media.EXTERNAL_CONTENT_URI, Long.toString(id));
+//        return Uri.parse("content://com.android.providers.media.documents/document/image%3A35540");
+//        if(id!=0) return Uri.fromFile(new File("/document/image:"+id));
+//        return Uri.fromFile(new File(getPath()));
     }
 
     public static MImageObj decodeFromServer(JSONObject obj){

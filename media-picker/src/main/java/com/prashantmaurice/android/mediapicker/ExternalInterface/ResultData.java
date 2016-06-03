@@ -1,6 +1,7 @@
 package com.prashantmaurice.android.mediapicker.ExternalInterface;
 
 import android.content.Intent;
+import android.net.Uri;
 
 import com.prashantmaurice.android.mediapicker.Models.MImageObj;
 
@@ -23,5 +24,11 @@ public class ResultData {
      */
     public List<SelectionObject> getSelectedPics() {
         return selectedObjs;
+    }
+
+    public List<Uri> getSelectedUri() {
+        List<Uri> uris = new ArrayList<>();
+        for(SelectionObject obj : selectedObjs) uris.add(obj.getUri());
+        return uris;
     }
 }
