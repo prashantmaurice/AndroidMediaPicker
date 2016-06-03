@@ -112,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(200, 200);
         lp.setMargins(0, 0, 10, 0);
         imageView.setLayoutParams(lp);
+        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         imageView.setImageBitmap(getImage(image));
         return imageView;
     }
