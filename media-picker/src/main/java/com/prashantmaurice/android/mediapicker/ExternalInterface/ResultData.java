@@ -8,12 +8,12 @@ import com.prashantmaurice.android.mediapicker.Models.MImageObj;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
+/**`
  * This is the object that is generated from data object coming
  * from {@link android.app.Activity#onActivityResult(int, int, Intent)}
  */
 public class ResultData {
-    List<SelectionObject> selectedObjs = new ArrayList<>();
+    List<SelectedMedia> selectedObjs = new ArrayList<>();
 
     /**
      * Returns a list of Selected Objects. There are helper functions
@@ -22,13 +22,19 @@ public class ResultData {
      *
      * @return list of {@link MImageObj}
      */
-    public List<SelectionObject> getSelectedPics() {
+    public List<SelectedMedia> getSelectedPics() {
         return selectedObjs;
     }
 
-    public List<Uri> getSelectedUri() {
+    /**
+     * Return originalUri of media that is selected. You can access bitmaps from these using
+     *
+     */
+    public List<Uri> getSelectedOriginalUri() {
         List<Uri> uris = new ArrayList<>();
-        for(SelectionObject obj : selectedObjs) uris.add(obj.getUri());
+        for(SelectedMedia obj : selectedObjs) uris.add(obj.getOriginalUri());
         return uris;
     }
+
+
 }

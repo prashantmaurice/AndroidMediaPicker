@@ -2,8 +2,14 @@ package com.prashantmaurice.android.mediapicker.ExternalInterface;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.prashantmaurice.android.mediapicker.Activities.MainFolderActivity.FolderActivity;
+import com.prashantmaurice.android.mediapicker.Utils.Settings;
+
+import static com.prashantmaurice.android.mediapicker.MediaPicker.From;
+import static com.prashantmaurice.android.mediapicker.MediaPicker.Pick;
 
 /**
  * Main config object that is used to call our library.
@@ -11,28 +17,71 @@ import com.prashantmaurice.android.mediapicker.Activities.MainFolderActivity.Fol
  * to modify UI/UX accordingly
  */
 
-public class Configuration {
-    private static String INTENT_SELECTMULTIPLE = "selectmultiple";
+public class Configuration implements Parcelable {
+    private static String INTENT_CONFIGURABLE = "maindata";
+
     private boolean selectMultiple = false;//show invite Dialog on open
+    private int maximumCount = Settings.DEFAULT_MAXCOUNT;//default
+    private Pick pick = Pick.IMAGE;
+    private From from = From.GALLERY_AND_CAMERA;
 
-    public Intent build(Context context){
-        Intent intent = new Intent(context, FolderActivity.class);
-        intent.putExtra(INTENT_SELECTMULTIPLE, selectMultiple);
-        return intent;
+
+    public Configuration(){}
+
+    public void setPick(Pick pick) {
+        this.pick = pick;
     }
-
+    public void setFrom(From from) {
+        this.from = from;
+    }
     public void setSelectMultiple(boolean selectMultiple) {
         this.selectMultiple = selectMultiple;
     }
 
-    protected static Configuration parseResult(Intent data) {
-        Configuration configuration = new Configuration();
-
-        if(data.hasExtra(INTENT_SELECTMULTIPLE)){
-            configuration.selectMultiple = data.getBooleanExtra(INTENT_SELECTMULTIPLE, false);
-        }
-
-
-        return configuration;
+    public void setMaximumCount(int maximumCount) {
+        this.maximumCount = maximumCount;
     }
+    public int getMaximumCount() {
+        return this.maximumCount;
+    }
+
+    /** Parsable logic */
+    public Intent build(Context context){
+        Intent intent = new Intent(context, FolderActivity.class);
+        intent.putExtra(INTENT_CONFIGURABLE, this);
+        return intent;
+    }
+    public static Configuration parseResult(Intent data) {
+        if(!data.hasExtra(INTENT_CONFIGURABLE)) return new Configuration();
+        else return (Configuration) data.getSerializableExtra(INTENT_CONFIGURABLE);
+    }
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(maximumCount);
+        dest.writeInt(selectMultiple?1:0);
+    }
+
+    public Configuration(Parcel parcel) {
+        maximumCount = parcel.readInt();
+        selectMultiple = parcel.readInt()==1;
+    }
+
+    public static final Creator<Configuration> CREATOR = new Creator<Configuration>() {
+        @Override
+        public Configuration[] newArray(int size) {
+            return new Configuration[size];
+        }
+        @Override
+        public Configuration createFromParcel(Parcel source) {
+            return new Configuration(source);
+        }
+    };
+
+
+
 }

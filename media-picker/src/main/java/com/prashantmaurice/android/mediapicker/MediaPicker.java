@@ -11,6 +11,8 @@ import com.prashantmaurice.android.mediapicker.ExternalInterface.ResultDataBuild
  * This is the main Interface to use this library. Don't call any other activity directly
  */
 public class MediaPicker {
+    public enum Pick{IMAGE}
+    public enum From{GALLERY_AND_CAMERA}
 
     /**
      * This is used to parse the Result generated from this Picker.
@@ -36,6 +38,31 @@ public class MediaPicker {
             config.setSelectMultiple(selectMultiple);
             return this;
         }
+
+        /**
+         * Select multiple media or single media
+         */
+        public IntentBuilder setMaximumCount(int maxCount) {
+            config.setMaximumCount(maxCount);
+            return this;
+        }
+
+        /**
+         * Pick which kind of media
+         */
+        public IntentBuilder pick(Pick pick) {
+            config.setPick(pick);
+            return this;
+        }
+
+        /**
+         * Pick media from where
+         */
+        public IntentBuilder from(From maxCount) {
+            config.setFrom(maxCount);
+            return this;
+        }
+
 
         /**
          * Generate Intent with selected parameters

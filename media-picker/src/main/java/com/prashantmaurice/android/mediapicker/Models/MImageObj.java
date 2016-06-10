@@ -4,7 +4,7 @@ import android.net.Uri;
 import android.provider.MediaStore;
 
 import com.prashantmaurice.android.mediapicker.ExternalInterface.ResultDataBuilder;
-import com.prashantmaurice.android.mediapicker.ExternalInterface.SelectionObject;
+import com.prashantmaurice.android.mediapicker.ExternalInterface.SelectedMedia;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -101,7 +101,7 @@ public class MImageObj {
         return MImageObj;
     }
 
-    public SelectionObject toImageObject(){
+    public SelectedMedia toImageObject(){
         return ResultDataBuilder.generateSelectionObject(this);
     }
 }

@@ -32,7 +32,6 @@ public class SubFolderActivity extends AppCompatActivity implements android.supp
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_subfolder);
-
         intentData = IntentBuilder.parseResult(getIntent());
         uiHandler =  new SubFolderActivityUIHandler(this);
         uiHandler.setTitle(intentData.folderName);

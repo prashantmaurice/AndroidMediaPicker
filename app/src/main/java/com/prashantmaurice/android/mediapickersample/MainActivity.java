@@ -46,7 +46,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new MediaPicker.IntentBuilder()
+                        .pick(MediaPicker.Pick.IMAGE)
+                        .from(MediaPicker.From.GALLERY_AND_CAMERA)
                         .selectMultiple(true)
+                        .setMaximumCount(5)
                         .build(MainActivity.this);
                 startActivityForResult(intent, REQUEST_PICK_MULTIPLE);
             }
@@ -75,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
             switch (requestCode){
                 case REQUEST_PICK_MULTIPLE:
                     ResultData dataObject = MediaPicker.getResultData(data);
-                    List<Uri> picUris = dataObject.getSelectedUri();
+                    List<Uri> picUris = dataObject.getSelectedOriginalUri();
                     addImagesToThegallery(picUris);
                     if(picUris.size()>0){
                         Uri uri = picUris.get(0);

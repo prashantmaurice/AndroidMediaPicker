@@ -1,6 +1,7 @@
 package com.prashantmaurice.android.mediapicker.Utils;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Environment;
 import android.support.annotation.Nullable;
@@ -52,6 +53,31 @@ public class Utils {
         public static void show(Context context, String detailedText) {
             Toast.makeText(context,detailedText, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    //
+    public static Bitmap createScaledBitmap(Bitmap bm, int maxSize) {
+        int width = bm.getWidth();
+        int height = bm.getHeight();
+
+        if (width > height) {
+            // landscape
+            float ratio = (float) width / maxSize;
+            width = maxSize;
+            height = (int)(height / ratio);
+        } else if (height > width) {
+            // portrait
+            float ratio = (float) height / maxSize;
+            height = maxSize;
+            width = (int)(width / ratio);
+        } else {
+            // square
+            height = maxSize;
+            width = maxSize;
+        }
+
+        bm = Bitmap.createScaledBitmap(bm, width, height, true);
+        return bm;
     }
 
 

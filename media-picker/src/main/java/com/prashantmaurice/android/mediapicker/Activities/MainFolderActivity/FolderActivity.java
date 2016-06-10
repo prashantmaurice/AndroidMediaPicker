@@ -10,11 +10,13 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 
+import com.prashantmaurice.android.mediapicker.ExternalInterface.Configuration;
+import com.prashantmaurice.android.mediapicker.ExternalInterface.ResultData;
+import com.prashantmaurice.android.mediapicker.ExternalInterface.ResultDataBuilder;
+import com.prashantmaurice.android.mediapicker.Utils.SingleTon;
 import com.prashantmaurice.android.mediapicker.Models.MFolderObj;
 import com.prashantmaurice.android.mediapicker.Models.MImageObj;
 import com.prashantmaurice.android.mediapicker.R;
-import com.prashantmaurice.android.mediapicker.ExternalInterface.ResultData;
-import com.prashantmaurice.android.mediapicker.ExternalInterface.ResultDataBuilder;
 import com.prashantmaurice.android.mediapicker.Utils.Constants;
 import com.prashantmaurice.android.mediapicker.Utils.Logg;
 import com.prashantmaurice.android.mediapicker.Utils.PermissionController;
@@ -30,21 +32,27 @@ import java.util.Map;
 
 import static com.prashantmaurice.android.mediapicker.Activities.SubFolderActivity.SubFolderActivity.RESULT_BACKPRESSED;
 
+/**
+ *
+ *
+ * This is the core Base Activity
+ */
 public class FolderActivity extends AppCompatActivity implements android.support.v4.app.LoaderManager.LoaderCallbacks<Cursor> {
     String TAG = "FOLDERACTIVITY";
     FolderActivityUIHandler uiHandler;
     PermissionController permissionController;
     SelectionController selectionController;
     Uri cameraURI;
+    SingleTon singleTon;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Logg.d(TAG,"onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_folder);
-
+        singleTon = SingleTon.recreateInstance(Configuration.parseResult(getIntent()));
         uiHandler =  new FolderActivityUIHandler(this);
-        selectionController = SelectionController.getInstance();
+        selectionController = SingleTon.getInstance().getSelectionController();
         permissionController = new PermissionController(this);
         permissionController.checkPermissionAndRun(Manifest.permission.WRITE_EXTERNAL_STORAGE, new PermissionController.TaskCallback(){
             @Override

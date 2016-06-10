@@ -39,14 +39,14 @@ public class ResultDataBuilder {
         }
         return null;
     }
-    public static List<SelectionObject> generateSelectionObject(List<MImageObj> objArr){
-        List<SelectionObject> list = new ArrayList<>();
+    public static List<SelectedMedia> generateSelectionObject(List<MImageObj> objArr){
+        List<SelectedMedia> list = new ArrayList<>();
         for(MImageObj obj : objArr) list.add(generateSelectionObject(obj));
         return list;
     }
 
-    public static SelectionObject generateSelectionObject(MImageObj obj){
-        SelectionObject selection = new SelectionObject();
+    public static SelectedMedia generateSelectionObject(MImageObj obj){
+        SelectedMedia selection = new SelectedMedia();
         selection.uri = obj.getURI();
         selection.type = Type.IMAGE;
         return selection;
@@ -57,9 +57,9 @@ public class ResultDataBuilder {
             ResultData activityObject = new ResultData();
             try {
                 JSONArray arr = obj.getJSONArray("objects");
-                ArrayList<SelectionObject> objects = new ArrayList<>();
+                ArrayList<SelectedMedia> objects = new ArrayList<>();
                 for(int i=0;i<arr.length();i++){
-                    SelectionObject ob2j = decodeSelectionObject(arr.getJSONObject(i));
+                    SelectedMedia ob2j = decodeSelectionObject(arr.getJSONObject(i));
                     if(ob2j!=null) objects.add(ob2j);
                 }
                 activityObject.selectedObjs = objects;
@@ -73,25 +73,26 @@ public class ResultDataBuilder {
             JSONObject obj = new JSONObject();
             try {
                 JSONArray objects = new JSONArray();
-                for(SelectionObject selection : resultData.getSelectedPics()) objects.put(encodeSelectionObject(selection));
+                for(SelectedMedia selection : resultData.getSelectedPics()) objects.put(encodeSelectionObject(selection));
                 obj.put("objects",objects);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
             return obj;
         }
-        private static JSONObject encodeSelectionObject(SelectionObject selection){
+        private static JSONObject encodeSelectionObject(SelectedMedia selection){
             JSONObject obj = new JSONObject();
             try {
                 obj.put("type",selection.getType().getString());
-                obj.put("uri",selection.getUri().toString());
+                obj.put("uri",selection.getOriginalUri().toString());
             } catch (JSONException e) {
                 e.printStackTrace();
             }
             return obj;
         }
-        private static @Nullable  SelectionObject decodeSelectionObject(JSONObject obj){
-            SelectionObject activityObject = new SelectionObject();
+        private static @Nullable
+        SelectedMedia decodeSelectionObject(JSONObject obj){
+            SelectedMedia activityObject = new SelectedMedia();
             try {
                 if(!obj.has("type") || !obj.has("uri")) return null;
                 else{
