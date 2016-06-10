@@ -53,7 +53,7 @@ public class Configuration implements Parcelable {
     }
     public static Configuration parseResult(Intent data) {
         if(!data.hasExtra(INTENT_CONFIGURABLE)) return new Configuration();
-        else return (Configuration) data.getSerializableExtra(INTENT_CONFIGURABLE);
+        else return (Configuration) data.getParcelableExtra(INTENT_CONFIGURABLE);
     }
     @Override
     public int describeContents() {

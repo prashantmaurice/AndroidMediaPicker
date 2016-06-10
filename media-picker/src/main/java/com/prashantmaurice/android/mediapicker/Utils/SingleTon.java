@@ -23,8 +23,9 @@ public class SingleTon {
     }
 
     public synchronized static SingleTon recreateInstance(Configuration configuration) {
-        if(sInstance==null) sInstance = new SingleTon(configuration);
-        else{
+        if(sInstance==null){
+            sInstance = new SingleTon(configuration);
+        }else{
             sInstance.reset();
             sInstance.configuration = configuration;
         }

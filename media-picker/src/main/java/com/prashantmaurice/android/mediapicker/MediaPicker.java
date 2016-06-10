@@ -12,7 +12,7 @@ import com.prashantmaurice.android.mediapicker.ExternalInterface.ResultDataBuild
  */
 public class MediaPicker {
     public enum Pick{IMAGE}
-    public enum From{GALLERY_AND_CAMERA}
+    public enum From{GALLERY_AND_CAMERA, GALLERY}
 
     /**
      * This is used to parse the Result generated from this Picker.

@@ -52,6 +52,7 @@ public class FolderActivity extends AppCompatActivity implements android.support
         setContentView(R.layout.activity_folder);
         singleTon = SingleTon.recreateInstance(Configuration.parseResult(getIntent()));
         uiHandler =  new FolderActivityUIHandler(this);
+
         selectionController = SingleTon.getInstance().getSelectionController();
         permissionController = new PermissionController(this);
         permissionController.checkPermissionAndRun(Manifest.permission.WRITE_EXTERNAL_STORAGE, new PermissionController.TaskCallback(){
