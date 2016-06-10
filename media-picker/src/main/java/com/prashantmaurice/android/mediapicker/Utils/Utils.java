@@ -19,8 +19,9 @@ public class Utils {
 
     public static class FileStorage{
         public static @Nullable Uri getOutputMediaFileUri() {
-            if(getOutputMediaFile()==null) return null;
-            return Uri.fromFile(getOutputMediaFile());
+            File output = getOutputMediaFile();
+            if(output==null) return null;
+            return Uri.fromFile(output);
         }
 
         private static File getOutputMediaFile() {

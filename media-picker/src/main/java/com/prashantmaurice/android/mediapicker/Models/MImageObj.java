@@ -3,105 +3,77 @@ package com.prashantmaurice.android.mediapicker.Models;
 import android.net.Uri;
 import android.provider.MediaStore;
 
-import com.prashantmaurice.android.mediapicker.ExternalInterface.ResultDataBuilder;
-import com.prashantmaurice.android.mediapicker.ExternalInterface.SelectedMedia;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.prashantmaurice.android.mediapicker.ExternalInterface.Type;
 
 /**
  * Created by maurice on 02/06/16.
  */
 public class MImageObj {
 
-    private String path = "Dummy";
-    private long id;
-
+    private Uri mainUri;//you can stream main image from here
+    private long mediaIdForThumbNail;//you can use this to get thumbnail Bitmap
+    private Type type;//use this to distinguish from media sources
 
     public MImageObj(){}
-    public MImageObj(String path){
-        this.path = path;
-    }
 
-    public String getPath() {
-        return ""+path;
+    public Uri getMainUri() {
+        return mainUri;
     }
-    public long getId() {
-        return id;
+    public long getThumbnailId() {
+        return mediaIdForThumbNail;
     }
-    public void setPath(String path) {
-        this.path = path;
+    public void setMainUri(Uri mainUri) {
+        this.mainUri = mainUri;
     }
-    public void setId(long id) {
-        this.id = id;
+    public void setThumbnailId(long id) {
+        this.mediaIdForThumbNail = id;
     }
-
-    public Uri getURI(){
-        return Uri.withAppendedPath( MediaStore.Images.Media.EXTERNAL_CONTENT_URI, Long.toString(id));
-//        return Uri.parse("content://com.android.providers.media.documents/document/image%3A35540");
-//        if(id!=0) return Uri.fromFile(new File("/document/image:"+id));
-//        return Uri.fromFile(new File(getPath()));
+    public Type getType() {
+        return type;
     }
-
-    public static MImageObj decodeFromServer(JSONObject obj){
-        MImageObj activityObject = new MImageObj();
-        try {
-            activityObject.path = (obj.has("path"))?obj.getString("path"):null;
-            activityObject.id = (obj.has("id"))?obj.getLong("id"):0;
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return activityObject;
+    public void setType(Type type) {
+        this.type = type;
     }
 
 
-    public static ArrayList<MImageObj> decodeFromServer(JSONArray obj){
-        ArrayList<MImageObj> list = new ArrayList<>();
-        for(int i=0;i<obj.length();i++){
-            try {
-                list.add(decodeFromServer(obj.getJSONObject(i)));
-            } catch (JSONException e) {e.printStackTrace();}
-        }
-        return list;
-    }
+//    public Uri getURI(){
+//        return Uri.withAppendedPath( MediaStore.Images.Media.EXTERNAL_CONTENT_URI, Long.toString(id));
+////        return Uri.parse("content://com.android.providers.media.documents/document/image%3A35540");
+////        if(id!=0) return Uri.fromFile(new File("/document/image:"+id));
+////        return Uri.fromFile(new File(getPath()));
+//    }
 
-    public JSONObject encode(){
-        JSONObject obj = new JSONObject();
-        try {
-            obj.put("path",path);
-            obj.put("id",id);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return obj;
-    }
-
-    public static JSONArray encode(List<MImageObj> imagesList){
-        JSONArray arr = new JSONArray();
-        for(MImageObj MImageObj : imagesList) arr.put(MImageObj.encode());
-        return arr;
-    }
 
     @Override
     public boolean equals(Object o){
         if (o instanceof MImageObj){
             MImageObj c = (MImageObj) o;
-            if (this.getId()==c.getId()) return true;
+            if (this.mainUri.getPath().equals(c.mainUri.getPath())) return true;
         }
         return false;
     }
 
-    public static MImageObj initializeFromUri(Uri uri) {
-        MImageObj MImageObj = new MImageObj();
-        MImageObj.setPath(uri.getPath());
-        return MImageObj;
+
+    public String getPath() {
+        return getMainUri().getPath();
     }
 
-    public SelectedMedia toImageObject(){
-        return ResultDataBuilder.generateSelectionObject(this);
+
+    public static class Builder{
+        public static MImageObj generateFromMediaImageCursor(long id){
+            Uri mainUri = Uri.withAppendedPath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, Long.toString(id));
+            MImageObj mImageObj = new MImageObj();
+            mImageObj.setType(Type.GALLERY_IMAGE);
+            mImageObj.setThumbnailId(id);
+            mImageObj.setMainUri(mainUri);
+            return mImageObj;
+
+        }
+        public static MImageObj generateFromCameraResult(Uri cameraURI) {
+            MImageObj mImageObj = new MImageObj();
+            mImageObj.setType(Type.CAMERA_IMAGE);
+            mImageObj.setMainUri(cameraURI);
+            return mImageObj;
+        }
     }
 }

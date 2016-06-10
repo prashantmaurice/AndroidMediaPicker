@@ -47,8 +47,9 @@ public class ResultDataBuilder {
 
     public static SelectedMedia generateSelectionObject(MImageObj obj){
         SelectedMedia selection = new SelectedMedia();
-        selection.uri = obj.getURI();
-        selection.type = Type.IMAGE;
+        selection.uri = obj.getMainUri();
+        selection.type = obj.getType();
+        selection.imageId = obj.getThumbnailId();
         return selection;
     }
 

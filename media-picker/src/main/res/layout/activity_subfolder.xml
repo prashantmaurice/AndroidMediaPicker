@@ -79,7 +79,8 @@
             android:layout_centerVertical="true"
             app:mrl_rippleDuration="300"
             app:mrl_rippleOverlay="true"
-            app:mrl_rippleColor="#ffffff">
+            app:mrl_rippleColor="#ffffff"
+            android:visibility="gone">
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"

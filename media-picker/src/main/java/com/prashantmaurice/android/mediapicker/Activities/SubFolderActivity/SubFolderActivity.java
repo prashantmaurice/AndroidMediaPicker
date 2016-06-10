@@ -81,9 +81,9 @@ public class SubFolderActivity extends AppCompatActivity implements android.supp
             String tempDir = fullName.substring(0, fullName.lastIndexOf("/"));
 
             if(intentData.folderPath.equals(tempDir)){
-                MImageObj MImageObj = new MImageObj(fullName);
-                MImageObj.setId(c.getLong(1));
-                images.add(MImageObj);
+                long id = c.getLong(1);
+                MImageObj mImageObj = MImageObj.Builder.generateFromMediaImageCursor(id);
+                images.add(mImageObj);
             }
 
             c.moveToNext();

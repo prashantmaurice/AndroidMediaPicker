@@ -42,6 +42,7 @@ public class FolderActivity extends AppCompatActivity implements android.support
     FolderActivityUIHandler uiHandler;
     PermissionController permissionController;
     SelectionController selectionController;
+    Configuration configuration;
     Uri cameraURI;
     SingleTon singleTon;
 
@@ -50,22 +51,27 @@ public class FolderActivity extends AppCompatActivity implements android.support
         Logg.d(TAG,"onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_folder);
-        singleTon = SingleTon.recreateInstance(Configuration.parseResult(getIntent()));
-        uiHandler =  new FolderActivityUIHandler(this);
+        if(savedInstanceState==null){
+            configuration = Configuration.parseResult(getIntent());
+            singleTon = SingleTon.recreateInstance(configuration);
+            uiHandler =  new FolderActivityUIHandler(this);
 
-        selectionController = SingleTon.getInstance().getSelectionController();
-        permissionController = new PermissionController(this);
-        permissionController.checkPermissionAndRun(Manifest.permission.WRITE_EXTERNAL_STORAGE, new PermissionController.TaskCallback(){
-            @Override
-            public void onGranted() {
-                getSupportLoaderManager().initLoader(1, null, FolderActivity.this);
-            }
+            selectionController = SingleTon.getInstance().getSelectionController();
+            permissionController = new PermissionController(this);
+            permissionController.checkPermissionAndRun(Manifest.permission.WRITE_EXTERNAL_STORAGE, new PermissionController.TaskCallback(){
+                @Override
+                public void onGranted() {
+                    getSupportLoaderManager().initLoader(1, null, FolderActivity.this);
+                }
 
-            @Override
-            public void onRejected() {
+                @Override
+                public void onRejected() {
 
-            }
-        });
+                }
+            });
+        }else{
+            cameraURI = Uri.parse(savedInstanceState.getString(CAMERA_URI));
+        }
     }
 
     private void setFolderData(List<MFolderObj> folders) {
@@ -102,11 +108,15 @@ public class FolderActivity extends AppCompatActivity implements android.support
         if(requestCode == Constants.RequestCodes.FolderActivity.REQUEST_CAMERA){
             switch (resultCode){
                 case RESULT_OK:
-                    List<MImageObj> list = new ArrayList<>();
-                    list.add(MImageObj.initializeFromUri(cameraURI));
-                    ResultData data2 = ResultDataBuilder.getDataForPics(list);
-                    setResult(RESULT_OK, ResultDataBuilder.toIntent(data2));
-                    finish();
+                    if(cameraURI!=null){
+                        List<MImageObj> list = new ArrayList<>();
+                        list.add(MImageObj.Builder.generateFromCameraResult(cameraURI));
+                        ResultData data2 = ResultDataBuilder.getDataForPics(list);
+                        setResult(RESULT_OK, ResultDataBuilder.toIntent(data2));
+                        finish();
+                    }else{
+                        ToastMain.showSmarterToast(this,"CameraUri is empty",null);
+                    }
                     break;
                 case RESULT_CANCELED: break;
             }
@@ -134,19 +144,20 @@ public class FolderActivity extends AppCompatActivity implements android.support
         Map<String, MFolderObj> folders = new HashMap<>();
 
         c.moveToFirst();
+
+
         while (!c.isAfterLast()) {
-            String fullName = c.getString(0);
-            String tempDir = fullName.substring(0, fullName.lastIndexOf("/"));
+            String fullPath = c.getString(0);// /storage/emulated/0/TinyStep/TinyStep Images/IMG 1439401529025.jpg
+            String tempDir = fullPath.substring(0, fullPath.lastIndexOf("/"));
 
             if(!folders.containsKey(tempDir)){
 
                 MFolderObj MFolderObj = new MFolderObj(tempDir);
 
                 //Set am imageObj as latest one
-                MImageObj MImageObj = new MImageObj(fullName);
-                MImageObj.setId(c.getLong(1));
-                MFolderObj.setLatestMImageObj(MImageObj);
-
+                long id = c.getLong(1);
+                MImageObj mImageObj = MImageObj.Builder.generateFromMediaImageCursor(id);
+                MFolderObj.setLatestMImageObj(mImageObj);
                 folders.put(tempDir, MFolderObj);
             }
 
@@ -169,6 +180,15 @@ public class FolderActivity extends AppCompatActivity implements android.support
     @Override
     public void onLoaderReset(android.support.v4.content.Loader<Cursor> loader) {
         Logg.d(TAG,"onLoaderReset");
+    }
+
+
+    static final String CAMERA_URI = "camera_uri";
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+        // Save data if activity is killed by camera/gallery
+        if(cameraURI!=null) savedInstanceState.putString(CAMERA_URI, cameraURI.toString());
+        super.onSaveInstanceState(savedInstanceState);// Always call the superclass so it can save the view hierarchy state
     }
 
     public void captureFromCamera() {

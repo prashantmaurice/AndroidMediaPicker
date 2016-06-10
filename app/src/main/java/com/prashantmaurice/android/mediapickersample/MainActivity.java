@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import com.prashantmaurice.android.mediapicker.ExternalInterface.ResultData;
+import com.prashantmaurice.android.mediapicker.ExternalInterface.SelectedMedia;
 import com.prashantmaurice.android.mediapicker.MediaPicker;
 
 import java.io.IOException;
@@ -18,6 +19,21 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+
+/**
+ *
+ *
+ * ---------------------
+ * content://com.android.providers.media.documents/document/image%3A23969
+ *
+ * BitmapFactory.Options options = new BitmapFactory.Options();
+ * InputStream inputStream = getContentResolver().openInputStream( imageUri );
+ * Bitmap bmp = BitmapFactory.decodeStream(inputStream, null, options);
+ * if( inputStream != null ) inputStream.close();
+ * ---------------------
+ *
+ *
+ */
 public class MainActivity extends AppCompatActivity {
 
     View btn_selectmultiple, btn_selectdefault;
@@ -78,19 +94,22 @@ public class MainActivity extends AppCompatActivity {
             switch (requestCode){
                 case REQUEST_PICK_MULTIPLE:
                     ResultData dataObject = MediaPicker.getResultData(data);
-                    List<Uri> picUris = dataObject.getSelectedOriginalUri();
-                    addImagesToThegallery(picUris);
-                    if(picUris.size()>0){
-                        Uri uri = picUris.get(0);
+                    List<SelectedMedia> selectedMedia = dataObject.getSelectedPics();
+
+//                    List<Uri> picUris = dataObject.getSelectedOriginalUri();
+                    addImagesToThegallery(selectedMedia);
+                    if(selectedMedia.size()>0){
+                        Uri uri = selectedMedia.get(0).getOriginalUri();// content://media/external/images/media/23969
                         Utils.showToast(this,"Picked "+uri.getPath());
                     }
-                    Utils.showToast(this,"Picked "+picUris.size()+" images");
+                    Utils.showToast(this,"Picked "+selectedMedia.size()+" images");
                     break;
                 case REQUEST_PICK_DEFAULTGALLERY:
-                    Uri uri = data.getData();
+
+                    Uri uri = data.getData();//  content://com.android.providers.media.documents/document/image%3A23969
                     List<Uri> picUris2 = new ArrayList<>();
                     picUris2.add(uri);
-                    addImagesToThegallery(picUris2);
+                    addImagesToThegalleryFromUri(picUris2);
                     Utils.showToast(this,"Picked "+uri.getPath());
             }
         }else{
@@ -98,9 +117,19 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void addImagesToThegallery(List<Uri> uriList) {
+    private void addImagesToThegallery(List<SelectedMedia> selectedMedia) {
         imageGallery.removeAllViews();
-        for (Uri image : uriList) {
+        for (SelectedMedia image : selectedMedia) {
+            try {
+                imageGallery.addView(getImageView(image));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+    private void addImagesToThegalleryFromUri(List<Uri> selectedUri) {
+        imageGallery.removeAllViews();
+        for (Uri image : selectedUri) {
             try {
                 imageGallery.addView(getImageView(image));
             } catch (IOException e) {
@@ -110,21 +139,29 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private View getImageView(Uri image) throws IOException {
+    private View getImageView(SelectedMedia selectedMedia) throws IOException {
+        if(selectedMedia.hasThumbNail()){
+            return getImageView(selectedMedia.getThumbNail(this));
+        }else{
+            return getImageView(selectedMedia.getOriginalBitmap(this));
+        }
+    }
+
+    private View getImageView(Bitmap bitmap){
         ImageView imageView = new ImageView(getApplicationContext());
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(200, 200);
         lp.setMargins(0, 0, 10, 0);
         imageView.setLayoutParams(lp);
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        imageView.setImageBitmap(getImage(image));
+        imageView.setImageBitmap(bitmap);
         return imageView;
     }
 
-    private Bitmap getImage(Uri imageUri) throws IOException {
+    private View getImageView(Uri imageUri) throws IOException {
         BitmapFactory.Options options = new BitmapFactory.Options();
         InputStream inputStream = getContentResolver().openInputStream( imageUri );
         Bitmap bmp = BitmapFactory.decodeStream(inputStream, null, options);
         if( inputStream != null ) inputStream.close();
-        return bmp;
+        return getImageView(bmp);
     }
 }
