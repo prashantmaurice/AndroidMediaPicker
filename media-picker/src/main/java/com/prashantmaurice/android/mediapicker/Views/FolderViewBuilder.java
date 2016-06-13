@@ -39,7 +39,7 @@ public class FolderViewBuilder {
     }
 
     public static class ViewHolder{
-        public View mainView;
+        public View mainView,main_cont;
         public TextView tv_foldernum,tv_foldername;
         public ImageView imageview;
 
@@ -48,6 +48,7 @@ public class FolderViewBuilder {
         public ViewHolder(View itemView, Activity activity) {
             this.activity = activity;
             mainView = itemView;
+            main_cont =  itemView.findViewById(R.id.main_cont);
             imageview = (ImageView) itemView.findViewById(R.id.imageview);
             tv_foldername = (TextView) itemView.findViewById(R.id.tv_foldername);
             tv_foldernum = (TextView) itemView.findViewById(R.id.tv_foldernum);
@@ -64,7 +65,7 @@ public class FolderViewBuilder {
         }
 
         public void setOnClickListener(SingleClickListener listener) {
-            mainView.setOnClickListener(listener);
+            main_cont.setOnClickListener(listener);
         }
     }
 }

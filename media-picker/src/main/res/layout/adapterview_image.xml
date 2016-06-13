@@ -1,38 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical">
-    <com.prashantmaurice.android.mediapicker.Views.SquareImageView
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:id="@+id/imageview"
-        android:src="@android:drawable/sym_contact_card"
-        android:scaleType="centerCrop" />
-
-    <LinearLayout
-        android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <com.balysv.materialripple.MaterialRippleLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignTop="@+id/imageview"
-        android:layout_alignBottom="@+id/imageview"
-        android:id="@+id/cont_select_overlay"
-        android:background="#7000"
-        android:layout_alignLeft="@+id/imageview"
-        android:layout_alignRight="@+id/imageview"
-        android:gravity="center">
+        android:id="@+id/main_cont"
+        app:mrl_rippleDuration="300"
+        app:mrl_rippleOverlay="true"
+        app:mrl_rippleColor="#ffffff">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <com.prashantmaurice.android.mediapicker.Views.SquareImageView
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:id="@+id/imageview"
+                android:src="@android:drawable/sym_contact_card"
+                android:scaleType="centerCrop" />
 
-        <TextView
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:text="1"
-            android:id="@+id/tv_number"
-            android:textColor="#fff"
-            android:background="@drawable/ring_white"
-            android:layout_gravity="center"
-            android:gravity="center" />
-    </LinearLayout>
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignTop="@+id/imageview"
+                android:layout_alignBottom="@+id/imageview"
+                android:id="@+id/cont_select_overlay"
+                android:background="#7000"
+                android:layout_alignLeft="@+id/imageview"
+                android:layout_alignRight="@+id/imageview"
+                android:gravity="center">
 
-</RelativeLayout>
+                <TextView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:text="1"
+                    android:id="@+id/tv_number"
+                    android:textColor="#fff"
+                    android:background="@drawable/ring_white"
+                    android:layout_gravity="center"
+                    android:gravity="center" />
+            </LinearLayout>
+
+        </RelativeLayout>
+    </com.balysv.materialripple.MaterialRippleLayout>
+</LinearLayout>

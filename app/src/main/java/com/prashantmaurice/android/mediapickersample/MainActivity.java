@@ -106,7 +106,10 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case REQUEST_PICK_DEFAULTGALLERY:
 
-                    Uri uri = data.getData();//  content://com.android.providers.media.documents/document/image%3A23969
+                    //  content://com.android.providers.media.documents/document/image%3A42617
+                    //  content://com.android.providers.media.documents/document/image%3A39853
+                    //  content://com.android.providers.media.documents/document/image%3A23969
+                    Uri uri = data.getData();
                     List<Uri> picUris2 = new ArrayList<>();
                     picUris2.add(uri);
                     addImagesToThegalleryFromUri(picUris2);

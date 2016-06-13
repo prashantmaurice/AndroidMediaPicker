@@ -37,7 +37,7 @@ public class ImageViewBuilder {
 
 
     public static class ViewHolder{
-        public View mainView, cont_select_overlay;
+        public View mainView, cont_select_overlay,main_cont;
         public ImageView imageview;
         public TextView tv_number;
 
@@ -46,6 +46,7 @@ public class ImageViewBuilder {
         public ViewHolder(View itemView, Activity activity) {
             this.activity = activity;
             mainView = itemView;
+            main_cont =  itemView.findViewById(R.id.main_cont);
             imageview = (ImageView) itemView.findViewById(R.id.imageview);
             tv_number = (TextView) itemView.findViewById(R.id.tv_number);
             cont_select_overlay = itemView.findViewById(R.id.cont_select_overlay);
@@ -73,7 +74,7 @@ public class ImageViewBuilder {
         }
 
         public void setOnClickListener(SingleClickListener listener) {
-            mainView.setOnClickListener(listener);
+            main_cont.setOnClickListener(listener);
         }
 
 
