@@ -2,10 +2,13 @@ package com.prashantmaurice.android.mediapicker;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 
 import com.prashantmaurice.android.mediapicker.ExternalInterface.Configuration;
 import com.prashantmaurice.android.mediapicker.ExternalInterface.ResultData;
 import com.prashantmaurice.android.mediapicker.ExternalInterface.ResultDataBuilder;
+
+import java.util.List;
 
 /**
  * This is the main Interface to use this library. Don't call any other activity directly
@@ -25,7 +28,7 @@ public class MediaPicker {
     }
 
     /**
-     * THis is the main Builder to build an intent object to call this library
+     * This is the main Builder to build an intent object to call this library
      */
     public static class IntentBuilder{
         Configuration config = new Configuration();
@@ -60,6 +63,14 @@ public class MediaPicker {
          */
         public IntentBuilder from(From maxCount) {
             config.setFrom(maxCount);
+            return this;
+        }
+
+        /**
+         * Set media preselected from gallery
+         */
+        public IntentBuilder setPreselectedFromGallery(List<Uri> uri){
+//            config.setPreselectedImages();
             return this;
         }
 

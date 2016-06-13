@@ -4,7 +4,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
-import com.prashantmaurice.android.mediapicker.Utils.SingleTon;
+import com.prashantmaurice.android.mediapicker.Activities.MainFolderActivity.FolderActivity;
 import com.prashantmaurice.android.mediapicker.Models.MImageObj;
 import com.prashantmaurice.android.mediapicker.Utils.SingleClickListener;
 import com.prashantmaurice.android.mediapicker.Views.ImageViewBuilder;
@@ -59,13 +59,13 @@ public class SubFolderActivityAdapter extends BaseAdapter {
         holder.setOnClickListener(new SingleClickListener() {
             @Override
             public void onSingleClick(View view) {
-                SingleTon.getInstance().getSelectionController().toggle(activity,MImageObj);
+                FolderActivity.getSelectionController().toggle(activity,MImageObj);
                 notifyDataSetChanged();
                 activity.refreshActionbarState();
             }
         });
-        if(SingleTon.getInstance().getSelectionController().isSelected(MImageObj)){
-            holder.setSelected(SingleTon.getInstance().getSelectionController().getSelectNumber(MImageObj));
+        if(FolderActivity.getSelectionController().isSelected(MImageObj)){
+            holder.setSelected(FolderActivity.getSelectionController().getSelectNumber(MImageObj));
         }else{
             holder.setUnSelected();
         }

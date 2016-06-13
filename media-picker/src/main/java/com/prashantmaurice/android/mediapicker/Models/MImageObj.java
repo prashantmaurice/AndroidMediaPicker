@@ -1,14 +1,18 @@
 package com.prashantmaurice.android.mediapicker.Models;
 
 import android.net.Uri;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.provider.MediaStore;
 
 import com.prashantmaurice.android.mediapicker.ExternalInterface.Type;
 
+import java.io.IOException;
+
 /**
  * Created by maurice on 02/06/16.
  */
-public class MImageObj {
+public class MImageObj implements Parcelable {
 
     private Uri mainUri;//you can stream main image from here
     private long mediaIdForThumbNail;//you can use this to get thumbnail Bitmap
@@ -75,5 +79,39 @@ public class MImageObj {
             mImageObj.setMainUri(cameraURI);
             return mImageObj;
         }
+    }
+
+    /** Serialization Functions */
+    private void writeObject(java.io.ObjectOutputStream out) throws IOException {
+        out.writeObject(mainUri.toString());
+        out.writeObject(mediaIdForThumbNail);
+        out.writeObject(type);
+        out.close();
+    }
+    private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
+        mainUri = Uri.parse((String) in.readObject());
+        mediaIdForThumbNail = (long) in.readObject();
+        type = (Type) in.readObject();
+        in.close();
+    }
+
+    /** Serialization Functions */
+    public static final MImageObj.Creator CREATOR = new MImageObj.Creator() {
+        public MImageObj createFromParcel(Parcel in ) { return new MImageObj(in);}
+        public MImageObj[] newArray(int size) {return new MImageObj[size];}
+    };
+    @Override
+    public int describeContents() {return 0;}
+
+    public MImageObj(Parcel in ) {
+        mainUri = Uri.parse(in.readString());
+        mediaIdForThumbNail = in.readLong();
+        type = (Type) in.readSerializable();
+    }
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(mainUri.toString());
+        dest.writeLong(mediaIdForThumbNail);
+        dest.writeSerializable(type);
     }
 }

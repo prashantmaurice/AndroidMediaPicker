@@ -25,9 +25,9 @@ public class Configuration implements Parcelable {
     private Pick pick = Pick.IMAGE;
     private From from = From.GALLERY_AND_CAMERA;
 
-
     public Configuration(){}
 
+    /** Getters and Setters */
     public void setPick(Pick pick) {
         this.pick = pick;
     }
@@ -37,7 +37,6 @@ public class Configuration implements Parcelable {
     public void setSelectMultiple(boolean selectMultiple) {
         this.selectMultiple = selectMultiple;
     }
-
     public void setMaximumCount(int maximumCount) {
         this.maximumCount = maximumCount;
     }

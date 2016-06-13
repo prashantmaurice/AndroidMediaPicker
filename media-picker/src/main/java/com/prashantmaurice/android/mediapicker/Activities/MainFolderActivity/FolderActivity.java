@@ -13,7 +13,6 @@ import android.support.v7.app.AppCompatActivity;
 import com.prashantmaurice.android.mediapicker.ExternalInterface.Configuration;
 import com.prashantmaurice.android.mediapicker.ExternalInterface.ResultData;
 import com.prashantmaurice.android.mediapicker.ExternalInterface.ResultDataBuilder;
-import com.prashantmaurice.android.mediapicker.Utils.SingleTon;
 import com.prashantmaurice.android.mediapicker.Models.MFolderObj;
 import com.prashantmaurice.android.mediapicker.Models.MImageObj;
 import com.prashantmaurice.android.mediapicker.R;
@@ -41,22 +40,29 @@ public class FolderActivity extends AppCompatActivity implements android.support
     String TAG = "FOLDERACTIVITY";
     FolderActivityUIHandler uiHandler;
     PermissionController permissionController;
-    SelectionController selectionController;
-    Configuration configuration;
     Uri cameraURI;
-    SingleTon singleTon;
+
+    //Static variables
+    static SelectionController selectionController;
+    static Configuration configuration;
+
+    public static SelectionController getSelectionController() {
+        return selectionController;
+    }
+
+    public static Configuration getConfiguration() {
+        return configuration;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Logg.d(TAG,"onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_folder);
+        uiHandler =  new FolderActivityUIHandler(this);
         if(savedInstanceState==null){
+            selectionController = SelectionController.getInstance();
             configuration = Configuration.parseResult(getIntent());
-            singleTon = SingleTon.recreateInstance(configuration);
-            uiHandler =  new FolderActivityUIHandler(this);
-
-            selectionController = SingleTon.getInstance().getSelectionController();
             permissionController = new PermissionController(this);
             permissionController.checkPermissionAndRun(Manifest.permission.WRITE_EXTERNAL_STORAGE, new PermissionController.TaskCallback(){
                 @Override
@@ -70,7 +76,12 @@ public class FolderActivity extends AppCompatActivity implements android.support
                 }
             });
         }else{
-            cameraURI = Uri.parse(savedInstanceState.getString(CAMERA_URI));
+            if(savedInstanceState.getString(SAVE_CAMERA_URI)!=null){
+                cameraURI = Uri.parse(savedInstanceState.getString(SAVE_CAMERA_URI));
+            }
+            selectionController = savedInstanceState.getParcelable(SAVE_SELECTION);
+            configuration = savedInstanceState.getParcelable(SAVE_CONFIGURATION);
+
         }
     }
 
@@ -111,6 +122,7 @@ public class FolderActivity extends AppCompatActivity implements android.support
                     if(cameraURI!=null){
                         List<MImageObj> list = new ArrayList<>();
                         list.add(MImageObj.Builder.generateFromCameraResult(cameraURI));
+                        list.addAll(selectionController.getSelectedPics());
                         ResultData data2 = ResultDataBuilder.getDataForPics(list);
                         setResult(RESULT_OK, ResultDataBuilder.toIntent(data2));
                         finish();
@@ -183,11 +195,15 @@ public class FolderActivity extends AppCompatActivity implements android.support
     }
 
 
-    static final String CAMERA_URI = "camera_uri";
+    static final String SAVE_CAMERA_URI = "camera_uri";
+    static final String SAVE_SELECTION = "singleton";
+    static final String SAVE_CONFIGURATION = "config";
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {
         // Save data if activity is killed by camera/gallery
-        if(cameraURI!=null) savedInstanceState.putString(CAMERA_URI, cameraURI.toString());
+        if(cameraURI!=null) savedInstanceState.putString(SAVE_CAMERA_URI, cameraURI.toString());
+        savedInstanceState.putParcelable(SAVE_SELECTION, selectionController);
+        savedInstanceState.putParcelable(SAVE_CONFIGURATION,configuration);
         super.onSaveInstanceState(savedInstanceState);// Always call the superclass so it can save the view hierarchy state
     }
 

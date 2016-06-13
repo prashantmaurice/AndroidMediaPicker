@@ -4,7 +4,7 @@ import android.view.View;
 import android.widget.GridView;
 import android.widget.TextView;
 
-import com.prashantmaurice.android.mediapicker.Utils.SingleTon;
+import com.prashantmaurice.android.mediapicker.Activities.MainFolderActivity.FolderActivity;
 import com.prashantmaurice.android.mediapicker.Models.MImageObj;
 import com.prashantmaurice.android.mediapicker.R;
 
@@ -58,7 +58,7 @@ public class SubFolderActivityUIHandler {
         viewHolder.btn_remove_selected.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SingleTon.getInstance().getSelectionController().clearSelection();
+                FolderActivity.getSelectionController().clearSelection();
                 adapter.notifyDataSetChanged();
                 refreshActionbarState();
             }
@@ -81,7 +81,7 @@ public class SubFolderActivityUIHandler {
     }
 
     public void refreshActionbarState(){
-        int count = SingleTon.getInstance().getSelectionController().getSelectedPics().size();
+        int count = FolderActivity.getSelectionController().getSelectedPics().size();
         if(count>0){
             viewHolder.actionbar_selected.setVisibility(View.VISIBLE);
             viewHolder.actionbar_unselected.setVisibility(View.GONE);

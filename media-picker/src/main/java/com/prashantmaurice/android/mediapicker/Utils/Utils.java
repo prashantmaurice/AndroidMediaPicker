@@ -4,12 +4,16 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Environment;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.widget.Toast;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -82,4 +86,18 @@ public class Utils {
     }
 
 
+    public static class SerializeUtils {
+        static void writeArray(Parcel out, List<?> selected, int flags){
+            out.writeInt(selected.size());
+            for(Object s : selected) out.writeParcelable((Parcelable) s,flags);
+        }
+
+
+        public static <E> List<E> readArray(Parcel in, ClassLoader classLoader){
+            List<E> arr = new ArrayList<>();
+            int size =  in.readInt();
+            for(int i=0;i<size;i++) arr.add((E) in.readParcelable(classLoader));
+            return arr;
+        }
+    }
 }
