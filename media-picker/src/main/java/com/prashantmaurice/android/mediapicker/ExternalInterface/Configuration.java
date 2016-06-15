@@ -62,11 +62,13 @@ public class Configuration implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(maximumCount);
+        dest.writeSerializable(from);
         dest.writeInt(selectMultiple?1:0);
     }
 
     public Configuration(Parcel parcel) {
         maximumCount = parcel.readInt();
+        from = (From) parcel.readSerializable();
         selectMultiple = parcel.readInt()==1;
     }
 
@@ -82,5 +84,7 @@ public class Configuration implements Parcelable {
     };
 
 
-
+    public From getFrom() {
+        return from;
+    }
 }

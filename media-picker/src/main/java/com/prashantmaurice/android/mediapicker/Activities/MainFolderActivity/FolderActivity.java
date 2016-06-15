@@ -13,6 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import com.prashantmaurice.android.mediapicker.ExternalInterface.Configuration;
 import com.prashantmaurice.android.mediapicker.ExternalInterface.ResultData;
 import com.prashantmaurice.android.mediapicker.ExternalInterface.ResultDataBuilder;
+import com.prashantmaurice.android.mediapicker.MediaPicker;
 import com.prashantmaurice.android.mediapicker.Models.MFolderObj;
 import com.prashantmaurice.android.mediapicker.Models.MImageObj;
 import com.prashantmaurice.android.mediapicker.R;
@@ -63,6 +64,9 @@ public class FolderActivity extends AppCompatActivity implements android.support
         if(savedInstanceState==null){
             selectionController = SelectionController.getInstance();
             configuration = Configuration.parseResult(getIntent());
+            if(configuration.getFrom().equals(MediaPicker.From.CAMERA)){
+                captureFromCamera();
+            }
             permissionController = new PermissionController(this);
             permissionController.checkPermissionAndRun(Manifest.permission.WRITE_EXTERNAL_STORAGE, new PermissionController.TaskCallback(){
                 @Override

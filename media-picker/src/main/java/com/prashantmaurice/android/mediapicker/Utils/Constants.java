@@ -11,7 +11,10 @@ public class Constants {
             public static int REQUEST_CAMERA = 1003;
         }
         public static class PermissionController{
-            static final int RESUEST_PERMISSION = 2002;
+            static final int REQUEST_PERMISSION = 2002;
+        }
+        public static class CameraOnlyActivity{
+            static final int REQUEST_CAMERA = 2003;
         }
     }
 }

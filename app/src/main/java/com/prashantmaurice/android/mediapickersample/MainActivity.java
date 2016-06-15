@@ -36,11 +36,12 @@ import java.util.List;
  */
 public class MainActivity extends AppCompatActivity {
 
-    View btn_selectmultiple, btn_selectdefault;
+    View btn_selectmultiple, btn_selectdefault,btn_selectcamera;
     LinearLayout imageGallery;
 
     static final int REQUEST_PICK_MULTIPLE = 1001;
     static final int REQUEST_PICK_DEFAULTGALLERY = 1002;
+    static final int REQUEST_PICK_CAMERA = 1003;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
     private void initializeViews() {
         btn_selectmultiple = findViewById(R.id.btn_selectmultiple);
         btn_selectdefault = findViewById(R.id.btn_selectdefault);
+        btn_selectcamera = findViewById(R.id.btn_selectcamera);
         imageGallery = (LinearLayout) findViewById(R.id.imageGallery);
     }
 
@@ -82,6 +84,17 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
                 intent.setType("image/*");
                 startActivityForResult(intent, REQUEST_PICK_DEFAULTGALLERY);
+            }
+        });
+
+        btn_selectcamera.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new MediaPicker.IntentBuilder()
+                        .pick(MediaPicker.Pick.IMAGE)
+                        .from(MediaPicker.From.CAMERA)
+                        .build(MainActivity.this);
+                startActivityForResult(intent, REQUEST_PICK_CAMERA);
             }
         });
     }
@@ -114,6 +127,20 @@ public class MainActivity extends AppCompatActivity {
                     picUris2.add(uri);
                     addImagesToThegalleryFromUri(picUris2);
                     Utils.showToast(this,"Picked "+uri.getPath());
+                    break;
+                case REQUEST_PICK_CAMERA:
+                    ResultData dataObject2 = MediaPicker.getResultData(data);
+                    List<SelectedMedia> selectedMedia2 = dataObject2.getSelectedPics();
+
+//                    List<Uri> picUris = dataObject.getSelectedOriginalUri();
+                    addImagesToThegallery(selectedMedia2);
+                    if(selectedMedia2.size()>0){
+                        Uri uri2 = selectedMedia2.get(0).getOriginalUri();// content://media/external/images/media/23969
+                        Utils.showToast(this,"Picked "+uri2.getPath());
+                    }
+                    Utils.showToast(this,"Picked "+selectedMedia2.size()+" images");
+                    break;
+
             }
         }else{
             Utils.showToast(this,"Cancelled Request");
