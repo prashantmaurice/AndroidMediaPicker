@@ -1,8 +1,6 @@
 package com.prashantmaurice.android.mediapicker.Views;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -11,10 +9,7 @@ import android.widget.TextView;
 import com.prashantmaurice.android.mediapicker.Models.MImageObj;
 import com.prashantmaurice.android.mediapicker.R;
 import com.prashantmaurice.android.mediapicker.Utils.BitmapLoaderController;
-import com.prashantmaurice.android.mediapicker.Utils.Logg;
 import com.prashantmaurice.android.mediapicker.Utils.SingleClickListener;
-
-import java.io.File;
 
 /**
  * Documented by maurice :
@@ -55,18 +50,18 @@ public class ImageViewBuilder {
 
 
 
-        public void inflateData(final MImageObj folderObj){
-            Logg.d(TAG, "Inflating data in ImageObj view");
-
-            File imgFile = new File(folderObj.getPath());
-            if(imgFile.exists()){
-
-                Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
-                imageview.setImageBitmap(myBitmap);
-
-            }
-
-        }
+//        public void inflateData(final MImageObj folderObj){
+//            Logg.d(TAG, "Inflating data in ImageObj view");
+//
+//            File imgFile = new File(folderObj.getThumbPath());
+//            if(imgFile.exists()){
+//
+//                Bitmap myBitmap = BitmapFactory.decodeFile(imgFile.getAbsolutePath());
+//                imageview.setImageBitmap(myBitmap);
+//
+//            }
+//
+//        }
 
 
         public void loadImage(MImageObj MImageObj) {

@@ -67,7 +67,7 @@ public class BitmapLoaderController {
         @Override
         protected Bitmap doInBackground(MImageObj... params) {
             mImageObj = params[0];
-            return MediaStore.Images.Thumbnails.getThumbnail(activity.getContentResolver(), mImageObj.getThumbnailId(), MediaStore.Images.Thumbnails.MINI_KIND, null);
+            return MediaStore.Images.Thumbnails.getThumbnail(activity.getContentResolver(), mImageObj.getImageId(), MediaStore.Images.Thumbnails.MINI_KIND, null);
         }
 
 

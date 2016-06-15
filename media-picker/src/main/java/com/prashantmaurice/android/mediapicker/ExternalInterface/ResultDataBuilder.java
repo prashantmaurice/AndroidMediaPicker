@@ -47,9 +47,15 @@ public class ResultDataBuilder {
 
     public static SelectedMedia generateSelectionObject(MImageObj obj){
         SelectedMedia selection = new SelectedMedia();
-        selection.uri = obj.getMainUri();
         selection.type = obj.getType();
-        selection.imageId = obj.getThumbnailId();
+        selection.imageId = obj.getImageId();
+        selection.datetaken = obj.getDateTaken();
+        selection.latitude = obj.getLatitude();
+        selection.longitude = obj.getLongitude();
+        selection.width = obj.getWidth();
+        selection.height = obj.getHeight();
+        selection.desc = obj.getDesc();
+        selection.uri = obj.getMainUri();
         return selection;
     }
 
@@ -85,7 +91,15 @@ public class ResultDataBuilder {
             JSONObject obj = new JSONObject();
             try {
                 obj.put("type",selection.getType().getString());
+                obj.put("imageId",selection.imageId);
+                obj.put("datetaken",selection.datetaken);
+                obj.put("latitude",selection.latitude);
+                obj.put("longitude",selection.longitude);
+                obj.put("desc",selection.desc);
                 obj.put("uri",selection.getOriginalUri().toString());
+                obj.put("width",selection.width);
+                obj.put("height",selection.height);
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -93,17 +107,24 @@ public class ResultDataBuilder {
         }
         private static @Nullable
         SelectedMedia decodeSelectionObject(JSONObject obj){
-            SelectedMedia activityObject = new SelectedMedia();
+            SelectedMedia selection = new SelectedMedia();
             try {
                 if(!obj.has("type") || !obj.has("uri")) return null;
                 else{
-                    activityObject.type = Type.fromString( obj.getString("type"));
-                    activityObject.uri = Uri.parse(obj.getString("uri"));
+                    selection.type = Type.fromString( obj.getString("type"));
+                    selection.imageId = obj.has("imageId")?obj.getLong("imageId"):0;
+                    selection.datetaken = obj.has("datetaken")?obj.getLong("datetaken"):0;
+                    selection.latitude = obj.has("latitude")?obj.getDouble("latitude"):0;
+                    selection.longitude =obj.has("longitude")?obj.getDouble("longitude"):0;
+                    selection.desc = obj.has("desc")?obj.getString("desc"):null;
+                    selection.uri = Uri.parse(obj.getString("uri"));
+                    selection.width = obj.has("width")?obj.getInt("width"):0;
+                    selection.height = obj.has("height")?obj.getInt("height"):0;
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            return activityObject;
+            return selection;
         }
     }
 }

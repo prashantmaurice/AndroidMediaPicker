@@ -65,7 +65,16 @@ public class SubFolderActivity extends AppCompatActivity implements android.supp
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         Logg.d(TAG,"onCreateLoader");
         Uri u = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-        String[] projection = {MediaStore.Images.ImageColumns.DATA,MediaStore.Images.Media._ID};
+        String[] projection = {
+                MediaStore.Images.ImageColumns.DATA,
+                MediaStore.Images.Media._ID,
+                MediaStore.Images.ImageColumns.LATITUDE,
+                MediaStore.Images.ImageColumns.LONGITUDE,
+                MediaStore.Images.ImageColumns.DESCRIPTION,
+                MediaStore.Images.ImageColumns.WIDTH,
+                MediaStore.Images.ImageColumns.HEIGHT,
+                MediaStore.Images.ImageColumns.DATE_TAKEN
+        };
         return new CursorLoader(this,u, projection, null, null, MediaStore.Images.ImageColumns.DATE_TAKEN+" DESC");
     }
 
@@ -77,13 +86,23 @@ public class SubFolderActivity extends AppCompatActivity implements android.supp
 
         c.moveToFirst();
         while (!c.isAfterLast()) {
-            String fullName = c.getString(0);
-            String tempDir = fullName.substring(0, fullName.lastIndexOf("/"));
+            String fullPath = c.getString(c.getColumnIndex(MediaStore.Images.ImageColumns.DATA));
+            String tempDir = fullPath.substring(0, fullPath.lastIndexOf("/"));
 
             if(intentData.folderPath.equals(tempDir)){
-                long id = c.getLong(1);
-                MImageObj mImageObj = MImageObj.Builder.generateFromMediaImageCursor(id);
+                //Set am imageObj as latest one
+                long id = c.getLong(c.getColumnIndex(MediaStore.Images.Media._ID));
+                long dateTaken = c.getLong(c.getColumnIndex(MediaStore.Images.ImageColumns.DATE_TAKEN));
+                int width = c.getInt(c.getColumnIndex(MediaStore.Images.ImageColumns.WIDTH));
+                int height = c.getInt(c.getColumnIndex(MediaStore.Images.ImageColumns.HEIGHT));
+                double lat = c.getDouble(c.getColumnIndex(MediaStore.Images.ImageColumns.LATITUDE));
+                double longg = c.getDouble(c.getColumnIndex(MediaStore.Images.ImageColumns.LONGITUDE));
+                String desc = c.getString(c.getColumnIndex(MediaStore.Images.ImageColumns.DESCRIPTION));
+
+                MImageObj mImageObj = MImageObj.Builder.generateFromMediaImageCursor(id, dateTaken,width,height, lat, longg, desc);
                 images.add(mImageObj);
+
+                Logg.d(TAG,"Width : "+width+" : height "+height);
             }
 
             c.moveToNext();

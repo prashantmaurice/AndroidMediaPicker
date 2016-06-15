@@ -145,7 +145,16 @@ public class FolderActivity extends AppCompatActivity implements android.support
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         Logg.d(TAG,"onCreateLoader");
         Uri u = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-        String[] projection = {MediaStore.Images.ImageColumns.DATA,MediaStore.Images.Media._ID};
+        String[] projection = {
+                MediaStore.Images.ImageColumns.DATA,
+                MediaStore.Images.Media._ID,
+                MediaStore.Images.ImageColumns.LATITUDE,
+                MediaStore.Images.ImageColumns.WIDTH,
+                MediaStore.Images.ImageColumns.HEIGHT,
+                MediaStore.Images.ImageColumns.LONGITUDE,//Orientation is always giving 0
+                MediaStore.Images.ImageColumns.DESCRIPTION,
+                MediaStore.Images.ImageColumns.DATE_TAKEN
+        };
         return new CursorLoader(this,u, projection, null, null,  MediaStore.Images.ImageColumns.DATE_TAKEN+" DESC");
     }
 
@@ -159,18 +168,26 @@ public class FolderActivity extends AppCompatActivity implements android.support
 
 
         while (!c.isAfterLast()) {
-            String fullPath = c.getString(0);// /storage/emulated/0/TinyStep/TinyStep Images/IMG 1439401529025.jpg
+            String fullPath = c.getString(c.getColumnIndex(MediaStore.Images.ImageColumns.DATA));// /storage/emulated/0/TinyStep/TinyStep Images/IMG 1439401529025.jpg
             String tempDir = fullPath.substring(0, fullPath.lastIndexOf("/"));
 
             if(!folders.containsKey(tempDir)){
-
-                MFolderObj MFolderObj = new MFolderObj(tempDir);
+                MFolderObj mFolderObj = new MFolderObj(tempDir);
 
                 //Set am imageObj as latest one
-                long id = c.getLong(1);
-                MImageObj mImageObj = MImageObj.Builder.generateFromMediaImageCursor(id);
-                MFolderObj.setLatestMImageObj(mImageObj);
-                folders.put(tempDir, MFolderObj);
+                long id = c.getLong(c.getColumnIndex(MediaStore.Images.Media._ID));
+                long dateTaken = c.getLong(c.getColumnIndex(MediaStore.Images.Media.DATE_TAKEN));
+                double lat = c.getDouble(c.getColumnIndex(MediaStore.Images.Media.LATITUDE));
+                double longg = c.getDouble(c.getColumnIndex(MediaStore.Images.Media.LONGITUDE));
+                int width = c.getInt(c.getColumnIndex(MediaStore.Images.ImageColumns.WIDTH));
+                int height = c.getInt(c.getColumnIndex(MediaStore.Images.ImageColumns.HEIGHT));
+                String desc = c.getString(c.getColumnIndex(MediaStore.Images.Media.DESCRIPTION));
+                MImageObj mImageObj = MImageObj.Builder.generateFromMediaImageCursor(id,dateTaken,width,height,lat,longg,desc);
+
+                mFolderObj.setLatestMImageObj(mImageObj);
+
+
+                folders.put(tempDir, mFolderObj);
             }
 
             MFolderObj MFolderObj = folders.get(tempDir);

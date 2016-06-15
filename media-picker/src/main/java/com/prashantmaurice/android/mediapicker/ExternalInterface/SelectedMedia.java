@@ -16,6 +16,69 @@ public class SelectedMedia {
     Uri uri;
     Type type;
     long imageId;
+    int width;
+    int height;
+    long datetaken;
+    double latitude;
+
+    /**
+     * @return height of image/video if available
+     */
+    public int getHeight() {
+        return height;
+    }
+
+    /**
+     * @return width of image/video if available
+     */
+    public int getWidth() {
+        return width;
+    }
+    /**
+     * @return longitude of the image taken
+     */
+    public double getLongitude() {
+        return longitude;
+    }
+
+    /**
+     * @return latitude of the image taken
+     */
+    public double getLatitude() {
+        return latitude;
+    }
+
+    /**
+     * @return date of the image taken
+     */
+    public long getDatetaken() {
+        return datetaken;
+    }
+
+    /**
+     * @return desc of the image
+     */
+    public String getDesc() {
+        return desc;
+    }
+
+    /**
+     * @return Uri of the image
+     */
+    public Uri getUri() {
+        return uri;
+    }
+
+    /**
+     * @return Uri of the image
+     */
+    public long getImageId() {
+        return imageId;
+    }
+
+
+    public double longitude;
+    public String desc;
 
 
     /**
@@ -45,6 +108,7 @@ public class SelectedMedia {
         return uri;
     }
 
+
     /**
      * This returns bitmap of original content,
      * Note : run this in async task else OutOfMemory issues might rise
@@ -62,7 +126,7 @@ public class SelectedMedia {
      */
     public Bitmap getThumbNail(Context context){
         if(!hasThumbNail()) return null;
-        return MediaStore.Images.Thumbnails.getThumbnail(context.getContentResolver(), imageId, MediaStore.Images.Thumbnails.MINI_KIND, null)   ;
+        return MediaStore.Images.Thumbnails.getThumbnail(context.getContentResolver(), getImageId(), MediaStore.Images.Thumbnails.MINI_KIND, null);
     }
 
     public boolean hasThumbNail(){
