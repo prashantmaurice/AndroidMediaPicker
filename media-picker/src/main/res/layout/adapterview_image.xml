@@ -19,7 +19,8 @@
                 android:layout_height="fill_parent"
                 android:id="@+id/imageview"
                 android:src="@android:drawable/sym_contact_card"
-                android:scaleType="centerCrop" />
+                android:scaleType="centerCrop"
+                android:background="#eee" />
 
             <LinearLayout
                 android:orientation="horizontal"

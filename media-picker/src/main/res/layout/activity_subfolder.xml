@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:orientation="horizontal"
-        android:background="@color/ColorPrimary"
+        android:background="@color/ActionBar_background"
         android:id="@+id/actionbar_unselected"
         android:gravity="center_vertical"
         android:visibility="visible">
@@ -20,7 +20,7 @@
             android:layout_height="match_parent"
             app:mrl_rippleDuration="300"
             app:mrl_rippleOverlay="true"
-            app:mrl_rippleColor="#ffffff"
+            app:mrl_rippleColor="#555"
             android:id="@+id/btn_back">
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -29,9 +29,9 @@
                 <ImageView
                     android:layout_width="56dp"
                     android:layout_height="56dp"
-                    android:src="@drawable/abc_ic_ab_back_mtrl_am_alpha"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp"
+                    android:src="@drawable/grey_arrow_01"
+                    android:paddingTop="20dp"
+                    android:paddingBottom="20dp"
                     android:scaleType="fitCenter"
                     android:paddingLeft="10dp" />
 
@@ -47,7 +47,7 @@
             android:gravity="center_vertical"
             app:mrl_rippleDuration="300"
             app:mrl_rippleOverlay="true"
-            app:mrl_rippleColor="#ffffff"
+            app:mrl_rippleColor="#555"
             android:layout_weight="1"
             android:layout_gravity="center_vertical">
 
@@ -64,7 +64,7 @@
                     android:text="Folders"
                     android:singleLine="true"
                     android:id="@+id/tv_title"
-                    android:textColor="#ffffffff"
+                    android:textColor="@color/ActionBar_text"
                     android:textSize="18dp"
                     android:gravity="center_vertical" />
             </LinearLayout>
@@ -79,7 +79,7 @@
             android:layout_centerVertical="true"
             app:mrl_rippleDuration="300"
             app:mrl_rippleOverlay="true"
-            app:mrl_rippleColor="#ffffff"
+            app:mrl_rippleColor="#555"
             android:visibility="gone">
             <ImageView
                 android:layout_width="wrap_content"
@@ -101,7 +101,7 @@
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:orientation="horizontal"
-        android:background="@color/ColorPrimary"
+        android:background="@color/ActionBar_background"
         android:id="@+id/actionbar_selected"
         android:gravity="center_vertical"
         android:visibility="visible">
@@ -111,7 +111,7 @@
             android:layout_height="match_parent"
             app:mrl_rippleDuration="300"
             app:mrl_rippleOverlay="true"
-            app:mrl_rippleColor="#ffffff"
+            app:mrl_rippleColor="#555"
             android:id="@+id/btn_remove_selected">
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -120,9 +120,9 @@
                 <ImageView
                     android:layout_width="56dp"
                     android:layout_height="56dp"
-                    android:src="@drawable/abc_ic_clear_mtrl_alpha"
-                    android:paddingTop="10dp"
-                    android:paddingBottom="10dp"
+                    android:src="@drawable/gamification_cross"
+                    android:paddingTop="18dp"
+                    android:paddingBottom="18dp"
                     android:scaleType="fitCenter"
                     android:paddingLeft="10dp" />
 
@@ -138,7 +138,7 @@
             android:gravity="center_vertical"
             app:mrl_rippleDuration="300"
             app:mrl_rippleOverlay="true"
-            app:mrl_rippleColor="#ffffff"
+            app:mrl_rippleColor="#555"
             android:layout_weight="1"
             android:layout_gravity="center_vertical">
 
@@ -154,7 +154,7 @@
                     android:text="Folders"
                     android:singleLine="true"
                     android:id="@+id/tv_selected"
-                    android:textColor="#ffffffff"
+                    android:textColor="@color/ActionBar_text"
                     android:textSize="18dp"
                     android:gravity="center_vertical" />
             </LinearLayout>
@@ -169,7 +169,7 @@
             android:layout_centerVertical="true"
             app:mrl_rippleDuration="300"
             app:mrl_rippleOverlay="true"
-            app:mrl_rippleColor="#ffffff"
+            app:mrl_rippleColor="#555"
             android:id="@+id/btn_done">
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -183,9 +183,10 @@
                     android:layout_height="match_parent"
                     android:text="DONE"
                     android:singleLine="true"
-                    android:textColor="#ffffffff"
-                    android:textSize="18dp"
-                    android:gravity="center_vertical" />
+                    android:textColor="@color/ActionBar_text"
+                    android:textSize="16dp"
+                    android:gravity="center_vertical"
+                    android:textStyle="bold" />
             </LinearLayout>
         </com.balysv.materialripple.MaterialRippleLayout>
 

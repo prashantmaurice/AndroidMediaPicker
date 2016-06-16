@@ -2,6 +2,7 @@ package com.prashantmaurice.android.mediapicker.Utils;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.widget.ImageView;
@@ -67,7 +68,11 @@ public class BitmapLoaderController {
         @Override
         protected Bitmap doInBackground(MImageObj... params) {
             mImageObj = params[0];
-            return MediaStore.Images.Thumbnails.getThumbnail(activity.getContentResolver(), mImageObj.getImageId(), MediaStore.Images.Thumbnails.MINI_KIND, null);
+            Bitmap bitmapOrg = MediaStore.Images.Thumbnails.getThumbnail(activity.getContentResolver(), mImageObj.getImageId(), MediaStore.Images.Thumbnails.MINI_KIND, null);
+            if(mImageObj.getOrientation()==0) return bitmapOrg;
+            Matrix matrix = new Matrix();
+            matrix.postRotate(mImageObj.getOrientation());
+            return Bitmap.createBitmap(bitmapOrg, 0, 0, bitmapOrg.getWidth(), bitmapOrg.getHeight(), matrix, true);
         }
 
 

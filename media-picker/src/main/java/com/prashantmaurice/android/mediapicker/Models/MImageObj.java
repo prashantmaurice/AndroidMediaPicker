@@ -21,6 +21,7 @@ public class MImageObj implements Parcelable {
     private String desc;
     private int width;
     private int height;
+    private int orientation;
 
     public MImageObj(){}
 
@@ -57,14 +58,22 @@ public class MImageObj implements Parcelable {
         return false;
     }
 
+    public void setOrientation(int orientation) {
+        this.orientation = orientation;
+    }
+
+    public int getOrientation() {
+        return orientation;
+    }
 
 
     public static class Builder{
-        public static MImageObj generateFromMediaImageCursor(long id, long dateTaken, int width, int height, double lat, double longg, String desc) {
+        public static MImageObj generateFromMediaImageCursor(long id, long dateTaken, int width, int height, double lat, double longg, String desc, int orientation) {
             Uri mainUri = Uri.withAppendedPath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, Long.toString(id));
             MImageObj mImageObj = new MImageObj();
             mImageObj.setType(Type.GALLERY_IMAGE);
             mImageObj.setImageId(id);
+            mImageObj.setOrientation(orientation);
             mImageObj.setDateTaken(dateTaken);
             mImageObj.setLatitude(lat);
             mImageObj.setLongitude(longg);
@@ -99,6 +108,7 @@ public class MImageObj implements Parcelable {
         dateTaken =  in.readLong();
         latitude =  in.readDouble();
         longitude =  in.readDouble();
+        orientation = in.readInt();
         desc =  in.readString();
         mainUri = Uri.parse( in.readString());
         height = in.readInt();
@@ -111,6 +121,7 @@ public class MImageObj implements Parcelable {
         dest.writeLong(dateTaken);
         dest.writeDouble(latitude);
         dest.writeDouble(longitude);
+        dest.writeInt(orientation);
         dest.writeString(desc);
         dest.writeString(mainUri.toString());
         dest.writeInt(height);

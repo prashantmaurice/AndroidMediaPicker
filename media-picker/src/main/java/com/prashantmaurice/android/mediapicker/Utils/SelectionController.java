@@ -5,6 +5,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.prashantmaurice.android.mediapicker.Activities.MainFolderActivity.FolderActivity;
+import com.prashantmaurice.android.mediapicker.ExternalInterface.Configuration;
+import com.prashantmaurice.android.mediapicker.MediaPicker;
 import com.prashantmaurice.android.mediapicker.Models.MImageObj;
 import com.prashantmaurice.android.mediapicker.Utils.Utils.SerializeUtils;
 
@@ -38,7 +40,14 @@ public class SelectionController implements Parcelable{
             selected.remove(MImageObj);
         }else{
             if(selected.size()>= FolderActivity.getConfiguration().getMaximumCount()){
-                ToastMain.showSmarterToast(context,null,"You can only select "+ FolderActivity.getConfiguration().getMaximumCount());
+                Configuration config = FolderActivity.getConfiguration();
+                String mediaTypeText = "images";
+                if(config.getPick().equals(MediaPicker.Pick.IMAGE)) mediaTypeText = "images";
+                int maxcount = FolderActivity.getConfiguration().getMaximumCount();
+                String text = "You can only select "+ maxcount+" "+mediaTypeText;
+
+
+                ToastMain.showSmarterToast(context,null,text);
             }else{
                 selected.add(MImageObj);
             }

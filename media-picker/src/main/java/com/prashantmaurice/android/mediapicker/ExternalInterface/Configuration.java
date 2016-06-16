@@ -87,4 +87,8 @@ public class Configuration implements Parcelable {
     public From getFrom() {
         return from;
     }
+
+    public Pick getPick() {
+        return pick;
+    }
 }

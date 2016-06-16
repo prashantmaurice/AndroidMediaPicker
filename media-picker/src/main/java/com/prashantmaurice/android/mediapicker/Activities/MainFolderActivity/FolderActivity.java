@@ -63,6 +63,7 @@ public class FolderActivity extends AppCompatActivity implements android.support
         uiHandler =  new FolderActivityUIHandler(this);
         if(savedInstanceState==null){
             selectionController = SelectionController.getInstance();
+            selectionController.reset();
             configuration = Configuration.parseResult(getIntent());
             if(configuration.getFrom().equals(MediaPicker.From.CAMERA)){
                 captureFromCamera();
@@ -156,6 +157,7 @@ public class FolderActivity extends AppCompatActivity implements android.support
                 MediaStore.Images.ImageColumns.WIDTH,
                 MediaStore.Images.ImageColumns.HEIGHT,
                 MediaStore.Images.ImageColumns.LONGITUDE,//Orientation is always giving 0
+                MediaStore.Images.ImageColumns.ORIENTATION,
                 MediaStore.Images.ImageColumns.DESCRIPTION,
                 MediaStore.Images.ImageColumns.DATE_TAKEN
         };
@@ -183,10 +185,11 @@ public class FolderActivity extends AppCompatActivity implements android.support
                 long dateTaken = c.getLong(c.getColumnIndex(MediaStore.Images.Media.DATE_TAKEN));
                 double lat = c.getDouble(c.getColumnIndex(MediaStore.Images.Media.LATITUDE));
                 double longg = c.getDouble(c.getColumnIndex(MediaStore.Images.Media.LONGITUDE));
+                int orientation = c.getInt(c.getColumnIndex(MediaStore.Images.ImageColumns.ORIENTATION));
                 int width = c.getInt(c.getColumnIndex(MediaStore.Images.ImageColumns.WIDTH));
                 int height = c.getInt(c.getColumnIndex(MediaStore.Images.ImageColumns.HEIGHT));
                 String desc = c.getString(c.getColumnIndex(MediaStore.Images.Media.DESCRIPTION));
-                MImageObj mImageObj = MImageObj.Builder.generateFromMediaImageCursor(id,dateTaken,width,height,lat,longg,desc);
+                MImageObj mImageObj = MImageObj.Builder.generateFromMediaImageCursor(id,dateTaken,width,height,lat,longg,desc,orientation);
 
                 mFolderObj.setLatestMImageObj(mImageObj);
 

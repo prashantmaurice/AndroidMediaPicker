@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -17,6 +18,7 @@ import com.prashantmaurice.android.mediapicker.R;
 import com.prashantmaurice.android.mediapicker.Utils.Logg;
 import com.prashantmaurice.android.mediapicker.Utils.PermissionController;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,6 +72,7 @@ public class SubFolderActivity extends AppCompatActivity implements android.supp
                 MediaStore.Images.Media._ID,
                 MediaStore.Images.ImageColumns.LATITUDE,
                 MediaStore.Images.ImageColumns.LONGITUDE,
+                MediaStore.Images.ImageColumns.ORIENTATION,
                 MediaStore.Images.ImageColumns.DESCRIPTION,
                 MediaStore.Images.ImageColumns.WIDTH,
                 MediaStore.Images.ImageColumns.HEIGHT,
@@ -95,14 +98,13 @@ public class SubFolderActivity extends AppCompatActivity implements android.supp
                 long dateTaken = c.getLong(c.getColumnIndex(MediaStore.Images.ImageColumns.DATE_TAKEN));
                 int width = c.getInt(c.getColumnIndex(MediaStore.Images.ImageColumns.WIDTH));
                 int height = c.getInt(c.getColumnIndex(MediaStore.Images.ImageColumns.HEIGHT));
+                int orientation = c.getInt(c.getColumnIndex(MediaStore.Images.ImageColumns.ORIENTATION));
                 double lat = c.getDouble(c.getColumnIndex(MediaStore.Images.ImageColumns.LATITUDE));
                 double longg = c.getDouble(c.getColumnIndex(MediaStore.Images.ImageColumns.LONGITUDE));
                 String desc = c.getString(c.getColumnIndex(MediaStore.Images.ImageColumns.DESCRIPTION));
 
-                MImageObj mImageObj = MImageObj.Builder.generateFromMediaImageCursor(id, dateTaken,width,height, lat, longg, desc);
+                MImageObj mImageObj = MImageObj.Builder.generateFromMediaImageCursor(id, dateTaken,width,height, lat, longg, desc,orientation);
                 images.add(mImageObj);
-
-                Logg.d(TAG,"Width : "+width+" : height "+height);
             }
 
             c.moveToNext();
