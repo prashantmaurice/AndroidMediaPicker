@@ -79,6 +79,7 @@ public class MediaPicker {
 
         /**
          * Set media preselected from gallery
+         * TODO : not implemented yet
          */
         public IntentBuilder setPreselectedFromGallery(List<Uri> uri){
 //            config.setPreselectedImages();
