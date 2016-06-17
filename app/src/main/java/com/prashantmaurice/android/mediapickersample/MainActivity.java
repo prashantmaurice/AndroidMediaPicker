@@ -67,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
                         .pick(MediaPicker.Pick.IMAGE)
                         .from(MediaPicker.From.GALLERY_AND_CAMERA)
                         .selectMultiple(true)
+                        .showNumberingStartFrom(3)
                         .setMaximumCount(5)
                         .build(MainActivity.this);
                 startActivityForResult(intent, REQUEST_PICK_MULTIPLE);

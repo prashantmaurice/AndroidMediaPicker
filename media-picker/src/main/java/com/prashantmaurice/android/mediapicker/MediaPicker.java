@@ -43,10 +43,21 @@ public class MediaPicker {
         }
 
         /**
-         * Select multiple media or single media
+         * Select maximum images he can select
          */
         public IntentBuilder setMaximumCount(int maxCount) {
             config.setMaximumCount(maxCount);
+            return this;
+        }
+
+        /**
+         * Show numbering from int
+         * useful if you want numbering to start from 3 because already 3 images are
+         * selected in Parent Activity
+         * Default : 0
+         */
+        public IntentBuilder showNumberingStartFrom(int startFromNum) {
+            config.setStartFrom(startFromNum);
             return this;
         }
 

@@ -22,6 +22,7 @@ public class Configuration implements Parcelable {
 
     private boolean selectMultiple = false;//show invite Dialog on open
     private int maximumCount = Settings.DEFAULT_MAXCOUNT;//default
+    private int startFrom = 0;//default
     private Pick pick = Pick.IMAGE;
     private From from = From.GALLERY_AND_CAMERA;
 
@@ -37,12 +38,10 @@ public class Configuration implements Parcelable {
     public void setSelectMultiple(boolean selectMultiple) {
         this.selectMultiple = selectMultiple;
     }
-    public void setMaximumCount(int maximumCount) {
-        this.maximumCount = maximumCount;
-    }
-    public int getMaximumCount() {
-        return this.maximumCount;
-    }
+    public void setMaximumCount(int maximumCount) { this.maximumCount = maximumCount;}
+    public void setStartFrom(int startFrom) { this.startFrom = startFrom;}
+    public int getStartFrom() {return this.startFrom;}
+    public int getMaximumCount() {return this.maximumCount;}
 
     /** Parsable logic */
     public Intent build(Context context){
@@ -62,12 +61,14 @@ public class Configuration implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(maximumCount);
+        dest.writeInt(startFrom);
         dest.writeSerializable(from);
         dest.writeInt(selectMultiple?1:0);
     }
 
     public Configuration(Parcel parcel) {
         maximumCount = parcel.readInt();
+        startFrom = parcel.readInt();
         from = (From) parcel.readSerializable();
         selectMultiple = parcel.readInt()==1;
     }

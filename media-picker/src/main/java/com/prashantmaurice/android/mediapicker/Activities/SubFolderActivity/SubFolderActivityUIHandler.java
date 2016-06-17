@@ -82,10 +82,11 @@ public class SubFolderActivityUIHandler {
 
     public void refreshActionbarState(){
         int count = FolderActivity.getSelectionController().getSelectedPics().size();
+        int startCount = FolderActivity.getConfiguration().getStartFrom();
         if(count>0){
             viewHolder.actionbar_selected.setVisibility(View.VISIBLE);
             viewHolder.actionbar_unselected.setVisibility(View.GONE);
-            viewHolder.tv_selected.setText(""+count+" selected");
+            viewHolder.tv_selected.setText(""+(count+startCount)+" selected");
         }else{
             viewHolder.actionbar_selected.setVisibility(View.GONE);
             viewHolder.actionbar_unselected.setVisibility(View.VISIBLE);
