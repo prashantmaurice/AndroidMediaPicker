@@ -7,7 +7,7 @@ import android.os.Parcelable;
 import com.prashantmaurice.android.mediapicker.Activities.MainFolderActivity.FolderActivity;
 import com.prashantmaurice.android.mediapicker.ExternalInterface.Configuration;
 import com.prashantmaurice.android.mediapicker.MediaPicker;
-import com.prashantmaurice.android.mediapicker.Models.MImageObj;
+import com.prashantmaurice.android.mediapicker.Models.MediaObj;
 import com.prashantmaurice.android.mediapicker.Utils.Utils.SerializeUtils;
 
 import java.util.ArrayList;
@@ -20,7 +20,7 @@ public class SelectionController implements Parcelable{
     String TAG = "BAD";
     static SelectionController instance;
 
-    List<MImageObj> selected = new ArrayList<>();
+    List<MediaObj> selected = new ArrayList<>();
 
     public static SelectionController getInstance(){
         if(instance==null) instance = new SelectionController();
@@ -31,34 +31,34 @@ public class SelectionController implements Parcelable{
         Logg.d(TAG,"Initialized");
     }
 
-    public List<MImageObj> getSelectedPics() {
+    public List<MediaObj> getSelectedMedias() {
         return selected;
     }
 
-    public void toggle(Context context, MImageObj MImageObj) {
-        if(selected.contains(MImageObj)){
-            selected.remove(MImageObj);
+    public void toggle(Context context, MediaObj mediaObj) {
+        if(selected.contains(mediaObj)){
+            selected.remove(mediaObj);
         }else{
             if(selected.size()>= FolderActivity.getConfiguration().getMaximumCount()){
                 Configuration config = FolderActivity.getConfiguration();
                 String mediaTypeText = "images";
-                if(config.getPick().equals(MediaPicker.Pick.IMAGE)) mediaTypeText = "images";
+                if(config.getPick().equals(MediaPicker.Pick.VIDEO)) mediaTypeText = "videos";
                 int maxcount = FolderActivity.getConfiguration().getMaximumCount();
                 int startCount = FolderActivity.getConfiguration().getStartFrom();
                 String text = "You can only select "+ (maxcount+startCount)+" "+mediaTypeText;
                 ToastMain.showSmarterToast(context,null,text);
             }else{
-                selected.add(MImageObj);
+                selected.add(mediaObj);
             }
         }
     }
 
-    public boolean isSelected(MImageObj MImageObj) {
-        return selected.contains(MImageObj);
+    public boolean isSelected(MediaObj mediaObj) {
+        return selected.contains(mediaObj);
     }
 
-    public int getSelectNumber(MImageObj MImageObj) {
-        return FolderActivity.getConfiguration().getStartFrom()+1+selected.indexOf(MImageObj);
+    public int getSelectNumber(MediaObj mediaObj) {
+        return FolderActivity.getConfiguration().getStartFrom()+1+selected.indexOf(mediaObj);
     }
 
     public void clearSelection() {
@@ -81,7 +81,7 @@ public class SelectionController implements Parcelable{
     public int describeContents() {return 0;}
 
     public SelectionController(Parcel in ) {
-        selected.addAll(SerializeUtils.<MImageObj>readArray(in,MImageObj.class.getClassLoader()));
+        selected.addAll(SerializeUtils.<MediaObj>readArray(in,MediaObj.class.getClassLoader()));
     }
 
     @Override

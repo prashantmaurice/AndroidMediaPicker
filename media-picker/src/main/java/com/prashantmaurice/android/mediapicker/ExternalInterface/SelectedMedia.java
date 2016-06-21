@@ -6,6 +6,8 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
 
+import com.prashantmaurice.android.mediapicker.MediaPicker.Pick;
+
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -15,11 +17,13 @@ import java.io.InputStream;
 public class SelectedMedia {
     Uri uri;
     Type type;
-    long imageId;
+    long mediaId;
     int width;
     int height;
     long datetaken;
     double latitude;
+    Pick mediaType;
+    int duration;
 
     /**
      * @return height of image/video if available
@@ -72,14 +76,17 @@ public class SelectedMedia {
     /**
      * @return Uri of the image
      */
-    public long getImageId() {
-        return imageId;
+    public long getMediaId() {
+        return mediaId;
     }
 
 
     public double longitude;
     public String desc;
 
+    public Pick getMediaType(){
+        return mediaType;
+    }
 
     /**
      * Get the type of object.
@@ -126,11 +133,13 @@ public class SelectedMedia {
      */
     public Bitmap getThumbNail(Context context){
         if(!hasThumbNail()) return null;
-        return MediaStore.Images.Thumbnails.getThumbnail(context.getContentResolver(), getImageId(), MediaStore.Images.Thumbnails.MINI_KIND, null);
+        if(mediaType == Pick.IMAGE) return MediaStore.Images.Thumbnails.getThumbnail(context.getContentResolver(), getMediaId(), MediaStore.Images.Thumbnails.MINI_KIND, null);
+        else if (mediaType == Pick.VIDEO) return MediaStore.Video.Thumbnails.getThumbnail(context.getContentResolver(), getMediaId(), MediaStore.Video.Thumbnails.MINI_KIND, null);
+        else return null;
     }
 
     public boolean hasThumbNail(){
-        return type.equals(Type.GALLERY_IMAGE) && imageId!=0;
+        return ((type.equals(Type.GALLERY_IMAGE)||type.equals(Type.GALLERY_VIDEO)) && mediaId!=0);
     }
 }
 

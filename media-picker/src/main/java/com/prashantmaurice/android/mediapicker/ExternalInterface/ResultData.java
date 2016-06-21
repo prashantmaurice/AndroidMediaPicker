@@ -22,7 +22,7 @@ public class ResultData {
      *
      * @return list of {@link MImageObj}
      */
-    public List<SelectedMedia> getSelectedPics() {
+    public List<SelectedMedia> getSelectedMedias() {
         return selectedObjs;
     }
 

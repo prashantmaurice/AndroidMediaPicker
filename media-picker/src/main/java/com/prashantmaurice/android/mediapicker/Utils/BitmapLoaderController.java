@@ -7,7 +7,10 @@ import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.widget.ImageView;
 
+import com.prashantmaurice.android.mediapicker.MediaPicker;
 import com.prashantmaurice.android.mediapicker.Models.MImageObj;
+import com.prashantmaurice.android.mediapicker.Models.MVideoObj;
+import com.prashantmaurice.android.mediapicker.Models.MediaObj;
 import com.prashantmaurice.android.mediapicker.R;
 
 import java.lang.ref.WeakReference;
@@ -31,10 +34,10 @@ public class BitmapLoaderController {
         cache = new Cache();
     }
 
-    public void loadImage(MImageObj MImageObj, ImageView imageview, Activity activity){
-        imageview.setTag(R.string.tag_imagetoload, MImageObj.getPath());
-        if(cache.containsBitmap(MImageObj)){
-            imageview.setImageBitmap(cache.getBitmap(MImageObj));
+    public void loadImage(MediaObj mediaObj, ImageView imageview, Activity activity){
+        imageview.setTag(R.string.tag_imagetoload, mediaObj.getPath());
+        if(cache.containsBitmap(mediaObj)){
+            imageview.setImageBitmap(cache.getBitmap(mediaObj));
         }else{
             imageview.setImageResource(R.drawable.empty);
             BitmapWorkerTask task = new BitmapWorkerTask(imageview,activity);
@@ -46,16 +49,15 @@ public class BitmapLoaderController {
             }
 
             imageview.setTag(R.string.tag_bitmaploadertask,task);
-            task.execute(MImageObj);
+            task.execute(mediaObj);
         }
     }
 
-
     //Load images in Background
-    class BitmapWorkerTask extends AsyncTask<MImageObj, Void, Bitmap> {
+    class BitmapWorkerTask extends AsyncTask<MediaObj, Void, Bitmap> {
         private final WeakReference<ImageView> imageViewReference;
         private final Activity activity;
-        private MImageObj mImageObj;
+        private MediaObj mediaObj;
 
         public BitmapWorkerTask(ImageView imageView, Activity activity) {
             this.activity = activity;
@@ -66,13 +68,22 @@ public class BitmapLoaderController {
 
         // Decode image in background.
         @Override
-        protected Bitmap doInBackground(MImageObj... params) {
-            mImageObj = params[0];
-            Bitmap bitmapOrg = MediaStore.Images.Thumbnails.getThumbnail(activity.getContentResolver(), mImageObj.getImageId(), MediaStore.Images.Thumbnails.MINI_KIND, null);
-            if(mImageObj.getOrientation()==0) return bitmapOrg;
-            Matrix matrix = new Matrix();
-            matrix.postRotate(mImageObj.getOrientation());
-            return Bitmap.createBitmap(bitmapOrg, 0, 0, bitmapOrg.getWidth(), bitmapOrg.getHeight(), matrix, true);
+        protected Bitmap doInBackground(MediaObj... params) {
+            mediaObj = params[0];
+
+            if(mediaObj.getMediaType() == MediaPicker.Pick.VIDEO){
+                Bitmap bitmapOrg = MediaStore.Video.Thumbnails.getThumbnail(activity.getContentResolver(), mediaObj.getMediaId(), MediaStore.Video.Thumbnails.MINI_KIND, null);
+                return bitmapOrg;
+            } else if(mediaObj.getMediaType() == MediaPicker.Pick.IMAGE){
+                Bitmap bitmapOrg = MediaStore.Images.Thumbnails.getThumbnail(activity.getContentResolver(), mediaObj.getMediaId(), MediaStore.Images.Thumbnails.MINI_KIND, null);
+                MImageObj mImageObj = (MImageObj)mediaObj;
+                if(mImageObj.getOrientation()==0) return bitmapOrg;
+                Matrix matrix = new Matrix();
+                matrix.postRotate(mImageObj.getOrientation());
+                return Bitmap.createBitmap(bitmapOrg, 0, 0, bitmapOrg.getWidth(), bitmapOrg.getHeight(), matrix, true);
+            } else {
+                return null;
+            }
         }
 
 
@@ -80,9 +91,9 @@ public class BitmapLoaderController {
         @Override
         protected void onPostExecute(Bitmap bitmap) {
             if (bitmap != null) {
-                cache.storeInCache(mImageObj,bitmap);
+                cache.storeInCache(mediaObj,bitmap);
                 final ImageView imageView = imageViewReference.get();
-                if (imageView != null && mImageObj.getMainUri().getPath().equals(imageView.getTag(R.string.tag_imagetoload))) {
+                if (imageView != null && mediaObj.getMainUri().getPath().equals(imageView.getTag(R.string.tag_imagetoload))) {
                     imageView.setImageBitmap(bitmap);
                 }
             }
@@ -95,29 +106,29 @@ public class BitmapLoaderController {
         private Map<String, Bitmap> cacheData = new HashMap<>();
         private Stack<String> usedQueue = new Stack<>();
 
-        public boolean containsBitmap(MImageObj MImageObj){
-            return cacheData.containsKey(MImageObj.getMainUri().getPath());
+        public boolean containsBitmap(MediaObj mediaObj){
+            return cacheData.containsKey(mediaObj.getMainUri().getPath());
         }
 
-        public Bitmap getBitmap(MImageObj MImageObj) {
-            Logg.d(TAG,"Used from cache : "+ MImageObj.getPath());
-            usedQueue.remove(MImageObj.getMainUri().getPath());
-            usedQueue.add(0, MImageObj.getMainUri().getPath());
-            return cacheData.get(MImageObj.getMainUri().getPath());
+        public Bitmap getBitmap(MediaObj mediaObj) {
+            Logg.d(TAG,"Used from cache : "+ mediaObj.getPath());
+            usedQueue.remove(mediaObj.getMainUri().getPath());
+            usedQueue.add(0, mediaObj.getMainUri().getPath());
+            return cacheData.get(mediaObj.getMainUri().getPath());
         }
 
-        public void storeInCache(MImageObj mImageObj, Bitmap bitmap) {
+        public void storeInCache(MediaObj mediaObj, Bitmap bitmap) {
             //Remove least used resource
-            if(!usedQueue.isEmpty() && usedQueue.size()>CACHE_SIZE_LIMIT && !usedQueue.contains(mImageObj.getPath())){
+            if(!usedQueue.isEmpty() && usedQueue.size()>CACHE_SIZE_LIMIT && !usedQueue.contains(mediaObj.getPath())){
                 String toremove = usedQueue.pop();
                 Logg.d(TAG,"Removed from cache : "+toremove);
                 cacheData.remove(toremove);
             }
 
             //add this
-            Logg.d(TAG,"Stored in cache : "+ mImageObj.getPath());
-            usedQueue.add(0, mImageObj.getPath());
-            cacheData.put(mImageObj.getPath(),bitmap);
+            Logg.d(TAG,"Stored in cache : "+ mediaObj.getPath());
+            usedQueue.add(0, mediaObj.getPath());
+            cacheData.put(mediaObj.getPath(),bitmap);
         }
     }
 

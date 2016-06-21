@@ -5,7 +5,7 @@ import android.widget.GridView;
 import android.widget.TextView;
 
 import com.prashantmaurice.android.mediapicker.Activities.MainFolderActivity.FolderActivity;
-import com.prashantmaurice.android.mediapicker.Models.MImageObj;
+import com.prashantmaurice.android.mediapicker.Models.MediaObj;
 import com.prashantmaurice.android.mediapicker.R;
 
 import java.util.List;
@@ -51,8 +51,7 @@ public class SubFolderActivityUIHandler {
         viewHolder.btn_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                folderActivity.setResult(SubFolderActivity.RESULT_BACKPRESSED);
-                folderActivity.finish();
+                finishActivity(SubFolderActivity.RESULT_BACKPRESSED);
             }
         });
         viewHolder.btn_remove_selected.setOnClickListener(new View.OnClickListener() {
@@ -66,30 +65,39 @@ public class SubFolderActivityUIHandler {
         viewHolder.btn_done.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                folderActivity.setResult(SubFolderActivity.RESULT_OK);
-                folderActivity.finish();
+                finishActivity(SubFolderActivity.RESULT_OK);
             }
         });
+    }
+
+    private void finishActivity(int result){
+        folderActivity.setResult(result);
+        folderActivity.finish();
     }
 
     public void setTitle(String title){
         viewHolder.tv_title.setText(title);
     }
-    public void setData(List<MImageObj> foldersList){
+    public void setData(List<MediaObj> foldersList){
         adapter.setData(foldersList);
         adapter.notifyDataSetChanged();
     }
 
     public void refreshActionbarState(){
-        int count = FolderActivity.getSelectionController().getSelectedPics().size();
+        int count = FolderActivity.getSelectionController().getSelectedMedias().size();
         int startCount = FolderActivity.getConfiguration().getStartFrom();
-        if(count>0){
-            viewHolder.actionbar_selected.setVisibility(View.VISIBLE);
-            viewHolder.actionbar_unselected.setVisibility(View.GONE);
-            viewHolder.tv_selected.setText(""+(count+startCount)+" selected");
-        }else{
-            viewHolder.actionbar_selected.setVisibility(View.GONE);
-            viewHolder.actionbar_unselected.setVisibility(View.VISIBLE);
+
+        if(count == 1 && !FolderActivity.getConfiguration().isSelectMultiple()){
+            finishActivity(SubFolderActivity.RESULT_OK);
+        } else {
+            if (count > 0) {
+                viewHolder.actionbar_selected.setVisibility(View.VISIBLE);
+                viewHolder.actionbar_unselected.setVisibility(View.GONE);
+                viewHolder.tv_selected.setText("" + (count + startCount) + " selected");
+            } else {
+                viewHolder.actionbar_selected.setVisibility(View.GONE);
+                viewHolder.actionbar_unselected.setVisibility(View.VISIBLE);
+            }
         }
     }
 

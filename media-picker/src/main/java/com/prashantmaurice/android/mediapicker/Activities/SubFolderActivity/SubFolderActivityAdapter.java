@@ -5,7 +5,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 import com.prashantmaurice.android.mediapicker.Activities.MainFolderActivity.FolderActivity;
-import com.prashantmaurice.android.mediapicker.Models.MImageObj;
+import com.prashantmaurice.android.mediapicker.Models.MediaObj;
 import com.prashantmaurice.android.mediapicker.Utils.SingleClickListener;
 import com.prashantmaurice.android.mediapicker.Views.ImageViewBuilder;
 
@@ -16,7 +16,7 @@ import java.util.List;
  * Created by maurice on 01/09/15.
  */
 public class SubFolderActivityAdapter extends BaseAdapter {
-    private final List<MImageObj> folders = new ArrayList<>();
+    private final List<MediaObj> folders = new ArrayList<>();
     private final SubFolderActivity activity;
 
     public SubFolderActivityAdapter(SubFolderActivity activity) {
@@ -29,7 +29,7 @@ public class SubFolderActivityAdapter extends BaseAdapter {
     }
 
     @Override
-    public MImageObj getItem(int position) {
+    public MediaObj getItem(int position) {
         return folders.get(position);
     }
 
@@ -54,18 +54,18 @@ public class SubFolderActivityAdapter extends BaseAdapter {
 
 
         //set view
-        final MImageObj MImageObj = folders.get(position);
-        holder.loadImage(MImageObj);
+        final MediaObj mediaObj = folders.get(position);
+        holder.loadImage(mediaObj);
         holder.setOnClickListener(new SingleClickListener() {
             @Override
             public void onSingleClick(View view) {
-                FolderActivity.getSelectionController().toggle(activity,MImageObj);
+                FolderActivity.getSelectionController().toggle(activity,mediaObj);
                 notifyDataSetChanged();
                 activity.refreshActionbarState();
             }
         });
-        if(FolderActivity.getSelectionController().isSelected(MImageObj)){
-            holder.setSelected(FolderActivity.getSelectionController().getSelectNumber(MImageObj));
+        if(FolderActivity.getSelectionController().isSelected(mediaObj) && FolderActivity.getConfiguration().isSelectMultiple()){
+            holder.setSelected(FolderActivity.getSelectionController().getSelectNumber(mediaObj));
         }else{
             holder.setUnSelected();
         }
@@ -73,7 +73,7 @@ public class SubFolderActivityAdapter extends BaseAdapter {
         return view;
     }
 
-    public void setData(List<MImageObj> data) {
+    public void setData(List<MediaObj> data) {
         folders.clear();
         folders.addAll(data);
     }

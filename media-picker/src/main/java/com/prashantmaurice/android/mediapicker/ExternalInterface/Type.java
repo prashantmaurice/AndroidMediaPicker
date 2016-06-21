@@ -7,11 +7,13 @@ package com.prashantmaurice.android.mediapicker.ExternalInterface;
 public enum Type{
     GALLERY_IMAGE,
     CAMERA_IMAGE,
+    GALLERY_VIDEO,
     UNKNOWN;
     public String getString(){
         switch (this){
             case GALLERY_IMAGE: return "gallery_image";
             case CAMERA_IMAGE: return "camera_image";
+            case GALLERY_VIDEO: return "gallery_image";
             default:return "unknown";
         }
     }

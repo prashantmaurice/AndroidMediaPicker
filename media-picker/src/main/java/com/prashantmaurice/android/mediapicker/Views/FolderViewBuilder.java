@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.prashantmaurice.android.mediapicker.MediaPicker;
 import com.prashantmaurice.android.mediapicker.Models.MFolderObj;
 import com.prashantmaurice.android.mediapicker.R;
 import com.prashantmaurice.android.mediapicker.Utils.BitmapLoaderController;
@@ -61,7 +62,7 @@ public class FolderViewBuilder {
             Logg.d(TAG, "Inflating data in FolderObj view : "+ MFolderObj.getName());
             tv_foldername.setText(MFolderObj.getName());
             tv_foldernum.setText("" + MFolderObj.getItemCount());
-            if(MFolderObj.getLatestImgObj()!=null) BitmapLoaderController.getInstance().loadImage(MFolderObj.getLatestImgObj(),imageview, activity);
+            if(MFolderObj.getLatestMediaObj()!=null) BitmapLoaderController.getInstance().loadImage(MFolderObj.getLatestMediaObj(),imageview, activity);
         }
 
         public void setOnClickListener(SingleClickListener listener) {

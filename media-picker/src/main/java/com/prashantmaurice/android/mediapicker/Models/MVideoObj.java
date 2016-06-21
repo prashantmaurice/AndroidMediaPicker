@@ -9,105 +9,99 @@ import com.prashantmaurice.android.mediapicker.ExternalInterface.Type;
 import com.prashantmaurice.android.mediapicker.MediaPicker;
 
 /**
- * Created by maurice on 02/06/16.
+ * Created by dipakb on 20/06/16.
  */
-public class MImageObj extends MediaObj implements Parcelable {
+public class MVideoObj extends MediaObj implements Parcelable{
 
-    private Uri mainUri;//you can stream main image from here
+    private Uri mainUri;//you can stream main video from here
     private Type type;//use this to distinguish from media sources
-    private long imageId;
+    private long videoId;
     private long dateTaken;
     private double latitude;
     private double longitude;
     private String desc;
     private int width;
     private int height;
-    private int orientation;
-    private MediaPicker.Pick mediaType = MediaPicker.Pick.IMAGE;
+    private int duration;
+    private MediaPicker.Pick mediaType = MediaPicker.Pick.VIDEO;
 
-    public MImageObj(){}
+
+    public MVideoObj(){}
 
     /** Abstract Getters */
     public Type getType() {return type;}
-    public long getMediaId() {return imageId;}
+    public long getMediaId() {return videoId;}
     public long getDateTaken() {return dateTaken;}
     public String getDesc() {return desc;}
     public Uri getMainUri() {return mainUri;}
     public String getPath() {return getMainUri().getPath();}
-    public MediaPicker.Pick getMediaType() { return mediaType;}
+    public MediaPicker.Pick getMediaType(){return mediaType;}
 
     /** Abstract Setters */
     public void setType(Type type) {this.type = type;}
-    public void setMediaId(long imageId) {this.imageId = imageId;}
+    public void setMediaId(long videoId) {this.videoId = videoId;}
     public void setDateTaken(long dateTaken) {this.dateTaken = dateTaken;}
     public void setDesc(String desc) {this.desc = desc;}
     public void setMainUri(Uri mainUri) {this.mainUri = mainUri;}
-    public void setOrientation(int orientation) {this.orientation = orientation;}
 
-    /**Image Obj Getters*/
+    /**Video Obj Getters*/
     public double getLatitude() {return latitude;}
     public double getLongitude() {return longitude;}
     public int getWidth() {return width;}
     public int getHeight() {return height;}
-    public int getOrientation() {return orientation;}
+    public int getDuration() {return duration;}
 
-    /**Image Obj Setters*/
+    /**Video Obj Setters*/
     public void setLatitude(double latitude) {this.latitude = latitude;}
     public void setLongitude(double longitude) {this.longitude = longitude;}
     public void setWidth(int width) {this.width = width;}
     public void setHeight(int height) {this.height = height;}
+    public void setDuration(int duration) {this.duration = duration;}
 
     @Override
     public boolean equals(Object o){
-        if (o instanceof MImageObj){
-            MImageObj c = (MImageObj) o;
+        if (o instanceof MVideoObj){
+            MVideoObj c = (MVideoObj) o;
             if (this.mainUri.getPath().equals(c.mainUri.getPath())) return true;
         }
         return false;
     }
 
     public static class Builder{
-        public static MImageObj generateFromMediaImageCursor(long id, long dateTaken, int width, int height, double lat, double longg, String desc, int orientation) {
-            Uri mainUri = Uri.withAppendedPath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, Long.toString(id));
-            MImageObj mImageObj = new MImageObj();
-            mImageObj.setType(Type.GALLERY_IMAGE);
-            mImageObj.setMediaId(id);
-            mImageObj.setOrientation(orientation);
-            mImageObj.setDateTaken(dateTaken);
-            mImageObj.setLatitude(lat);
-            mImageObj.setLongitude(longg);
-            mImageObj.setDesc(desc);
-            mImageObj.setMainUri(mainUri);
-            mImageObj.setWidth(width);
-            mImageObj.setHeight(height);
-            return mImageObj;
+        public static MVideoObj generateFromMediaVideoCursor(long id, long dateTaken, int width, int height, double lat, double longg, String desc, int duration) {
+            Uri mainUri = Uri.withAppendedPath(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, Long.toString(id));
+            MVideoObj mVideoObj = new MVideoObj();
+            mVideoObj.setType(Type.GALLERY_VIDEO);
+            mVideoObj.setMediaId(id);
+            mVideoObj.setDuration(duration);
+            mVideoObj.setDateTaken(dateTaken);
+            mVideoObj.setLatitude(lat);
+            mVideoObj.setLongitude(longg);
+            mVideoObj.setDesc(desc);
+            mVideoObj.setMainUri(mainUri);
+            mVideoObj.setWidth(width);
+            mVideoObj.setHeight(height);
+            return mVideoObj;
 
-        }
-        public static MImageObj generateFromCameraResult(Uri cameraURI) {
-            MImageObj mImageObj = new MImageObj();
-            mImageObj.setType(Type.CAMERA_IMAGE);
-            mImageObj.setDateTaken(System.currentTimeMillis());
-            mImageObj.setMainUri(cameraURI);
-            return mImageObj;
         }
     }
 
 
     /** Serialization Functions */
-    public static final MImageObj.Creator CREATOR = new MImageObj.Creator() {
-        public MImageObj createFromParcel(Parcel in ) { return new MImageObj(in);}
-        public MImageObj[] newArray(int size) {return new MImageObj[size];}
+    public static final MVideoObj.Creator CREATOR = new MVideoObj.Creator() {
+        public MVideoObj createFromParcel(Parcel in ) { return new MVideoObj(in);}
+        public MVideoObj[] newArray(int size) {return new MVideoObj[size];}
     };
     @Override
     public int describeContents() {return 0;}
 
-    public MImageObj(Parcel in ) {
+    public MVideoObj(Parcel in ) {
         type = (Type) in.readSerializable();
-        imageId =  in.readLong();
+        videoId =  in.readLong();
         dateTaken =  in.readLong();
         latitude =  in.readDouble();
         longitude =  in.readDouble();
-        orientation = in.readInt();
+        duration = in.readInt();
         desc =  in.readString();
         mainUri = Uri.parse( in.readString());
         height = in.readInt();
@@ -116,11 +110,11 @@ public class MImageObj extends MediaObj implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeSerializable(type);
-        dest.writeLong(imageId);
+        dest.writeLong(videoId);
         dest.writeLong(dateTaken);
         dest.writeDouble(latitude);
         dest.writeDouble(longitude);
-        dest.writeInt(orientation);
+        dest.writeInt(duration);
         dest.writeString(desc);
         dest.writeString(mainUri.toString());
         dest.writeInt(height);

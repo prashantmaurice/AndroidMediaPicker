@@ -1,5 +1,7 @@
 package com.prashantmaurice.android.mediapicker.Models;
 
+import com.prashantmaurice.android.mediapicker.MediaPicker;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,12 +15,14 @@ public class MFolderObj {
 
     private String directory = "Dummy";
     private int itemCount = 0;
-    private MImageObj latestMImageObj;
+    private MediaObj latestMediaObj;
+    private MediaPicker.Pick mediaType;
 
 
     public MFolderObj(){}
-    public MFolderObj(String directory){
+    public MFolderObj(String directory, MediaPicker.Pick mediaType){
         this.directory = directory;
+        this.mediaType = mediaType;
     }
 
     public String getName() {
@@ -72,11 +76,15 @@ public class MFolderObj {
         return obj;
     }
 
-    public void setLatestMImageObj(MImageObj latestMImageObj) {
-        this.latestMImageObj = latestMImageObj;
+    public void setLatestMediaObj(MediaObj latestMVideoObj) {
+        this.latestMediaObj = latestMVideoObj;
     }
 
-    public MImageObj getLatestImgObj() {
-        return latestMImageObj;
+    public MediaObj getLatestMediaObj() {
+        return latestMediaObj;
+    }
+
+    public MediaPicker.Pick getMediaType(){
+        return mediaType;
     }
 }

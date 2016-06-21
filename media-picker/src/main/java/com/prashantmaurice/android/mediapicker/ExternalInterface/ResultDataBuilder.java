@@ -4,7 +4,10 @@ import android.content.Intent;
 import android.net.Uri;
 import android.support.annotation.Nullable;
 
+import com.prashantmaurice.android.mediapicker.MediaPicker;
 import com.prashantmaurice.android.mediapicker.Models.MImageObj;
+import com.prashantmaurice.android.mediapicker.Models.MVideoObj;
+import com.prashantmaurice.android.mediapicker.Models.MediaObj;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -18,10 +21,10 @@ import java.util.List;
  */
 public class ResultDataBuilder {
     private static String INTENT_SELECTED = "selected";
-    public static ResultData getDataForPics(List<MImageObj> images){
+    public static ResultData getDataForPics(List<MediaObj> medias){
         ResultData data = new ResultData();
         data.selectedObjs.clear();
-        data.selectedObjs.addAll(generateSelectionObject(images));
+        data.selectedObjs.addAll(generateSelectionObject(medias));
         return data;
     }
     public static Intent toIntent(ResultData data){
@@ -39,23 +42,38 @@ public class ResultDataBuilder {
         }
         return null;
     }
-    public static List<SelectedMedia> generateSelectionObject(List<MImageObj> objArr){
+    public static List<SelectedMedia> generateSelectionObject(List<MediaObj> objArr){
         List<SelectedMedia> list = new ArrayList<>();
-        for(MImageObj obj : objArr) list.add(generateSelectionObject(obj));
+        for(MediaObj obj : objArr) list.add(generateSelectionObject(obj));
         return list;
     }
 
-    public static SelectedMedia generateSelectionObject(MImageObj obj){
+    public static SelectedMedia generateSelectionObject(MediaObj obj){
         SelectedMedia selection = new SelectedMedia();
         selection.type = obj.getType();
-        selection.imageId = obj.getImageId();
+        selection.mediaId = obj.getMediaId();
+        selection.mediaType = obj.getMediaType();
         selection.datetaken = obj.getDateTaken();
-        selection.latitude = obj.getLatitude();
-        selection.longitude = obj.getLongitude();
-        selection.width = obj.getWidth();
-        selection.height = obj.getHeight();
         selection.desc = obj.getDesc();
         selection.uri = obj.getMainUri();
+
+        if(obj instanceof MImageObj){
+            MImageObj imageObj = (MImageObj)obj;
+            selection.latitude = imageObj.getLatitude();
+            selection.longitude = imageObj.getLongitude();
+            selection.width = imageObj.getWidth();
+            selection.height = imageObj.getHeight();
+        }
+
+        if(obj instanceof MVideoObj){
+            MVideoObj videoObj = (MVideoObj)obj;
+            selection.latitude = videoObj.getLatitude();
+            selection.longitude = videoObj.getLongitude();
+            selection.width = videoObj.getWidth();
+            selection.height = videoObj.getHeight();
+            selection.duration = videoObj.getDuration();
+        }
+
         return selection;
     }
 
@@ -80,7 +98,7 @@ public class ResultDataBuilder {
             JSONObject obj = new JSONObject();
             try {
                 JSONArray objects = new JSONArray();
-                for(SelectedMedia selection : resultData.getSelectedPics()) objects.put(encodeSelectionObject(selection));
+                for(SelectedMedia selection : resultData.getSelectedMedias()) objects.put(encodeSelectionObject(selection));
                 obj.put("objects",objects);
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -91,7 +109,7 @@ public class ResultDataBuilder {
             JSONObject obj = new JSONObject();
             try {
                 obj.put("type",selection.getType().getString());
-                obj.put("imageId",selection.imageId);
+                obj.put("mediaId",selection.mediaId);
                 obj.put("datetaken",selection.datetaken);
                 obj.put("latitude",selection.latitude);
                 obj.put("longitude",selection.longitude);
@@ -99,6 +117,7 @@ public class ResultDataBuilder {
                 obj.put("uri",selection.getOriginalUri().toString());
                 obj.put("width",selection.width);
                 obj.put("height",selection.height);
+                obj.put("mediaType", selection.mediaType.getStr());
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -112,7 +131,7 @@ public class ResultDataBuilder {
                 if(!obj.has("type") || !obj.has("uri")) return null;
                 else{
                     selection.type = Type.fromString( obj.getString("type"));
-                    selection.imageId = obj.has("imageId")?obj.getLong("imageId"):0;
+                    selection.mediaId = obj.has("mediaId")?obj.getLong("mediaId"):0;
                     selection.datetaken = obj.has("datetaken")?obj.getLong("datetaken"):0;
                     selection.latitude = obj.has("latitude")?obj.getDouble("latitude"):0;
                     selection.longitude =obj.has("longitude")?obj.getDouble("longitude"):0;
@@ -120,6 +139,7 @@ public class ResultDataBuilder {
                     selection.uri = Uri.parse(obj.getString("uri"));
                     selection.width = obj.has("width")?obj.getInt("width"):0;
                     selection.height = obj.has("height")?obj.getInt("height"):0;
+                    selection.mediaType = MediaPicker.Pick.getPickForPickStr(obj.getString("mediaType"));
                 }
             } catch (JSONException e) {
                 e.printStackTrace();

@@ -12,8 +12,11 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 
+import com.prashantmaurice.android.mediapicker.MediaPicker;
 import com.prashantmaurice.android.mediapicker.Models.MFolderObj;
 import com.prashantmaurice.android.mediapicker.Models.MImageObj;
+import com.prashantmaurice.android.mediapicker.Models.MVideoObj;
+import com.prashantmaurice.android.mediapicker.Models.MediaObj;
 import com.prashantmaurice.android.mediapicker.R;
 import com.prashantmaurice.android.mediapicker.Utils.Logg;
 import com.prashantmaurice.android.mediapicker.Utils.PermissionController;
@@ -66,51 +69,94 @@ public class SubFolderActivity extends AppCompatActivity implements android.supp
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         Logg.d(TAG,"onCreateLoader");
-        Uri u = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-        String[] projection = {
-                MediaStore.Images.ImageColumns.DATA,
-                MediaStore.Images.Media._ID,
-                MediaStore.Images.ImageColumns.LATITUDE,
-                MediaStore.Images.ImageColumns.LONGITUDE,
-                MediaStore.Images.ImageColumns.ORIENTATION,
-                MediaStore.Images.ImageColumns.DESCRIPTION,
-                MediaStore.Images.ImageColumns.WIDTH,
-                MediaStore.Images.ImageColumns.HEIGHT,
-                MediaStore.Images.ImageColumns.DATE_TAKEN
-        };
-        return new CursorLoader(this,u, projection, null, null, MediaStore.Images.ImageColumns.DATE_TAKEN+" DESC");
+
+        if(intentData.mediaType.equals(MediaPicker.Pick.VIDEO)){
+            Uri u = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+            String[] projection = {
+                    MediaStore.Video.VideoColumns.DATA,
+                    MediaStore.Video.Media._ID,
+                    MediaStore.Video.VideoColumns.LATITUDE,
+                    MediaStore.Video.VideoColumns.LONGITUDE,
+                    MediaStore.Video.VideoColumns.DURATION,
+                    MediaStore.Video.VideoColumns.DESCRIPTION,
+                    MediaStore.Video.VideoColumns.WIDTH,
+                    MediaStore.Video.VideoColumns.HEIGHT,
+                    MediaStore.Video.VideoColumns.DATE_TAKEN
+            };
+            return new CursorLoader(this, u, projection, null, null, MediaStore.Video.VideoColumns.DATE_TAKEN + " DESC");
+        } else {
+
+            Uri u = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+            String[] projection = {
+                    MediaStore.Images.ImageColumns.DATA,
+                    MediaStore.Images.Media._ID,
+                    MediaStore.Images.ImageColumns.LATITUDE,
+                    MediaStore.Images.ImageColumns.LONGITUDE,
+                    MediaStore.Images.ImageColumns.ORIENTATION,
+                    MediaStore.Images.ImageColumns.DESCRIPTION,
+                    MediaStore.Images.ImageColumns.WIDTH,
+                    MediaStore.Images.ImageColumns.HEIGHT,
+                    MediaStore.Images.ImageColumns.DATE_TAKEN
+            };
+            return new CursorLoader(this, u, projection, null, null, MediaStore.Images.ImageColumns.DATE_TAKEN + " DESC");
+        }
     }
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor c) {
         Logg.d(TAG,"onLoadFinished");
 
-        List<MImageObj> images = new ArrayList<>();
+        List<MediaObj> mediaObjs = new ArrayList<>();
 
         c.moveToFirst();
-        while (!c.isAfterLast()) {
-            String fullPath = c.getString(c.getColumnIndex(MediaStore.Images.ImageColumns.DATA));
-            String tempDir = fullPath.substring(0, fullPath.lastIndexOf("/"));
 
-            if(intentData.folderPath.equals(tempDir)){
-                //Set am imageObj as latest one
-                long id = c.getLong(c.getColumnIndex(MediaStore.Images.Media._ID));
-                long dateTaken = c.getLong(c.getColumnIndex(MediaStore.Images.ImageColumns.DATE_TAKEN));
-                int width = c.getInt(c.getColumnIndex(MediaStore.Images.ImageColumns.WIDTH));
-                int height = c.getInt(c.getColumnIndex(MediaStore.Images.ImageColumns.HEIGHT));
-                int orientation = c.getInt(c.getColumnIndex(MediaStore.Images.ImageColumns.ORIENTATION));
-                double lat = c.getDouble(c.getColumnIndex(MediaStore.Images.ImageColumns.LATITUDE));
-                double longg = c.getDouble(c.getColumnIndex(MediaStore.Images.ImageColumns.LONGITUDE));
-                String desc = c.getString(c.getColumnIndex(MediaStore.Images.ImageColumns.DESCRIPTION));
+        if(intentData.mediaType == MediaPicker.Pick.VIDEO) {
+            while (!c.isAfterLast()) {
+                String fullPath = c.getString(c.getColumnIndex(MediaStore.Video.VideoColumns.DATA));
+                String tempDir = fullPath.substring(0, fullPath.lastIndexOf("/"));
 
-                MImageObj mImageObj = MImageObj.Builder.generateFromMediaImageCursor(id, dateTaken,width,height, lat, longg, desc,orientation);
-                images.add(mImageObj);
+                if (intentData.folderPath.equals(tempDir)) {
+                    //Set am imageObj as latest one
+                    long id = c.getLong(c.getColumnIndex(MediaStore.Video.Media._ID));
+                    long dateTaken = c.getLong(c.getColumnIndex(MediaStore.Video.VideoColumns.DATE_TAKEN));
+                    int width = c.getInt(c.getColumnIndex(MediaStore.Video.VideoColumns.WIDTH));
+                    int height = c.getInt(c.getColumnIndex(MediaStore.Video.VideoColumns.HEIGHT));
+                    int duration = c.getInt(c.getColumnIndex(MediaStore.Video.VideoColumns.DURATION));
+                    double lat = c.getDouble(c.getColumnIndex(MediaStore.Video.VideoColumns.LATITUDE));
+                    double longg = c.getDouble(c.getColumnIndex(MediaStore.Video.VideoColumns.LONGITUDE));
+                    String desc = c.getString(c.getColumnIndex(MediaStore.Video.VideoColumns.DESCRIPTION));
+
+                    MVideoObj mVideoObj = MVideoObj.Builder.generateFromMediaVideoCursor(id, dateTaken, width, height, lat, longg, desc, duration);
+                    mediaObjs.add(mVideoObj);
+                }
+
+                c.moveToNext();
             }
+        } else {
+            while (!c.isAfterLast()) {
+                String fullPath = c.getString(c.getColumnIndex(MediaStore.Images.ImageColumns.DATA));
+                String tempDir = fullPath.substring(0, fullPath.lastIndexOf("/"));
 
-            c.moveToNext();
+                if (intentData.folderPath.equals(tempDir)) {
+                    //Set am imageObj as latest one
+                    long id = c.getLong(c.getColumnIndex(MediaStore.Images.Media._ID));
+                    long dateTaken = c.getLong(c.getColumnIndex(MediaStore.Images.ImageColumns.DATE_TAKEN));
+                    int width = c.getInt(c.getColumnIndex(MediaStore.Images.ImageColumns.WIDTH));
+                    int height = c.getInt(c.getColumnIndex(MediaStore.Images.ImageColumns.HEIGHT));
+                    int orientation = c.getInt(c.getColumnIndex(MediaStore.Images.ImageColumns.ORIENTATION));
+                    double lat = c.getDouble(c.getColumnIndex(MediaStore.Images.ImageColumns.LATITUDE));
+                    double longg = c.getDouble(c.getColumnIndex(MediaStore.Images.ImageColumns.LONGITUDE));
+                    String desc = c.getString(c.getColumnIndex(MediaStore.Images.ImageColumns.DESCRIPTION));
+
+                    MImageObj mImageObj = MImageObj.Builder.generateFromMediaImageCursor(id, dateTaken, width, height, lat, longg, desc, orientation);
+                    mediaObjs.add(mImageObj);
+                }
+
+                c.moveToNext();
+            }
         }
 
-        uiHandler.setData(images);
+        uiHandler.setData(mediaObjs);
     }
 
     @Override
@@ -122,11 +168,11 @@ public class SubFolderActivity extends AppCompatActivity implements android.supp
         uiHandler.refreshActionbarState();
     }
 
-
     //Use this to build intent for calling this class
     public static class IntentBuilder{
         private static String INTENT_FOLDER_NAME = "folder-name";
         private static String INTENT_FOLDER_PATH = "folder-path";
+        private static String INTENT_MEDIA_TYPE = "media-type";
 
         IntentData intentData = new IntentData();
 
@@ -135,6 +181,7 @@ public class SubFolderActivity extends AppCompatActivity implements android.supp
         public IntentBuilder setFolderObj(MFolderObj MFolderObj) {
             intentData.folderName = MFolderObj.getName();
             intentData.folderPath = MFolderObj.getPath();
+            intentData.mediaType = MFolderObj.getMediaType();
             return this;
         }
 
@@ -142,6 +189,8 @@ public class SubFolderActivity extends AppCompatActivity implements android.supp
             Intent intent = new Intent(context, SubFolderActivity.class);
             intent.putExtra(INTENT_FOLDER_NAME, intentData.folderName);
             intent.putExtra(INTENT_FOLDER_PATH, intentData.folderPath);
+            intent.putExtra(INTENT_MEDIA_TYPE, intentData.mediaType.getStr());
+
             return intent;
         }
 
@@ -155,6 +204,10 @@ public class SubFolderActivity extends AppCompatActivity implements android.supp
             if(data.hasExtra(IntentBuilder.INTENT_FOLDER_PATH)){
                 intentData.folderPath = data.getStringExtra(IntentBuilder.INTENT_FOLDER_PATH);
             }
+            if(data.hasExtra(IntentBuilder.INTENT_MEDIA_TYPE)){
+                String pickStr = data.getStringExtra(IntentBuilder.INTENT_MEDIA_TYPE);
+                intentData.mediaType = MediaPicker.Pick.getPickForPickStr(pickStr);
+            }
 
             return intentData;
         }
@@ -163,6 +216,7 @@ public class SubFolderActivity extends AppCompatActivity implements android.supp
         public static class IntentData{
             public String folderName;
             public String folderPath;
+            public MediaPicker.Pick mediaType;
         }
     }
 

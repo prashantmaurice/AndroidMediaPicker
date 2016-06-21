@@ -7,6 +7,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.prashantmaurice.android.mediapicker.Models.MImageObj;
+import com.prashantmaurice.android.mediapicker.Models.MediaObj;
 import com.prashantmaurice.android.mediapicker.R;
 import com.prashantmaurice.android.mediapicker.Utils.BitmapLoaderController;
 import com.prashantmaurice.android.mediapicker.Utils.SingleClickListener;
@@ -64,8 +65,8 @@ public class ImageViewBuilder {
 //        }
 
 
-        public void loadImage(MImageObj MImageObj) {
-            BitmapLoaderController.getInstance().loadImage(MImageObj,imageview, activity);
+        public void loadImage(MediaObj mediaObj) {
+            BitmapLoaderController.getInstance().loadImage(mediaObj,imageview, activity);
         }
 
         public void setOnClickListener(SingleClickListener listener) {

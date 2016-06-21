@@ -14,8 +14,29 @@ import java.util.List;
  * This is the main Interface to use this library. Don't call any other activity directly
  */
 public class MediaPicker {
-    public enum Pick{IMAGE}
     public enum From{GALLERY_AND_CAMERA, GALLERY, CAMERA}
+
+    public enum Pick{
+        IMAGE,
+        VIDEO,
+        AUDIO;
+
+        public static Pick getPickForPickStr(String typeStr){
+            for(Pick value  : Pick.values()) if(getStringMap(value).equals(typeStr)) return value;
+            return IMAGE;//default
+        }
+
+        public String getStr(){return getStringMap(this);}
+
+        public static String getStringMap(Pick pick){
+            switch (pick){
+                case VIDEO : return "video";
+                case IMAGE : return "image";
+                case AUDIO : return "audio";
+                default : return "default";
+            }
+        }
+    }
 
     /**
      * This is used to parse the Result generated from this Picker.

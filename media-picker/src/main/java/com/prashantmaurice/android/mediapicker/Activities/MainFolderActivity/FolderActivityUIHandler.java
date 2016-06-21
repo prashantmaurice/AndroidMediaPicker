@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.view.View;
 import android.widget.GridView;
 
+import com.prashantmaurice.android.mediapicker.MediaPicker;
 import com.prashantmaurice.android.mediapicker.Models.MFolderObj;
 import com.prashantmaurice.android.mediapicker.R;
 
@@ -29,6 +30,12 @@ public class FolderActivityUIHandler {
         viewHolder.btn_back = folderActivity.findViewById(R.id.btn_back);
         viewHolder.btn_camera = folderActivity.findViewById(R.id.btn_camera);
         viewHolder.gridView = (GridView) folderActivity.findViewById(R.id.gridView);
+
+        if(FolderActivity.getConfiguration().getFrom() == MediaPicker.From.GALLERY){
+            viewHolder.btn_camera.setVisibility(View.GONE);
+        } else {
+            viewHolder.btn_camera.setVisibility(View.VISIBLE);
+        }
 
         initializeGridView(viewHolder.gridView);
     }

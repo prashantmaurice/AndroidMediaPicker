@@ -6,6 +6,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.prashantmaurice.android.mediapicker.Activities.MainFolderActivity.FolderActivity;
+import com.prashantmaurice.android.mediapicker.MediaPicker;
 import com.prashantmaurice.android.mediapicker.Utils.Settings;
 
 import static com.prashantmaurice.android.mediapicker.MediaPicker.From;
@@ -42,6 +43,7 @@ public class Configuration implements Parcelable {
     public void setStartFrom(int startFrom) { this.startFrom = startFrom;}
     public int getStartFrom() {return this.startFrom;}
     public int getMaximumCount() {return this.maximumCount;}
+    public boolean isSelectMultiple() { return selectMultiple;}
 
     /** Parsable logic */
     public Intent build(Context context){
@@ -64,6 +66,8 @@ public class Configuration implements Parcelable {
         dest.writeInt(startFrom);
         dest.writeSerializable(from);
         dest.writeInt(selectMultiple?1:0);
+        dest.writeString(pick.getStr());
+
     }
 
     public Configuration(Parcel parcel) {
@@ -71,6 +75,7 @@ public class Configuration implements Parcelable {
         startFrom = parcel.readInt();
         from = (From) parcel.readSerializable();
         selectMultiple = parcel.readInt()==1;
+        pick = MediaPicker.Pick.getPickForPickStr(parcel.readString());
     }
 
     public static final Creator<Configuration> CREATOR = new Creator<Configuration>() {

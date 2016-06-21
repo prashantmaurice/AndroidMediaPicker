@@ -36,12 +36,13 @@ import java.util.List;
  */
 public class MainActivity extends AppCompatActivity {
 
-    View btn_selectmultiple, btn_selectdefault,btn_selectcamera;
+    View btn_selectmultiple, btn_selectdefault,btn_selectcamera, btn_selectvideo;
     LinearLayout imageGallery;
 
     static final int REQUEST_PICK_MULTIPLE = 1001;
     static final int REQUEST_PICK_DEFAULTGALLERY = 1002;
     static final int REQUEST_PICK_CAMERA = 1003;
+    static final int REQUEST_PICK_VIDEO = 1004;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
         btn_selectdefault = findViewById(R.id.btn_selectdefault);
         btn_selectcamera = findViewById(R.id.btn_selectcamera);
         imageGallery = (LinearLayout) findViewById(R.id.imageGallery);
+        btn_selectvideo = findViewById(R.id.btn_selectvideo);
     }
 
     private void initializeListeners() {
@@ -98,6 +100,18 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(intent, REQUEST_PICK_CAMERA);
             }
         });
+
+        btn_selectvideo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new MediaPicker.IntentBuilder()
+                        .pick(MediaPicker.Pick.VIDEO)
+                        .from(MediaPicker.From.GALLERY)
+                        .selectMultiple(false)
+                        .build(MainActivity.this);
+                startActivityForResult(intent, REQUEST_PICK_VIDEO);
+            }
+        });
     }
 
     @Override
@@ -108,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
             switch (requestCode){
                 case REQUEST_PICK_MULTIPLE:
                     ResultData dataObject = MediaPicker.getResultData(data);
-                    List<SelectedMedia> selectedMedia = dataObject.getSelectedPics();
+                    List<SelectedMedia> selectedMedia = dataObject.getSelectedMedias();
 
 //                    List<Uri> picUris = dataObject.getSelectedOriginalUri();
                     addImagesToThegallery(selectedMedia);
@@ -131,7 +145,7 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 case REQUEST_PICK_CAMERA:
                     ResultData dataObject2 = MediaPicker.getResultData(data);
-                    List<SelectedMedia> selectedMedia2 = dataObject2.getSelectedPics();
+                    List<SelectedMedia> selectedMedia2 = dataObject2.getSelectedMedias();
 
 //                    List<Uri> picUris = dataObject.getSelectedOriginalUri();
                     addImagesToThegallery(selectedMedia2);
@@ -140,6 +154,17 @@ public class MainActivity extends AppCompatActivity {
                         Utils.showToast(this,"Picked "+uri2.getPath());
                     }
                     Utils.showToast(this,"Picked "+selectedMedia2.size()+" images");
+                    break;
+                case REQUEST_PICK_VIDEO:
+                    ResultData dataObject3 = MediaPicker.getResultData(data);
+                    List<SelectedMedia> selectedMedia3 = dataObject3.getSelectedMedias();
+
+                    addImagesToThegallery(selectedMedia3);
+                    if(selectedMedia3.size()>0){
+                        Uri uri2 = selectedMedia3.get(0).getOriginalUri();// content://media/external/images/media/23969
+                        Utils.showToast(this,"Picked "+uri2.getPath());
+                    }
+                    Utils.showToast(this,"Picked "+selectedMedia3.size()+" videos");
                     break;
 
             }
@@ -150,9 +175,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void addImagesToThegallery(List<SelectedMedia> selectedMedia) {
         imageGallery.removeAllViews();
-        for (SelectedMedia image : selectedMedia) {
+        for (SelectedMedia media : selectedMedia) {
             try {
-                imageGallery.addView(getImageView(image));
+                imageGallery.addView(getImageView(media));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -160,9 +185,9 @@ public class MainActivity extends AppCompatActivity {
     }
     private void addImagesToThegalleryFromUri(List<Uri> selectedUri) {
         imageGallery.removeAllViews();
-        for (Uri image : selectedUri) {
+        for (Uri imageUri : selectedUri) {
             try {
-                imageGallery.addView(getImageView(image));
+                imageGallery.addView(getImageView(imageUri));
             } catch (IOException e) {
                 e.printStackTrace();
             }
