@@ -80,6 +80,12 @@ public class SelectedMedia {
         return mediaId;
     }
 
+    /**
+     * @return duration of the video
+     */
+    public int getDuration() {
+        return duration;
+    }
 
     public double longitude;
     public String desc;
