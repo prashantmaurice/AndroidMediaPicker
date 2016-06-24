@@ -1,5 +1,6 @@
 package com.prashantmaurice.android.mediapicker.Models;
 
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -7,6 +8,8 @@ import android.provider.MediaStore;
 
 import com.prashantmaurice.android.mediapicker.ExternalInterface.Type;
 import com.prashantmaurice.android.mediapicker.MediaPicker;
+
+import java.io.IOException;
 
 /**
  * Created by maurice on 02/06/16.
@@ -88,6 +91,16 @@ public class MImageObj extends MediaObj implements Parcelable {
             mImageObj.setType(Type.CAMERA_IMAGE);
             mImageObj.setDateTaken(System.currentTimeMillis());
             mImageObj.setMainUri(cameraURI);
+
+            ExifInterface exif;
+            try {
+                exif = new ExifInterface(cameraURI.getPath() );
+                mImageObj.setWidth(exif.getAttributeInt(ExifInterface.TAG_IMAGE_WIDTH, 0));
+                mImageObj.setHeight(exif.getAttributeInt(ExifInterface.TAG_IMAGE_LENGTH, 0));
+                mImageObj.setOrientation(exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 0));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             return mImageObj;
         }
     }
