@@ -24,6 +24,7 @@ public class SelectedMedia {
     double latitude;
     Pick mediaType;
     int duration;
+    public int orientation;//useful for images
 
     /**
      * @return height of image/video if available
@@ -41,8 +42,8 @@ public class SelectedMedia {
     /**
      * @return longitude of the image taken
      */
-    public double getLongitude() {
-        return longitude;
+    public int getOrientation() {
+        return orientation;
     }
 
     /**
@@ -51,7 +52,12 @@ public class SelectedMedia {
     public double getLatitude() {
         return latitude;
     }
-
+    /**
+     * @return longitude of the image taken
+     */
+    public double getLongitude() {
+        return longitude;
+    }
     /**
      * @return date of the image taken
      */

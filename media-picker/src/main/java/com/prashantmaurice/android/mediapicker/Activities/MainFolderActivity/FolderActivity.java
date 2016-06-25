@@ -26,7 +26,9 @@ import com.prashantmaurice.android.mediapicker.Utils.SelectionController;
 import com.prashantmaurice.android.mediapicker.Utils.ToastMain;
 import com.prashantmaurice.android.mediapicker.Utils.Utils;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -229,7 +231,7 @@ public class FolderActivity extends AppCompatActivity implements android.support
                 if (!folders.containsKey(tempDir)) {
                     MFolderObj mFolderObj = new MFolderObj(tempDir, configuration.getPick());
 
-                    //Set am imageObj as latest one
+                    //Set am imageObj as latest one//1453763584//79870665600000 //
                     long id = c.getLong(c.getColumnIndex(MediaStore.Images.Media._ID));
                     long dateTaken = c.getLong(c.getColumnIndex(MediaStore.Images.Media.DATE_TAKEN));
                     double lat = c.getDouble(c.getColumnIndex(MediaStore.Images.Media.LATITUDE));
@@ -238,8 +240,14 @@ public class FolderActivity extends AppCompatActivity implements android.support
                     int width = c.getInt(c.getColumnIndex(MediaStore.Images.ImageColumns.WIDTH));
                     int height = c.getInt(c.getColumnIndex(MediaStore.Images.ImageColumns.HEIGHT));
                     String desc = c.getString(c.getColumnIndex(MediaStore.Images.Media.DESCRIPTION));
-                    MImageObj mImageObj = MImageObj.Builder.generateFromMediaImageCursor(id, dateTaken, width, height, lat, longg, desc, orientation);
 
+                    //parse date-taken as in few phones it contained 79870665600000,
+                    if(dateTaken > System.currentTimeMillis()+(1000*60*60*24*1000)){
+                        dateTaken = (new File(fullPath).lastModified());
+                        if(dateTaken<10) dateTaken = System.currentTimeMillis();
+                    }
+
+                    MImageObj mImageObj = MImageObj.Builder.generateFromMediaImageCursor(id, dateTaken, width, height, lat, longg, desc, orientation);
                     mFolderObj.setLatestMediaObj(mImageObj);
 
 

@@ -63,6 +63,8 @@ public class ResultDataBuilder {
             selection.longitude = imageObj.getLongitude();
             selection.width = imageObj.getWidth();
             selection.height = imageObj.getHeight();
+            selection.orientation = ((MImageObj) obj).getOrientation();
+
         }
 
         if(obj instanceof MVideoObj){

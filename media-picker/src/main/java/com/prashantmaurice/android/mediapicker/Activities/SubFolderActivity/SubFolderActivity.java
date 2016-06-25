@@ -21,6 +21,7 @@ import com.prashantmaurice.android.mediapicker.R;
 import com.prashantmaurice.android.mediapicker.Utils.Logg;
 import com.prashantmaurice.android.mediapicker.Utils.PermissionController;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -148,8 +149,16 @@ public class SubFolderActivity extends AppCompatActivity implements android.supp
                     double longg = c.getDouble(c.getColumnIndex(MediaStore.Images.ImageColumns.LONGITUDE));
                     String desc = c.getString(c.getColumnIndex(MediaStore.Images.ImageColumns.DESCRIPTION));
 
+                    //parse date-taken as in few phones it contained 79870665600000,
+                    if(dateTaken> System.currentTimeMillis()+(1000*60*60*24*1000)){
+                        dateTaken = (new File(fullPath).lastModified());
+                        if(dateTaken<10) dateTaken = System.currentTimeMillis();
+                    }
+
                     MImageObj mImageObj = MImageObj.Builder.generateFromMediaImageCursor(id, dateTaken, width, height, lat, longg, desc, orientation);
                     mediaObjs.add(mImageObj);
+
+
                 }
 
                 c.moveToNext();

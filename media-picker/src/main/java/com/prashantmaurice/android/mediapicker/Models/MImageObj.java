@@ -72,6 +72,7 @@ public class MImageObj extends MediaObj implements Parcelable {
     public static class Builder{
         public static MImageObj generateFromMediaImageCursor(long id, long dateTaken, int width, int height, double lat, double longg, String desc, int orientation) {
             Uri mainUri = Uri.withAppendedPath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, Long.toString(id));
+
             MImageObj mImageObj = new MImageObj();
             mImageObj.setType(Type.GALLERY_IMAGE);
             mImageObj.setMediaId(id);
