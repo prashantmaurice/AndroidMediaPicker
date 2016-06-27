@@ -14,6 +14,8 @@ public abstract class MediaObj {
 
     public abstract Type getType();
 
+    public abstract long getSize();
+
     public abstract long getDateTaken();
 
     public abstract String getDesc();
@@ -28,6 +30,8 @@ public abstract class MediaObj {
     public abstract void setMediaId(long mediaId);
 
     public abstract void setType(Type type);
+
+    public abstract void setSize(long size);
 
     public abstract void setDateTaken(long dateTaken);
 

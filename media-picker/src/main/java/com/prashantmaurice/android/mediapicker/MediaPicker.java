@@ -114,5 +114,13 @@ public class MediaPicker {
         public Intent build(Context context){
             return config.build(context);
         }
+
+        /**
+         * Set maximum file size in KB that can be selected. If not set, no limit on max size
+         */
+        public IntentBuilder setMaximumFileSize(int maximumFileSize) {
+            config.setMaximumFileSize(maximumFileSize);
+            return this;
+        }
     }
 }

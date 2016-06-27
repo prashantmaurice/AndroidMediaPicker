@@ -7,6 +7,7 @@ import android.widget.BaseAdapter;
 import com.prashantmaurice.android.mediapicker.Activities.MainFolderActivity.FolderActivity;
 import com.prashantmaurice.android.mediapicker.Models.MediaObj;
 import com.prashantmaurice.android.mediapicker.Utils.SingleClickListener;
+import com.prashantmaurice.android.mediapicker.Utils.ToastMain;
 import com.prashantmaurice.android.mediapicker.Views.ImageViewBuilder;
 
 import java.util.ArrayList;
@@ -59,9 +60,14 @@ public class SubFolderActivityAdapter extends BaseAdapter {
         holder.setOnClickListener(new SingleClickListener() {
             @Override
             public void onSingleClick(View view) {
-                FolderActivity.getSelectionController().toggle(activity,mediaObj);
-                notifyDataSetChanged();
-                activity.refreshActionbarState();
+                long maxAllowedSize = FolderActivity.getConfiguration().getMaximumFileSize();
+                if(maxAllowedSize > 0 && mediaObj.getSize() > 0 && maxAllowedSize < mediaObj.getSize()){
+                    ToastMain.showSmarterToast(activity, "", "This file is too large to send");
+                } else {
+                    FolderActivity.getSelectionController().toggle(activity, mediaObj);
+                    notifyDataSetChanged();
+                    activity.refreshActionbarState();
+                }
             }
         });
         if(FolderActivity.getSelectionController().isSelected(mediaObj) && FolderActivity.getConfiguration().isSelectMultiple()){

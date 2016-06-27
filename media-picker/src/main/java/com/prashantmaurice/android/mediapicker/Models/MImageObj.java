@@ -27,6 +27,7 @@ public class MImageObj extends MediaObj implements Parcelable {
     private int height;
     private int orientation;
     private MediaPicker.Pick mediaType = MediaPicker.Pick.IMAGE;
+    private long size;
 
     public MImageObj(){}
 
@@ -38,6 +39,7 @@ public class MImageObj extends MediaObj implements Parcelable {
     public Uri getMainUri() {return mainUri;}
     public String getPath() {return getMainUri().getPath();}
     public MediaPicker.Pick getMediaType() { return mediaType;}
+    public long getSize() {return size;}
 
     /** Abstract Setters */
     public void setType(Type type) {this.type = type;}
@@ -46,6 +48,7 @@ public class MImageObj extends MediaObj implements Parcelable {
     public void setDesc(String desc) {this.desc = desc;}
     public void setMainUri(Uri mainUri) {this.mainUri = mainUri;}
     public void setOrientation(int orientation) {this.orientation = orientation;}
+    public void setSize(long size) {this.size = size;}
 
     /**Image Obj Getters*/
     public double getLatitude() {return latitude;}
@@ -70,7 +73,7 @@ public class MImageObj extends MediaObj implements Parcelable {
     }
 
     public static class Builder{
-        public static MImageObj generateFromMediaImageCursor(long id, long dateTaken, int width, int height, double lat, double longg, String desc, int orientation) {
+        public static MImageObj generateFromMediaImageCursor(long id, long dateTaken, int width, int height, double lat, double longg, String desc, int orientation, long size) {
             Uri mainUri = Uri.withAppendedPath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, Long.toString(id));
 
             MImageObj mImageObj = new MImageObj();
@@ -84,6 +87,7 @@ public class MImageObj extends MediaObj implements Parcelable {
             mImageObj.setMainUri(mainUri);
             mImageObj.setWidth(width);
             mImageObj.setHeight(height);
+            mImageObj.setSize(size);
             return mImageObj;
 
         }
@@ -126,6 +130,7 @@ public class MImageObj extends MediaObj implements Parcelable {
         mainUri = Uri.parse( in.readString());
         height = in.readInt();
         width = in.readInt();
+        size = in.readLong();
     }
     @Override
     public void writeToParcel(Parcel dest, int flags) {
@@ -139,5 +144,6 @@ public class MImageObj extends MediaObj implements Parcelable {
         dest.writeString(mainUri.toString());
         dest.writeInt(height);
         dest.writeInt(width);
+        dest.writeLong(size);
     }
 }

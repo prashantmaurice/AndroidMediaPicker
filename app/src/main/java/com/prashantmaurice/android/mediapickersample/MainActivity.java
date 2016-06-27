@@ -108,6 +108,7 @@ public class MainActivity extends AppCompatActivity {
                         .pick(MediaPicker.Pick.VIDEO)
                         .from(MediaPicker.From.GALLERY)
                         .selectMultiple(false)
+                        .setMaximumFileSize(5000)
                         .build(MainActivity.this);
                 startActivityForResult(intent, REQUEST_PICK_VIDEO);
             }

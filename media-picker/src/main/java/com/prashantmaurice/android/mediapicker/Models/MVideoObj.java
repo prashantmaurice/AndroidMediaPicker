@@ -24,6 +24,7 @@ public class MVideoObj extends MediaObj implements Parcelable{
     private int height;
     private int duration;
     private MediaPicker.Pick mediaType = MediaPicker.Pick.VIDEO;
+    private long size;
 
 
     public MVideoObj(){}
@@ -36,6 +37,7 @@ public class MVideoObj extends MediaObj implements Parcelable{
     public Uri getMainUri() {return mainUri;}
     public String getPath() {return getMainUri().getPath();}
     public MediaPicker.Pick getMediaType(){return mediaType;}
+    public long getSize() {return size;}
 
     /** Abstract Setters */
     public void setType(Type type) {this.type = type;}
@@ -43,6 +45,7 @@ public class MVideoObj extends MediaObj implements Parcelable{
     public void setDateTaken(long dateTaken) {this.dateTaken = dateTaken;}
     public void setDesc(String desc) {this.desc = desc;}
     public void setMainUri(Uri mainUri) {this.mainUri = mainUri;}
+    public void setSize(long size) {this.size = size;}
 
     /**Video Obj Getters*/
     public double getLatitude() {return latitude;}
@@ -68,7 +71,7 @@ public class MVideoObj extends MediaObj implements Parcelable{
     }
 
     public static class Builder{
-        public static MVideoObj generateFromMediaVideoCursor(long id, long dateTaken, int width, int height, double lat, double longg, String desc, int duration) {
+        public static MVideoObj generateFromMediaVideoCursor(long id, long dateTaken, int width, int height, double lat, double longg, String desc, int duration, long size) {
             Uri mainUri = Uri.withAppendedPath(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, Long.toString(id));
             MVideoObj mVideoObj = new MVideoObj();
             mVideoObj.setType(Type.GALLERY_VIDEO);
@@ -81,6 +84,7 @@ public class MVideoObj extends MediaObj implements Parcelable{
             mVideoObj.setMainUri(mainUri);
             mVideoObj.setWidth(width);
             mVideoObj.setHeight(height);
+            mVideoObj.setSize(size);
             return mVideoObj;
 
         }
@@ -106,6 +110,7 @@ public class MVideoObj extends MediaObj implements Parcelable{
         mainUri = Uri.parse( in.readString());
         height = in.readInt();
         width = in.readInt();
+        size = in.readLong();
     }
     @Override
     public void writeToParcel(Parcel dest, int flags) {
@@ -119,5 +124,6 @@ public class MVideoObj extends MediaObj implements Parcelable{
         dest.writeString(mainUri.toString());
         dest.writeInt(height);
         dest.writeInt(width);
+        dest.writeLong(size);
     }
 }

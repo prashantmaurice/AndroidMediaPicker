@@ -26,6 +26,7 @@ public class Configuration implements Parcelable {
     private int startFrom = 0;//default
     private Pick pick = Pick.IMAGE;
     private From from = From.GALLERY_AND_CAMERA;
+    private long maxFileSize = 0; // max file size in bytes
 
     public Configuration(){}
 
@@ -40,10 +41,12 @@ public class Configuration implements Parcelable {
         this.selectMultiple = selectMultiple;
     }
     public void setMaximumCount(int maximumCount) { this.maximumCount = maximumCount;}
+    public void setMaximumFileSize(int maxSize) { this.maxFileSize = maxSize*1024;} // convert to bytes
     public void setStartFrom(int startFrom) { this.startFrom = startFrom;}
     public int getStartFrom() {return this.startFrom;}
     public int getMaximumCount() {return this.maximumCount;}
     public boolean isSelectMultiple() { return selectMultiple;}
+    public long getMaximumFileSize() {return this.maxFileSize;}
 
     /** Parsable logic */
     public Intent build(Context context){
@@ -67,6 +70,7 @@ public class Configuration implements Parcelable {
         dest.writeSerializable(from);
         dest.writeInt(selectMultiple?1:0);
         dest.writeString(pick.getStr());
+        dest.writeLong(maxFileSize);
 
     }
 
@@ -76,6 +80,7 @@ public class Configuration implements Parcelable {
         from = (From) parcel.readSerializable();
         selectMultiple = parcel.readInt()==1;
         pick = MediaPicker.Pick.getPickForPickStr(parcel.readString());
+        maxFileSize = parcel.readLong();
     }
 
     public static final Creator<Configuration> CREATOR = new Creator<Configuration>() {

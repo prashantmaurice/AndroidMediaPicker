@@ -211,7 +211,7 @@ public class FolderActivity extends AppCompatActivity implements android.support
                     int width = c.getInt(c.getColumnIndex(MediaStore.Video.VideoColumns.WIDTH));
                     int height = c.getInt(c.getColumnIndex(MediaStore.Video.VideoColumns.HEIGHT));
                     String desc = c.getString(c.getColumnIndex(MediaStore.Video.Media.DESCRIPTION));
-                    MVideoObj mVideoObj = MVideoObj.Builder.generateFromMediaVideoCursor(id, dateTaken, width, height, lat, longg, desc, duration);
+                    MVideoObj mVideoObj = MVideoObj.Builder.generateFromMediaVideoCursor(id, dateTaken, width, height, lat, longg, desc, duration, 0);
 
                     mFolderObj.setLatestMediaObj(mVideoObj);
 
@@ -247,7 +247,7 @@ public class FolderActivity extends AppCompatActivity implements android.support
                         if(dateTaken<10) dateTaken = System.currentTimeMillis();
                     }
 
-                    MImageObj mImageObj = MImageObj.Builder.generateFromMediaImageCursor(id, dateTaken, width, height, lat, longg, desc, orientation);
+                    MImageObj mImageObj = MImageObj.Builder.generateFromMediaImageCursor(id, dateTaken, width, height, lat, longg, desc, orientation, 0);
                     mFolderObj.setLatestMediaObj(mImageObj);
 
 

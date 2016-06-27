@@ -82,7 +82,8 @@ public class SubFolderActivity extends AppCompatActivity implements android.supp
                     MediaStore.Video.VideoColumns.DESCRIPTION,
                     MediaStore.Video.VideoColumns.WIDTH,
                     MediaStore.Video.VideoColumns.HEIGHT,
-                    MediaStore.Video.VideoColumns.DATE_TAKEN
+                    MediaStore.Video.VideoColumns.DATE_TAKEN,
+                    MediaStore.Video.Media.SIZE
             };
             return new CursorLoader(this, u, projection, null, null, MediaStore.Video.VideoColumns.DATE_TAKEN + " DESC");
         } else {
@@ -97,7 +98,8 @@ public class SubFolderActivity extends AppCompatActivity implements android.supp
                     MediaStore.Images.ImageColumns.DESCRIPTION,
                     MediaStore.Images.ImageColumns.WIDTH,
                     MediaStore.Images.ImageColumns.HEIGHT,
-                    MediaStore.Images.ImageColumns.DATE_TAKEN
+                    MediaStore.Images.ImageColumns.DATE_TAKEN,
+                    MediaStore.Images.Media.SIZE
             };
             return new CursorLoader(this, u, projection, null, null, MediaStore.Images.ImageColumns.DATE_TAKEN + " DESC");
         }
@@ -126,8 +128,9 @@ public class SubFolderActivity extends AppCompatActivity implements android.supp
                     double lat = c.getDouble(c.getColumnIndex(MediaStore.Video.VideoColumns.LATITUDE));
                     double longg = c.getDouble(c.getColumnIndex(MediaStore.Video.VideoColumns.LONGITUDE));
                     String desc = c.getString(c.getColumnIndex(MediaStore.Video.VideoColumns.DESCRIPTION));
+                    long size = c.getLong(c.getColumnIndex(MediaStore.Video.Media.SIZE));
 
-                    MVideoObj mVideoObj = MVideoObj.Builder.generateFromMediaVideoCursor(id, dateTaken, width, height, lat, longg, desc, duration);
+                    MVideoObj mVideoObj = MVideoObj.Builder.generateFromMediaVideoCursor(id, dateTaken, width, height, lat, longg, desc, duration, size);
                     mediaObjs.add(mVideoObj);
                 }
 
@@ -148,6 +151,7 @@ public class SubFolderActivity extends AppCompatActivity implements android.supp
                     double lat = c.getDouble(c.getColumnIndex(MediaStore.Images.ImageColumns.LATITUDE));
                     double longg = c.getDouble(c.getColumnIndex(MediaStore.Images.ImageColumns.LONGITUDE));
                     String desc = c.getString(c.getColumnIndex(MediaStore.Images.ImageColumns.DESCRIPTION));
+                    long size = c.getLong(c.getColumnIndex(MediaStore.Images.Media.SIZE));
 
                     //parse date-taken as in few phones it contained 79870665600000,
                     if(dateTaken> System.currentTimeMillis()+(1000*60*60*24*1000)){
@@ -155,7 +159,7 @@ public class SubFolderActivity extends AppCompatActivity implements android.supp
                         if(dateTaken<10) dateTaken = System.currentTimeMillis();
                     }
 
-                    MImageObj mImageObj = MImageObj.Builder.generateFromMediaImageCursor(id, dateTaken, width, height, lat, longg, desc, orientation);
+                    MImageObj mImageObj = MImageObj.Builder.generateFromMediaImageCursor(id, dateTaken, width, height, lat, longg, desc, orientation, size);
                     mediaObjs.add(mImageObj);
 
 
