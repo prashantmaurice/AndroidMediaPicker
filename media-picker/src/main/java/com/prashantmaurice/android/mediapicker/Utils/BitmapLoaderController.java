@@ -71,17 +71,22 @@ public class BitmapLoaderController {
         protected Bitmap doInBackground(MediaObj... params) {
             mediaObj = params[0];
 
-            if(mediaObj.getMediaType() == MediaPicker.Pick.VIDEO){
-                Bitmap bitmapOrg = MediaStore.Video.Thumbnails.getThumbnail(activity.getContentResolver(), mediaObj.getMediaId(), MediaStore.Video.Thumbnails.MINI_KIND, null);
-                return bitmapOrg;
-            } else if(mediaObj.getMediaType() == MediaPicker.Pick.IMAGE){
-                Bitmap bitmapOrg = MediaStore.Images.Thumbnails.getThumbnail(activity.getContentResolver(), mediaObj.getMediaId(), MediaStore.Images.Thumbnails.MINI_KIND, null);
-                MImageObj mImageObj = (MImageObj)mediaObj;
-                if(mImageObj.getOrientation()==0) return bitmapOrg;
-                Matrix matrix = new Matrix();
-                matrix.postRotate(mImageObj.getOrientation());
-                return Bitmap.createBitmap(bitmapOrg, 0, 0, bitmapOrg.getWidth(), bitmapOrg.getHeight(), matrix, true);
-            } else {
+            try {
+                if (mediaObj.getMediaType() == MediaPicker.Pick.VIDEO) {
+                    Bitmap bitmapOrg = MediaStore.Video.Thumbnails.getThumbnail(activity.getContentResolver(), mediaObj.getMediaId(), MediaStore.Video.Thumbnails.MINI_KIND, null);
+                    return bitmapOrg;
+                } else if (mediaObj.getMediaType() == MediaPicker.Pick.IMAGE) {
+                    Bitmap bitmapOrg = MediaStore.Images.Thumbnails.getThumbnail(activity.getContentResolver(), mediaObj.getMediaId(), MediaStore.Images.Thumbnails.MINI_KIND, null);
+                    MImageObj mImageObj = (MImageObj) mediaObj;
+                    if (mImageObj.getOrientation() == 0) return bitmapOrg;
+                    Matrix matrix = new Matrix();
+                    matrix.postRotate(mImageObj.getOrientation());
+                    return Bitmap.createBitmap(bitmapOrg, 0, 0, bitmapOrg.getWidth(), bitmapOrg.getHeight(), matrix, true);
+                } else {
+                    return null;
+                }
+            } catch (Exception e){
+                e.printStackTrace();
                 return null;
             }
         }
