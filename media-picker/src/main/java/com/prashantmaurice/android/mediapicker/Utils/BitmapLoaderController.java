@@ -85,7 +85,9 @@ public class BitmapLoaderController {
                     if (mImageObj.getOrientation() == 0) return bitmapOrg;
                     Matrix matrix = new Matrix();
                     matrix.postRotate(mImageObj.getOrientation());
-                    return Bitmap.createBitmap(bitmapOrg, 0, 0, bitmapOrg.getWidth(), bitmapOrg.getHeight(), matrix, true);
+                    Bitmap bitmapRotated = Bitmap.createBitmap(bitmapOrg, 0, 0, bitmapOrg.getWidth(), bitmapOrg.getHeight(), matrix, true);
+                    if(bitmapOrg != null && !bitmapOrg.isRecycled()) bitmapOrg.recycle();
+                    return bitmapRotated;
                 } else {
                     return null;
                 }
