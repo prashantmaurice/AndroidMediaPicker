@@ -9,7 +9,6 @@ import android.widget.ImageView;
 
 import com.prashantmaurice.android.mediapicker.MediaPicker;
 import com.prashantmaurice.android.mediapicker.Models.MImageObj;
-import com.prashantmaurice.android.mediapicker.Models.MVideoObj;
 import com.prashantmaurice.android.mediapicker.Models.MediaObj;
 import com.prashantmaurice.android.mediapicker.R;
 
@@ -51,6 +50,11 @@ public class BitmapLoaderController {
             imageview.setTag(R.string.tag_bitmaploadertask,task);
             task.execute(mediaObj);
         }
+    }
+
+    public void flushCache() {
+        cache.flushEverything();
+//        cache = new Cache();
     }
 
     //Load images in Background
@@ -127,13 +131,23 @@ public class BitmapLoaderController {
             if(!usedQueue.isEmpty() && usedQueue.size()>CACHE_SIZE_LIMIT && !usedQueue.contains(mediaObj.getPath())){
                 String toremove = usedQueue.pop();
                 Logg.d(TAG,"Removed from cache : "+toremove);
-                cacheData.remove(toremove);
+                Bitmap bm = cacheData.remove(toremove);
+//                bm.recycle();
+
             }
 
             //add this
             Logg.d(TAG,"Stored in cache : "+ mediaObj.getPath());
             usedQueue.add(0, mediaObj.getPath());
             cacheData.put(mediaObj.getPath(),bitmap);
+        }
+
+        public void flushEverything(){
+//            for(String key : cacheData.keySet()){
+//                cacheData.get(key).recycle();
+//            }
+            cacheData.clear();
+            usedQueue.clear();
         }
     }
 

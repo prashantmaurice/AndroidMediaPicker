@@ -19,6 +19,7 @@ import com.prashantmaurice.android.mediapicker.Models.MImageObj;
 import com.prashantmaurice.android.mediapicker.Models.MVideoObj;
 import com.prashantmaurice.android.mediapicker.Models.MediaObj;
 import com.prashantmaurice.android.mediapicker.R;
+import com.prashantmaurice.android.mediapicker.Utils.BitmapLoaderController;
 import com.prashantmaurice.android.mediapicker.Utils.Constants;
 import com.prashantmaurice.android.mediapicker.Utils.Logg;
 import com.prashantmaurice.android.mediapicker.Utils.PermissionController;
@@ -28,7 +29,6 @@ import com.prashantmaurice.android.mediapicker.Utils.Utils;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -114,10 +114,13 @@ public class FolderActivity extends AppCompatActivity implements android.support
                 case RESULT_OK:
                     ResultData data2 = ResultDataBuilder.getDataForPics(selectionController.getSelectedMedias());
                     setResult(RESULT_OK, ResultDataBuilder.toIntent(data2));
+                    BitmapLoaderController.getInstance().flushCache();
                     finish();
+
                     break;
                 case RESULT_CANCELED:
                     setResult(RESULT_CANCELED);
+                    BitmapLoaderController.getInstance().flushCache();
                     finish();
                     break;
                 case RESULT_BACKPRESSED:
@@ -134,6 +137,7 @@ public class FolderActivity extends AppCompatActivity implements android.support
                         list.addAll(selectionController.getSelectedMedias());
                         ResultData data2 = ResultDataBuilder.getDataForPics(list);
                         setResult(RESULT_OK, ResultDataBuilder.toIntent(data2));
+                        BitmapLoaderController.getInstance().flushCache();
                         finish();
                     }else{
                         ToastMain.showSmarterToast(this,"CameraUri is empty",null);
