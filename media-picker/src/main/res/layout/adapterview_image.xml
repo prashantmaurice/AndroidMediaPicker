@@ -22,6 +22,14 @@
                 android:scaleType="centerCrop"
                 android:background="#eee" />
 
+            <com.prashantmaurice.android.mediapicker.Views.SquareImageView
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:id="@+id/overlay"
+                android:src="@drawable/image_overlay"
+                android:scaleType="centerCrop"
+                android:visibility="gone"/>
+
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"

@@ -34,7 +34,7 @@ public class ImageViewBuilder {
 
     public static class ViewHolder{
         public View mainView, cont_select_overlay,main_cont;
-        public ImageView imageview;
+        public ImageView imageview, image_overlay;
         public TextView tv_number;
 
         Activity activity;
@@ -46,6 +46,7 @@ public class ImageViewBuilder {
             imageview = (ImageView) itemView.findViewById(R.id.imageview);
             tv_number = (TextView) itemView.findViewById(R.id.tv_number);
             cont_select_overlay = itemView.findViewById(R.id.cont_select_overlay);
+            image_overlay = (ImageView)itemView.findViewById(R.id.overlay);
         }
 
 
@@ -81,6 +82,10 @@ public class ImageViewBuilder {
 
         public void setUnSelected() {
             cont_select_overlay.setVisibility(View.GONE);
+        }
+
+        public void setImageOverlay(boolean set) {
+            image_overlay.setVisibility(set ? View.VISIBLE :View.GONE);
         }
     }
 

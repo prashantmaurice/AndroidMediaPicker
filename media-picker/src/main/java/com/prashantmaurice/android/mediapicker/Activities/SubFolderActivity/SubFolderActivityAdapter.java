@@ -57,11 +57,15 @@ public class SubFolderActivityAdapter extends BaseAdapter {
         //set view
         final MediaObj mediaObj = folders.get(position);
         holder.loadImage(mediaObj);
+
+        long maxAllowedSize = FolderActivity.getConfiguration().getMaximumFileSize();
+        final boolean maxReached = (maxAllowedSize > 0 && mediaObj.getSize() > 0 && maxAllowedSize < mediaObj.getSize());
+        holder.setImageOverlay(maxReached);
         holder.setOnClickListener(new SingleClickListener() {
             @Override
             public void onSingleClick(View view) {
-                long maxAllowedSize = FolderActivity.getConfiguration().getMaximumFileSize();
-                if(maxAllowedSize > 0 && mediaObj.getSize() > 0 && maxAllowedSize < mediaObj.getSize()){
+
+                if(maxReached){
                     ToastMain.showSmarterToast(activity, "", "This file is too large to send");
                 } else {
                     FolderActivity.getSelectionController().toggle(activity, mediaObj);
