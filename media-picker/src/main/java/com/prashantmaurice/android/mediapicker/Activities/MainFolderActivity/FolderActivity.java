@@ -201,6 +201,7 @@ public class FolderActivity extends AppCompatActivity implements android.support
         if(configuration.getPick().equals(MediaPicker.Pick.VIDEO)){
             while (!c.isAfterLast()) {
                 String fullPath = c.getString(c.getColumnIndex(MediaStore.Video.VideoColumns.DATA));// /storage/emulated/0/TinyStep/TinyStep Images/IMG 1439401529025.jpg
+                if(fullPath==null) fullPath = "";
                 String tempDir = fullPath.substring(0, fullPath.lastIndexOf("/"));
 
                 if (!folders.containsKey(tempDir)) {
@@ -230,6 +231,7 @@ public class FolderActivity extends AppCompatActivity implements android.support
         } else {
             while (!c.isAfterLast()) {
                 String fullPath = c.getString(c.getColumnIndex(MediaStore.Images.ImageColumns.DATA));// /storage/emulated/0/TinyStep/TinyStep Images/IMG 1439401529025.jpg
+                if(fullPath==null) fullPath = "";
                 String tempDir = fullPath.substring(0, fullPath.lastIndexOf("/"));
 
                 if (!folders.containsKey(tempDir)) {
