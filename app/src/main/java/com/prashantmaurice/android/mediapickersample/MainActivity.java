@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.prashantmaurice.android.mediapicker.ExternalInterface.CustomFolder;
 import com.prashantmaurice.android.mediapicker.ExternalInterface.ResultData;
 import com.prashantmaurice.android.mediapicker.ExternalInterface.SelectedMedia;
 import com.prashantmaurice.android.mediapicker.MediaPicker;
@@ -36,7 +37,7 @@ import java.util.List;
  */
 public class MainActivity extends AppCompatActivity {
 
-    View btn_selectmultiple, btn_selectdefault,btn_selectcamera, btn_selectvideo;
+    View btn_selectmultiple, btn_selectdefault,btn_selectcamera, btn_selectvideo,btn_customfolder;
     LinearLayout imageGallery;
 
     static final int REQUEST_PICK_MULTIPLE = 1001;
@@ -57,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
         btn_selectmultiple = findViewById(R.id.btn_selectmultiple);
         btn_selectdefault = findViewById(R.id.btn_selectdefault);
         btn_selectcamera = findViewById(R.id.btn_selectcamera);
+        btn_customfolder = findViewById(R.id.btn_customfolder);
         imageGallery = (LinearLayout) findViewById(R.id.imageGallery);
         btn_selectvideo = findViewById(R.id.btn_selectvideo);
     }
@@ -113,6 +115,23 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(intent, REQUEST_PICK_VIDEO);
             }
         });
+
+        btn_customfolder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new MediaPicker.IntentBuilder()
+                        .pick(MediaPicker.Pick.IMAGE)
+                        .from(MediaPicker.From.GALLERY_AND_CAMERA)
+                        .addCustomFolder(CustomFolder.Builder.generate("Custom folder",12,"http://i.imgur.com/DvpvklR.png"))
+                        .addCustomFolder(CustomFolder.Builder.generate("Custom folder2",1,"http://i.imgur.com/DvpvklR.png"))
+                        .addCustomFolder(CustomFolder.Builder.generate("Custom folder3",3,"http://i.imgur.com/DvpvklR.png"))
+                        .selectMultiple(true)
+                        .showNumberingStartFrom(3)
+                        .setMaximumCount(5)
+                        .build(MainActivity.this);
+                startActivityForResult(intent, REQUEST_PICK_MULTIPLE);
+            }
+        });
     }
 
     @Override
@@ -123,6 +142,12 @@ public class MainActivity extends AppCompatActivity {
             switch (requestCode){
                 case REQUEST_PICK_MULTIPLE:
                     ResultData dataObject = MediaPicker.getResultData(data);
+                    if(dataObject.isCustomSelected()){
+                        switch (dataObject.getCustomSelected()){
+
+                        }
+                    }
+
                     List<SelectedMedia> selectedMedia = dataObject.getSelectedMedias();
 
 //                    List<Uri> picUris = dataObject.getSelectedOriginalUri();

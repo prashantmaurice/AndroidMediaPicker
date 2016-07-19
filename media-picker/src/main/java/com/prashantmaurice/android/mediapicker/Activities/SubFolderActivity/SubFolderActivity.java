@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -13,7 +12,7 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 
 import com.prashantmaurice.android.mediapicker.MediaPicker;
-import com.prashantmaurice.android.mediapicker.Models.MFolderObj;
+import com.prashantmaurice.android.mediapicker.Models.MLocalFolderObj;
 import com.prashantmaurice.android.mediapicker.Models.MImageObj;
 import com.prashantmaurice.android.mediapicker.Models.MVideoObj;
 import com.prashantmaurice.android.mediapicker.Models.MediaObj;
@@ -22,7 +21,6 @@ import com.prashantmaurice.android.mediapicker.Utils.Logg;
 import com.prashantmaurice.android.mediapicker.Utils.PermissionController;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -191,10 +189,10 @@ public class SubFolderActivity extends AppCompatActivity implements android.supp
 
         public IntentBuilder(){};
 
-        public IntentBuilder setFolderObj(MFolderObj MFolderObj) {
-            intentData.folderName = MFolderObj.getName();
-            intentData.folderPath = MFolderObj.getPath();
-            intentData.mediaType = MFolderObj.getMediaType();
+        public IntentBuilder setFolderObj(MLocalFolderObj MLocalFolderObj) {
+            intentData.folderName = MLocalFolderObj.getName();
+            intentData.folderPath = MLocalFolderObj.getPath();
+            intentData.mediaType = MLocalFolderObj.getMediaType();
             return this;
         }
 

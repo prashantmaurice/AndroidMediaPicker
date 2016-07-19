@@ -9,6 +9,12 @@ import com.prashantmaurice.android.mediapicker.Activities.MainFolderActivity.Fol
 import com.prashantmaurice.android.mediapicker.MediaPicker;
 import com.prashantmaurice.android.mediapicker.Utils.Settings;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.prashantmaurice.android.mediapicker.MediaPicker.From;
 import static com.prashantmaurice.android.mediapicker.MediaPicker.Pick;
 
@@ -27,6 +33,7 @@ public class Configuration implements Parcelable {
     private Pick pick = Pick.IMAGE;
     private From from = From.GALLERY_AND_CAMERA;
     private long maxFileSize = 0; // max file size in bytes
+    private List<CustomFolder> customFolders = new ArrayList<>();
 
     public Configuration(){}
 
@@ -43,10 +50,12 @@ public class Configuration implements Parcelable {
     public void setMaximumCount(int maximumCount) { this.maximumCount = maximumCount;}
     public void setMaximumFileSize(int maxSize) { this.maxFileSize = maxSize*1024;} // convert to bytes
     public void setStartFrom(int startFrom) { this.startFrom = startFrom;}
+    public void addCustomFolders(List<CustomFolder> foldersToAdd) { customFolders.addAll(foldersToAdd); }
     public int getStartFrom() {return this.startFrom;}
     public int getMaximumCount() {return this.maximumCount;}
     public boolean isSelectMultiple() { return selectMultiple;}
     public long getMaximumFileSize() {return this.maxFileSize;}
+    public List<CustomFolder> getCustomFolders() {return this.customFolders;}
 
     /** Parsable logic */
     public Intent build(Context context){
@@ -71,7 +80,7 @@ public class Configuration implements Parcelable {
         dest.writeInt(selectMultiple?1:0);
         dest.writeString(pick.getStr());
         dest.writeLong(maxFileSize);
-
+        dest.writeString(CustomFolder.encode(customFolders).toString());
     }
 
     public Configuration(Parcel parcel) {
@@ -81,6 +90,9 @@ public class Configuration implements Parcelable {
         selectMultiple = parcel.readInt()==1;
         pick = MediaPicker.Pick.getPickForPickStr(parcel.readString());
         maxFileSize = parcel.readLong();
+        try {
+            customFolders = CustomFolder.decode(new JSONArray(parcel.readString()));
+        } catch (JSONException e) {e.printStackTrace();}
     }
 
     public static final Creator<Configuration> CREATOR = new Creator<Configuration>() {
@@ -102,4 +114,6 @@ public class Configuration implements Parcelable {
     public Pick getPick() {
         return pick;
     }
+
+
 }

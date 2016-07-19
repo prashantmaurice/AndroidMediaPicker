@@ -1,17 +1,22 @@
 package com.prashantmaurice.android.mediapicker.Views;
 
-import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.prashantmaurice.android.mediapicker.MediaPicker;
-import com.prashantmaurice.android.mediapicker.Models.MFolderObj;
+import com.prashantmaurice.android.mediapicker.Activities.MainFolderActivity.FolderActivity;
+import com.prashantmaurice.android.mediapicker.ExternalInterface.CustomFolder;
+import com.prashantmaurice.android.mediapicker.Models.FolderObj;
+import com.prashantmaurice.android.mediapicker.Models.MLocalFolderObj;
+import com.prashantmaurice.android.mediapicker.Models.MediaObj;
 import com.prashantmaurice.android.mediapicker.R;
-import com.prashantmaurice.android.mediapicker.Utils.BitmapLoaderController;
 import com.prashantmaurice.android.mediapicker.Utils.Logg;
+import com.prashantmaurice.android.mediapicker.Utils.PicassoUtils;
 import com.prashantmaurice.android.mediapicker.Utils.SingleClickListener;
+import com.squareup.picasso.Picasso;
+
+import static com.prashantmaurice.android.mediapicker.Utils.PicassoUtils.VideoThumbnailRequestHandler;
 
 /**
  * Documented by maurice :
@@ -22,7 +27,7 @@ public class FolderViewBuilder {
     static final String TAG = "FOLDERVIEW";
 
 
-    public static View getView(Activity activity){
+    public static View getView(FolderActivity activity){
         LayoutInflater inflator = LayoutInflater.from(activity);
         View mainView = inflator.inflate(R.layout.adapterview_folder, null);
         ViewHolder holder = new ViewHolder(mainView, activity);
@@ -32,10 +37,10 @@ public class FolderViewBuilder {
                 
     }
 
-    public static View getView(Activity activity, MFolderObj MFolderObj){
+    public static View getView(FolderActivity activity, MLocalFolderObj MLocalFolderObj){
         View view = getView(activity);
         ViewHolder holder = (ViewHolder) view.getTag();
-        holder.inflateData(MFolderObj);
+        holder.inflateData(MLocalFolderObj);
         return view;
     }
 
@@ -44,9 +49,9 @@ public class FolderViewBuilder {
         public TextView tv_foldernum,tv_foldername;
         public ImageView imageview;
 
-        Activity activity;
+        FolderActivity activity;
 
-        public ViewHolder(View itemView, Activity activity) {
+        public ViewHolder(View itemView, FolderActivity activity) {
             this.activity = activity;
             mainView = itemView;
             main_cont =  itemView.findViewById(R.id.main_cont);
@@ -56,17 +61,81 @@ public class FolderViewBuilder {
         }
 
 
+        public void inflateData(final FolderObj folderObj){
+            Logg.d(TAG, "Inflating data in FolderObj view : "+ folderObj.getName());
+            tv_foldername.setText(folderObj.getName());
+            tv_foldernum.setText("" + folderObj.getItemCount());
+            if(folderObj instanceof MLocalFolderObj){
+                MLocalFolderObj localFolderObj = (MLocalFolderObj) folderObj;
+                MediaObj mediaObj = localFolderObj.getLatestMediaObj();
+                switch (localFolderObj.getMediaType()){
+                    case VIDEO:
+                        activity.getPicassoForVideo()
+                                .load(VideoThumbnailRequestHandler.SCHEME +"://"+mediaObj.getMediaId())
+                                .into(imageview);
+
+//                        Uri videoThumbUri = Uri.withAppendedPath(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, Long.toString(mediaObj.getMediaId()));
+//                        Picasso.with(activity)
+//                                .load(videoThumbUri)
+//                                .into(imageview);
+                        break;
 
 
-        public void inflateData(final MFolderObj MFolderObj){
-            Logg.d(TAG, "Inflating data in FolderObj view : "+ MFolderObj.getName());
-            tv_foldername.setText(MFolderObj.getName());
-            tv_foldernum.setText("" + MFolderObj.getItemCount());
-            if(MFolderObj.getLatestMediaObj()!=null) BitmapLoaderController.getInstance().loadImage(MFolderObj.getLatestMediaObj(),imageview, activity);
+                    case IMAGE:
+                        activity.getPicassoForImage()
+                                .load(PicassoUtils.ImageThumbnailRequestHandler.SCHEME +"://"+mediaObj.getMediaId())
+                                .into(imageview);
+
+
+//                        Uri imageURI = Uri.withAppendedPath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, Long.toString(mediaObj.getMediaId()));
+//                        Picasso.with(activity)
+//                                .load(imageURI)
+//                                .into(imageview);
+                        break;
+                }
+
+
+
+//
+//                if (localFolderObj.getMediaType() == MediaPicker.Pick.VIDEO) {
+//                    Uri imageURI = Uri.withAppendedPath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, Long.toString(mediaObj.getMediaId()));
+//                } else if (mediaObj.getMediaType() == MediaPicker.Pick.IMAGE) {
+//                    Bitmap bitmapOrg = MediaStore.Images.Thumbnails.getThumbnail(activity.getContentResolver(), mediaObj.getMediaId(), MediaStore.Images.Thumbnails.MINI_KIND, null);
+//                    MImageObj mImageObj = (MImageObj) mediaObj;
+//                    if (mImageObj.getOrientation() == 0) return bitmapOrg;
+//                    Matrix matrix = new Matrix();
+//                    matrix.postRotate(mImageObj.getOrientation());
+//                    Bitmap bitmapRotated = Bitmap.createBitmap(bitmapOrg, 0, 0, bitmapOrg.getWidth(), bitmapOrg.getHeight(), matrix, true);
+//                    if(bitmapOrg != null && !bitmapOrg.isRecycled()) bitmapOrg.recycle();
+//                    return bitmapRotated;
+//                } else {
+//                    return null;
+//                }
+
+//                Uri imageURI = Uri.withAppendedPath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, Integer.toString(columnIndex));
+//                Picasso
+//                        .with(context)
+//                        .load(imageURI)
+//                        .fit()
+//                        .centerInside()
+//                        .into(imageView);
+//
+//                if(localFolderObj.getLatestMediaObj()!=null) Picasso.with(activity).load(localFolderObj.getLatestMediaObj().getMainUri()).into(imageview);
+
+//                if(localFolderObj.getLatestMediaObj()!=null) BitmapLoaderController.getInstance().loadImage(localFolderObj.getLatestMediaObj(),imageview, activity);
+            }else if(folderObj instanceof CustomFolder){
+                CustomFolder customFolder = (CustomFolder) folderObj;
+                Logg.d("CUSOTMMM"," : "+customFolder.getBGUri());
+                Picasso.with(activity).load(customFolder.getBGUri()).into(imageview);
+//                BitmapLoaderController.getInstance().loadImage(customFolder.getBGUri(),imageview, activity);
+            }
+
         }
 
         public void setOnClickListener(SingleClickListener listener) {
             main_cont.setOnClickListener(listener);
         }
     }
+
+
 }

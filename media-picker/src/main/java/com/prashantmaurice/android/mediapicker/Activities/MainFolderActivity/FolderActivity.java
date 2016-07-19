@@ -11,11 +11,13 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 
 import com.prashantmaurice.android.mediapicker.ExternalInterface.Configuration;
+import com.prashantmaurice.android.mediapicker.ExternalInterface.CustomFolder;
 import com.prashantmaurice.android.mediapicker.ExternalInterface.ResultData;
 import com.prashantmaurice.android.mediapicker.ExternalInterface.ResultDataBuilder;
 import com.prashantmaurice.android.mediapicker.MediaPicker;
-import com.prashantmaurice.android.mediapicker.Models.MFolderObj;
+import com.prashantmaurice.android.mediapicker.Models.FolderObj;
 import com.prashantmaurice.android.mediapicker.Models.MImageObj;
+import com.prashantmaurice.android.mediapicker.Models.MLocalFolderObj;
 import com.prashantmaurice.android.mediapicker.Models.MVideoObj;
 import com.prashantmaurice.android.mediapicker.Models.MediaObj;
 import com.prashantmaurice.android.mediapicker.R;
@@ -23,9 +25,11 @@ import com.prashantmaurice.android.mediapicker.Utils.BitmapLoaderController;
 import com.prashantmaurice.android.mediapicker.Utils.Constants;
 import com.prashantmaurice.android.mediapicker.Utils.Logg;
 import com.prashantmaurice.android.mediapicker.Utils.PermissionController;
+import com.prashantmaurice.android.mediapicker.Utils.PicassoUtils;
 import com.prashantmaurice.android.mediapicker.Utils.SelectionController;
 import com.prashantmaurice.android.mediapicker.Utils.ToastMain;
 import com.prashantmaurice.android.mediapicker.Utils.Utils;
+import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -51,6 +55,9 @@ public class FolderActivity extends AppCompatActivity implements android.support
     static SelectionController selectionController;
     static Configuration configuration;
 
+    static Picasso picassoForVideo;
+    static Picasso picassoForImage;
+
     public static SelectionController getSelectionController() {
         return selectionController;
     }
@@ -64,6 +71,8 @@ public class FolderActivity extends AppCompatActivity implements android.support
         Logg.d(TAG,"onCreate");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_folder);
+
+
         if(savedInstanceState==null){
             selectionController = SelectionController.getInstance();
             selectionController.reset();
@@ -94,8 +103,8 @@ public class FolderActivity extends AppCompatActivity implements android.support
         uiHandler =  new FolderActivityUIHandler(this);
     }
 
-    private void setFolderData(List<MFolderObj> folders) {
-        List<MFolderObj> list = new ArrayList<>();
+    private void setFolderData(List<FolderObj> folders) {
+        List<FolderObj> list = new ArrayList<>();
         list.addAll(folders);
         uiHandler.setData(list);
     }
@@ -193,7 +202,7 @@ public class FolderActivity extends AppCompatActivity implements android.support
     public void onLoadFinished(android.support.v4.content.Loader<Cursor> loader, Cursor c) {
         Logg.d(TAG,"onLoadFinished");
 
-        Map<String, MFolderObj> folders = new HashMap<>();
+        Map<String, MLocalFolderObj> folders = new HashMap<>();
 
         c.moveToFirst();
 
@@ -205,7 +214,7 @@ public class FolderActivity extends AppCompatActivity implements android.support
                 String tempDir = fullPath.substring(0, fullPath.lastIndexOf("/"));
 
                 if (!folders.containsKey(tempDir)) {
-                    MFolderObj mFolderObj = new MFolderObj(tempDir, configuration.getPick());
+                    MLocalFolderObj mLocalFolderObj = new MLocalFolderObj(tempDir, configuration.getPick());
 
                     //Set am imageObj as latest one
                     long id = c.getLong(c.getColumnIndex(MediaStore.Video.Media._ID));
@@ -218,14 +227,14 @@ public class FolderActivity extends AppCompatActivity implements android.support
                     String desc = c.getString(c.getColumnIndex(MediaStore.Video.Media.DESCRIPTION));
                     MVideoObj mVideoObj = MVideoObj.Builder.generateFromMediaVideoCursor(id, dateTaken, width, height, lat, longg, desc, duration, 0);
 
-                    mFolderObj.setLatestMediaObj(mVideoObj);
+                    mLocalFolderObj.setLatestMediaObj(mVideoObj);
 
 
-                    folders.put(tempDir, mFolderObj);
+                    folders.put(tempDir, mLocalFolderObj);
                 }
 
-                MFolderObj MFolderObj = folders.get(tempDir);
-                MFolderObj.setItemCount(MFolderObj.getItemCount() + 1);
+                MLocalFolderObj MLocalFolderObj = folders.get(tempDir);
+                MLocalFolderObj.setItemCount(MLocalFolderObj.getItemCount() + 1);
                 c.moveToNext();
             }
         } else {
@@ -235,7 +244,7 @@ public class FolderActivity extends AppCompatActivity implements android.support
                 String tempDir = fullPath.substring(0, fullPath.lastIndexOf("/"));
 
                 if (!folders.containsKey(tempDir)) {
-                    MFolderObj mFolderObj = new MFolderObj(tempDir, configuration.getPick());
+                    MLocalFolderObj mLocalFolderObj = new MLocalFolderObj(tempDir, configuration.getPick());
 
                     //Set am imageObj as latest one//1453763584//79870665600000 //
                     long id = c.getLong(c.getColumnIndex(MediaStore.Images.Media._ID));
@@ -254,24 +263,29 @@ public class FolderActivity extends AppCompatActivity implements android.support
                     }
 
                     MImageObj mImageObj = MImageObj.Builder.generateFromMediaImageCursor(id, dateTaken, width, height, lat, longg, desc, orientation, 0);
-                    mFolderObj.setLatestMediaObj(mImageObj);
+                    mLocalFolderObj.setLatestMediaObj(mImageObj);
 
 
-                    folders.put(tempDir, mFolderObj);
+                    folders.put(tempDir, mLocalFolderObj);
                 }
 
-                MFolderObj MFolderObj = folders.get(tempDir);
-                MFolderObj.setItemCount(MFolderObj.getItemCount() + 1);
+                MLocalFolderObj MLocalFolderObj = folders.get(tempDir);
+                MLocalFolderObj.setItemCount(MLocalFolderObj.getItemCount() + 1);
                 c.moveToNext();
             }
         }
 
-        List<MFolderObj> resultIAV = new ArrayList<>();
-        Iterator<MFolderObj> i = folders.values().iterator();
-        MFolderObj next;
+        List<FolderObj> resultIAV = new ArrayList<>();
+        Iterator<MLocalFolderObj> i = folders.values().iterator();
+        MLocalFolderObj next;
         while(i.hasNext()){
             next = i.next();
             resultIAV.add(next);
+        }
+
+        //add custom folders
+        for(CustomFolder customFolder : configuration.getCustomFolders()){
+            resultIAV.add(customFolder);
         }
 
         setFolderData(resultIAV);
@@ -303,5 +317,22 @@ public class FolderActivity extends AppCompatActivity implements android.support
         }
         cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, cameraURI);
         startActivityForResult(cameraIntent, Constants.RequestCodes.FolderActivity.REQUEST_CAMERA);
+    }
+
+    public Picasso getPicassoForVideo(){
+        if(picassoForVideo==null){
+            picassoForVideo = new Picasso.Builder(this)
+                    .addRequestHandler(new PicassoUtils.VideoThumbnailRequestHandler(this))
+                    .build();
+        }
+        return picassoForVideo;
+    }
+    public Picasso getPicassoForImage(){
+        if(picassoForImage==null){
+            picassoForImage = new Picasso.Builder(this)
+                    .addRequestHandler(new PicassoUtils.ImageThumbnailRequestHandler(this))
+                    .build();
+        }
+        return picassoForImage;
     }
 }

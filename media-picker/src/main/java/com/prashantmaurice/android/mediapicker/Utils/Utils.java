@@ -9,10 +9,14 @@ import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
@@ -99,5 +103,32 @@ public class Utils {
             for(int i=0;i<size;i++) arr.add((E) in.readParcelable(classLoader));
             return arr;
         }
+    }
+
+    public static <T> List<T> toList(T obj) {
+        List<T> list = new ArrayList<>();
+        list.add(obj);
+        return list;
+    }
+
+    public static JSONObject stripJsonOfStringNull(JSONObject jsonObject ){
+        JSONObject newJsonObject = new JSONObject();
+        Iterator<String> iter = jsonObject.keys();
+        while (iter.hasNext()) {
+            String key = iter.next();
+            try {
+                Object value = jsonObject.get(key);
+                if( value instanceof JSONObject )
+                    newJsonObject.put( key, stripJsonOfStringNull( (JSONObject)value ) );
+                else {
+                    String strValOfValue = value.toString();
+                    if( !strValOfValue.equals("null") )
+                        newJsonObject.put( key, value );
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return newJsonObject;
     }
 }

@@ -8,6 +8,7 @@ import com.prashantmaurice.android.mediapicker.MediaPicker;
 import com.prashantmaurice.android.mediapicker.Models.MImageObj;
 import com.prashantmaurice.android.mediapicker.Models.MVideoObj;
 import com.prashantmaurice.android.mediapicker.Models.MediaObj;
+import com.prashantmaurice.android.mediapicker.Utils.Utils;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -20,7 +21,7 @@ import java.util.List;
  * Created by maurice on 03/06/16.
  */
 public class ResultDataBuilder {
-    private static String INTENT_SELECTED = "selected";
+    private static String INTENT_RESULTDATAOBJ = "selected";
     public static ResultData getDataForPics(List<MediaObj> medias){
         ResultData data = new ResultData();
         data.selectedObjs.clear();
@@ -29,12 +30,12 @@ public class ResultDataBuilder {
     }
     public static Intent toIntent(ResultData data){
         Intent intent = new Intent();
-        intent.putExtra(INTENT_SELECTED, Encoders.encode(data).toString());
+        intent.putExtra(INTENT_RESULTDATAOBJ, Encoders.encode(data).toString());
         return intent;
     }
     public static ResultData parseResult(Intent data) {
-        if(data.hasExtra(INTENT_SELECTED)){
-            String jsonArrStr =  data.getStringExtra(INTENT_SELECTED);
+        if(data.hasExtra(INTENT_RESULTDATAOBJ)){
+            String jsonArrStr =  data.getStringExtra(INTENT_RESULTDATAOBJ);
             try {
                 JSONObject jsonArr = new JSONObject(jsonArrStr);
                 return Encoders.decode(jsonArr);
@@ -90,6 +91,7 @@ public class ResultDataBuilder {
                     if(ob2j!=null) objects.add(ob2j);
                 }
                 activityObject.selectedObjs = objects;
+                activityObject.customFolderSelected = (obj.has("customFolderSelected"))? obj.getString("customFolderSelected"):null;
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -102,10 +104,11 @@ public class ResultDataBuilder {
                 JSONArray objects = new JSONArray();
                 for(SelectedMedia selection : resultData.getSelectedMedias()) objects.put(encodeSelectionObject(selection));
                 obj.put("objects",objects);
+                obj.put("customFolderSelected",resultData.customFolderSelected);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            return obj;
+            return Utils.stripJsonOfStringNull(obj);
         }
         private static JSONObject encodeSelectionObject(SelectedMedia selection){
             JSONObject obj = new JSONObject();

@@ -5,8 +5,10 @@ import android.content.Intent;
 import android.net.Uri;
 
 import com.prashantmaurice.android.mediapicker.ExternalInterface.Configuration;
+import com.prashantmaurice.android.mediapicker.ExternalInterface.CustomFolder;
 import com.prashantmaurice.android.mediapicker.ExternalInterface.ResultData;
 import com.prashantmaurice.android.mediapicker.ExternalInterface.ResultDataBuilder;
+import com.prashantmaurice.android.mediapicker.Utils.Utils;
 
 import java.util.List;
 
@@ -107,6 +109,19 @@ public class MediaPicker {
             return this;
         }
 
+        /**
+         *  Add Custom Folder to Folders List
+         *  Generate a custom folder using
+         *
+         */
+        public IntentBuilder addCustomFolder(CustomFolder customFolder){
+            return addCustomFolders(Utils.toList(customFolder));
+        }
+        public IntentBuilder addCustomFolders(List<CustomFolder> customFolders){
+            config.addCustomFolders(customFolders);
+            return this;
+        }
+
 
         /**
          * Generate Intent with selected parameters
@@ -122,5 +137,6 @@ public class MediaPicker {
             config.setMaximumFileSize(maximumFileSize);
             return this;
         }
+
     }
 }

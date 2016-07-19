@@ -14,6 +14,7 @@ import java.util.List;
  */
 public class ResultData {
     List<SelectedMedia> selectedObjs = new ArrayList<>();
+    String customFolderSelected;
 
     /**
      * Returns a list of Selected Objects. There are helper functions
@@ -37,4 +38,11 @@ public class ResultData {
     }
 
 
+    public boolean isCustomSelected() {
+        return customFolderSelected!=null;
+    }
+
+    public String getCustomSelected() {
+        return customFolderSelected;
+    }
 }
