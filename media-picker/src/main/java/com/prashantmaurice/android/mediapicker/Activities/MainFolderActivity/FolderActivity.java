@@ -157,6 +157,13 @@ public class FolderActivity extends AppCompatActivity implements android.support
         }
     }
 
+    public void finishWithCustomFolderSelected(String folderId){
+        ResultData data2 = ResultDataBuilder.getForCustomFolderSelectedAndMediaSelected(folderId,selectionController.getSelectedMedias());
+        setResult(RESULT_OK, ResultDataBuilder.toIntent(data2));
+        BitmapLoaderController.getInstance().flushCache();
+        finish();
+    }
+
     @Override
     protected void onResume() {
         super.onResume();

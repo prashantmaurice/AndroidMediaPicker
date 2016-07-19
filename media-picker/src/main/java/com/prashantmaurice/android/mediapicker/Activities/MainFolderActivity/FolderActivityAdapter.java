@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 import com.prashantmaurice.android.mediapicker.Activities.SubFolderActivity.SubFolderActivity;
+import com.prashantmaurice.android.mediapicker.ExternalInterface.CustomFolder;
 import com.prashantmaurice.android.mediapicker.Models.FolderObj;
 import com.prashantmaurice.android.mediapicker.Models.MLocalFolderObj;
 import com.prashantmaurice.android.mediapicker.Utils.Constants;
@@ -68,6 +69,8 @@ public class FolderActivityAdapter extends BaseAdapter {
                             .setFolderObj((MLocalFolderObj) group)
                             .build(activity);
                     activity.startActivityForResult(intent, Constants.RequestCodes.FolderActivity.REQUEST_SUBFOLDER);
+                }else if(group instanceof CustomFolder){
+                    activity.finishWithCustomFolderSelected(((CustomFolder)group).getCustomFolderId());
                 }
             }
         });

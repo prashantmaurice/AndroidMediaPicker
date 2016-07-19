@@ -45,6 +45,9 @@ public class MainActivity extends AppCompatActivity {
     static final int REQUEST_PICK_CAMERA = 1003;
     static final int REQUEST_PICK_VIDEO = 1004;
 
+    static final String CUSTOMALBUM_1 = "custom1";
+    static final String CUSTOMALBUM_2 = "custom2";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -122,9 +125,8 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new MediaPicker.IntentBuilder()
                         .pick(MediaPicker.Pick.IMAGE)
                         .from(MediaPicker.From.GALLERY_AND_CAMERA)
-                        .addCustomFolder(CustomFolder.Builder.generate("Custom folder",12,"http://i.imgur.com/DvpvklR.png"))
-                        .addCustomFolder(CustomFolder.Builder.generate("Custom folder2",1,"http://i.imgur.com/DvpvklR.png"))
-                        .addCustomFolder(CustomFolder.Builder.generate("Custom folder3",3,"http://i.imgur.com/DvpvklR.png"))
+                        .addCustomFolder(CustomFolder.Builder.generate("Custom folder 1",12,"http://i.imgur.com/DvpvklR.png",CUSTOMALBUM_1))
+                        .addCustomFolder(CustomFolder.Builder.generate("Custom folder 2",1,"http://i.imgur.com/DvpvklR.png",CUSTOMALBUM_2))
                         .selectMultiple(true)
                         .showNumberingStartFrom(3)
                         .setMaximumCount(5)
@@ -144,7 +146,12 @@ public class MainActivity extends AppCompatActivity {
                     ResultData dataObject = MediaPicker.getResultData(data);
                     if(dataObject.isCustomSelected()){
                         switch (dataObject.getCustomSelected()){
-
+                            case CUSTOMALBUM_1:
+                                Utils.showToast(this,"Custom option "+CUSTOMALBUM_1+" selected");
+                                break;
+                            case CUSTOMALBUM_2:
+                                Utils.showToast(this,"Custom option "+CUSTOMALBUM_2+" selected");
+                                break;
                         }
                     }
 
@@ -157,6 +164,7 @@ public class MainActivity extends AppCompatActivity {
                         Utils.showToast(this,"Picked "+uri.getPath());
                     }
                     Utils.showToast(this,"Picked "+selectedMedia.size()+" images");
+
                     break;
                 case REQUEST_PICK_DEFAULTGALLERY:
 

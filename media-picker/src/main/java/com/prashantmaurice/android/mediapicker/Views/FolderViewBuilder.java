@@ -8,6 +8,7 @@ import android.widget.TextView;
 import com.prashantmaurice.android.mediapicker.Activities.MainFolderActivity.FolderActivity;
 import com.prashantmaurice.android.mediapicker.ExternalInterface.CustomFolder;
 import com.prashantmaurice.android.mediapicker.Models.FolderObj;
+import com.prashantmaurice.android.mediapicker.Models.MImageObj;
 import com.prashantmaurice.android.mediapicker.Models.MLocalFolderObj;
 import com.prashantmaurice.android.mediapicker.Models.MediaObj;
 import com.prashantmaurice.android.mediapicker.R;
@@ -82,8 +83,10 @@ public class FolderViewBuilder {
 
 
                     case IMAGE:
+
+                        MImageObj imageObj = (MImageObj) mediaObj;
                         activity.getPicassoForImage()
-                                .load(PicassoUtils.ImageThumbnailRequestHandler.SCHEME +"://"+mediaObj.getMediaId())
+                                .load(PicassoUtils.ImageThumbnailRequestHandler.getUriRequest(mediaObj.getMediaId(),imageObj.getOrientation()))
                                 .into(imageview);
 
 

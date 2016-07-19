@@ -28,6 +28,18 @@ public class ResultDataBuilder {
         data.selectedObjs.addAll(generateSelectionObject(medias));
         return data;
     }
+    public static ResultData getForCustomFolderSelected(String folderId){
+        ResultData data = new ResultData();
+        data.customFolderSelected = folderId;
+        return data;
+    }
+    public static ResultData getForCustomFolderSelectedAndMediaSelected(String folderId, List<MediaObj> medias){
+        ResultData data = new ResultData();
+        data.selectedObjs.clear();
+        data.selectedObjs.addAll(generateSelectionObject(medias));
+        data.customFolderSelected = folderId;
+        return data;
+    }
     public static Intent toIntent(ResultData data){
         Intent intent = new Intent();
         intent.putExtra(INTENT_RESULTDATAOBJ, Encoders.encode(data).toString());
