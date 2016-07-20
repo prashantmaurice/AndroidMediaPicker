@@ -152,7 +152,11 @@ public class FolderActivity extends AppCompatActivity implements android.support
                         ToastMain.showSmarterToast(this,"CameraUri is empty",null);
                     }
                     break;
-                case RESULT_CANCELED: break;
+                case RESULT_CANCELED:
+                    if(configuration.getFrom().equals(MediaPicker.From.CAMERA)){
+                        finish();
+                    }
+                    break;
             }
         }
     }
