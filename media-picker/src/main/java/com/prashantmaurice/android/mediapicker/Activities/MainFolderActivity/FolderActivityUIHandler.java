@@ -8,6 +8,7 @@ import com.prashantmaurice.android.mediapicker.MediaPicker;
 import com.prashantmaurice.android.mediapicker.Models.FolderObj;
 import com.prashantmaurice.android.mediapicker.Models.MLocalFolderObj;
 import com.prashantmaurice.android.mediapicker.R;
+import com.prashantmaurice.android.mediapicker.Utils.BitmapLoaderController;
 
 import java.util.List;
 
@@ -51,6 +52,7 @@ public class FolderActivityUIHandler {
             @Override
             public void onClick(View v) {
                 folderActivity.setResult(Activity.RESULT_CANCELED);
+                BitmapLoaderController.getInstance().flushCache();
                 folderActivity.finish();
             }
         });

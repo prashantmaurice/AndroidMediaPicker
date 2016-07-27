@@ -125,7 +125,6 @@ public class FolderActivity extends AppCompatActivity implements android.support
                     setResult(RESULT_OK, ResultDataBuilder.toIntent(data2));
                     BitmapLoaderController.getInstance().flushCache();
                     finish();
-
                     break;
                 case RESULT_CANCELED:
                     setResult(RESULT_CANCELED);

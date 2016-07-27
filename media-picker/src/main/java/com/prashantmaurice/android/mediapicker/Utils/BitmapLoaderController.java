@@ -83,9 +83,10 @@ public class BitmapLoaderController {
             try {
                 if (mediaObj.getMediaType() == MediaPicker.Pick.VIDEO) {
                     Bitmap bitmapOrg = MediaStore.Video.Thumbnails.getThumbnail(activity.getContentResolver(), mediaObj.getMediaId(), MediaStore.Video.Thumbnails.MINI_KIND, null);
-                    return bitmapOrg;
+                    return createScaledBitmap(bitmapOrg, 256);
                 } else if (mediaObj.getMediaType() == MediaPicker.Pick.IMAGE) {
-                    Bitmap bitmapOrg = MediaStore.Images.Thumbnails.getThumbnail(activity.getContentResolver(), mediaObj.getMediaId(), MediaStore.Images.Thumbnails.MINI_KIND, null);
+                    Bitmap bitmapOrg1 = MediaStore.Images.Thumbnails.getThumbnail(activity.getContentResolver(), mediaObj.getMediaId(), MediaStore.Images.Thumbnails.MINI_KIND, null);
+                    Bitmap bitmapOrg = createScaledBitmap(bitmapOrg1, 256);
                     MImageObj mImageObj = (MImageObj) mediaObj;
                     if (mImageObj.getOrientation() == 0) return bitmapOrg;
                     Matrix matrix = new Matrix();
@@ -106,13 +107,46 @@ public class BitmapLoaderController {
         // Once complete, see if ImageView is still around and set bitmap.
         @Override
         protected void onPostExecute(Bitmap bitmap) {
-            if (bitmap != null) {
+            if (bitmap != null && !bitmap.isRecycled()) {
                 cache.storeInCache(mediaObj,bitmap);
                 final ImageView imageView = imageViewReference.get();
                 if (imageView != null && mediaObj.getMainUri().getPath().equals(imageView.getTag(R.string.tag_imagetoload))) {
                     imageView.setImageBitmap(bitmap);
                 }
             }
+        }
+    }
+
+
+    public static Bitmap createScaledBitmap(Bitmap bm, int boundSize){
+        try {
+            if (bm == null || bm.isRecycled()) return bm;
+            int width = bm.getWidth();
+            int height = bm.getHeight();
+
+            Logg.d("SCALEEE", "createScaledBitmap Image Picker : " + boundSize);
+            if (width > height) {
+                // landscape
+                float ratio = (float) width / boundSize;
+                width = boundSize;
+                height = (int) (height / ratio);
+            } else if (height > width) {
+                // portrait
+                float ratio = (float) height / boundSize;
+                height = boundSize;
+                width = (int) (width / ratio);
+            } else {
+                // square
+                height = boundSize;
+                width = boundSize;
+            }
+
+            Bitmap scaled = Bitmap.createScaledBitmap(bm, width, height, true);
+            if (!bm.isRecycled()) bm.recycle();
+            return scaled;
+        }catch (Exception|OutOfMemoryError e){
+            e.printStackTrace();
+            return bm;
         }
     }
 
@@ -168,11 +202,15 @@ public class BitmapLoaderController {
         }
 
         public void flushEverything(){
-//            for(String key : cacheData.keySet()){
-//                cacheData.get(key).recycle();
-//            }
+            Logg.d(TAG, "flushEverything");
+            for(String key : cacheData.keySet()){
+                if(!cacheData.get(key).isRecycled()) {
+                    cacheData.get(key).recycle();
+                }
+            }
             cacheData.clear();
             usedQueue.clear();
+            System.gc();
         }
     }
 
