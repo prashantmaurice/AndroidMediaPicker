@@ -97,7 +97,7 @@ public class BitmapLoaderController {
                 } else {
                     return null;
                 }
-            } catch (Exception e){
+            } catch (Exception|OutOfMemoryError e){
                 e.printStackTrace();
                 return null;
             }
