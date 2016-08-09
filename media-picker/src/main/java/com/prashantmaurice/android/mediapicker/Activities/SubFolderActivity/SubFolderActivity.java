@@ -19,6 +19,11 @@ import com.prashantmaurice.android.mediapicker.Models.MediaObj;
 import com.prashantmaurice.android.mediapicker.R;
 import com.prashantmaurice.android.mediapicker.Utils.Logg;
 import com.prashantmaurice.android.mediapicker.Utils.PermissionController;
+import com.prashantmaurice.android.mediapicker.Utils.PicassoUtils;
+import com.squareup.picasso.Cache;
+import com.squareup.picasso.LruCache;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.RequestHandler;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -30,6 +35,9 @@ public class SubFolderActivity extends AppCompatActivity implements android.supp
     SubFolderActivityUIHandler uiHandler;
     PermissionController permissionController;
     IntentBuilder.IntentData intentData;
+    static Picasso picassoForVideo;
+    static Picasso picassoForImage;
+    LruCache cache2;
 
 
     @Override
@@ -37,6 +45,7 @@ public class SubFolderActivity extends AppCompatActivity implements android.supp
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_subfolder);
         intentData = IntentBuilder.parseResult(getIntent());
+        cache2 = new LruCache(this);
         uiHandler =  new SubFolderActivityUIHandler(this);
         uiHandler.setTitle(intentData.folderName);
         permissionController = new PermissionController(this);
@@ -64,6 +73,32 @@ public class SubFolderActivity extends AppCompatActivity implements android.supp
 //    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
 //        permissionController.onRequestPermissionsResult(requestCode,permissions,grantResults);
 //    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        cache2.clear();
+        if(picassoForImage!=null) picassoForImage.shutdown();
+        if(picassoForVideo!=null) picassoForVideo.shutdown();
+        picassoForImage = null;
+        picassoForVideo = null;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        cache2.clear();
+        if(picassoForImage!=null) picassoForImage.shutdown();
+        if(picassoForVideo!=null) picassoForVideo.shutdown();
+        picassoForImage = null;
+        picassoForVideo = null;
+    }
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
@@ -173,6 +208,28 @@ public class SubFolderActivity extends AppCompatActivity implements android.supp
     @Override
     public void onLoaderReset(Loader<Cursor> loader) {
 
+    }
+
+    public Picasso getPicassoForVideo(){
+        if(picassoForVideo==null){
+            picassoForVideo = new Picasso.Builder(this)
+                    .addRequestHandler(new PicassoUtils.VideoThumbnailRequestHandler(this))
+                    .memoryCache(cache2)
+                    .build();
+        }
+        return picassoForVideo;
+    }
+    public Picasso getPicassoForImage(){
+        if(picassoForImage==null){
+//            picassoForImage.cache.clear();;
+
+
+            picassoForImage = new Picasso.Builder(this)
+                    .addRequestHandler(new PicassoUtils.ImageThumbnailRequestHandler(this))
+                    .memoryCache(cache2)
+                    .build();
+        }
+        return picassoForImage;
     }
 
     public void refreshActionbarState() {

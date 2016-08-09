@@ -6,11 +6,14 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.prashantmaurice.android.mediapicker.Activities.SubFolderActivity.SubFolderActivity;
 import com.prashantmaurice.android.mediapicker.Models.MImageObj;
 import com.prashantmaurice.android.mediapicker.Models.MediaObj;
 import com.prashantmaurice.android.mediapicker.R;
 import com.prashantmaurice.android.mediapicker.Utils.BitmapLoaderController;
+import com.prashantmaurice.android.mediapicker.Utils.PicassoUtils;
 import com.prashantmaurice.android.mediapicker.Utils.SingleClickListener;
+import com.squareup.picasso.MemoryPolicy;
 
 /**
  * Documented by maurice :
@@ -21,7 +24,7 @@ public class ImageViewBuilder {
     static final String TAG = "FOLDERVIEW";
 
 
-    public static View getView(Activity activity){
+    public static View getView(SubFolderActivity activity){
         LayoutInflater inflator = LayoutInflater.from(activity);
         View mainView = inflator.inflate(R.layout.adapterview_image, null);
         ViewHolder holder = new ViewHolder(mainView, activity);
@@ -37,9 +40,9 @@ public class ImageViewBuilder {
         public ImageView imageview, image_overlay;
         public TextView tv_number;
 
-        Activity activity;
+        SubFolderActivity activity;
 
-        public ViewHolder(View itemView, Activity activity) {
+        public ViewHolder(View itemView, SubFolderActivity activity) {
             this.activity = activity;
             mainView = itemView;
             main_cont =  itemView.findViewById(R.id.main_cont);
@@ -67,7 +70,44 @@ public class ImageViewBuilder {
 
 
         public void loadImage(MediaObj mediaObj) {
-            BitmapLoaderController.getInstance().loadImage(mediaObj,imageview, activity);
+
+            switch (mediaObj.getMediaType()){
+                case VIDEO:
+
+                    activity.getPicassoForVideo()
+                            .load(PicassoUtils.VideoThumbnailRequestHandler.SCHEME +"://"+mediaObj.getMediaId())
+                            .into(imageview);
+
+//                        Uri videoThumbUri = Uri.withAppendedPath(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, Long.toString(mediaObj.getMediaId()));
+//                        Picasso.with(activity)
+//                                .load(videoThumbUri)
+//                                .into(imageview);
+                    break;
+
+
+                case IMAGE:
+
+                    MImageObj imageObj = (MImageObj) mediaObj;
+                    activity.getPicassoForImage()
+                            .load(PicassoUtils.ImageThumbnailRequestHandler.getUriRequest(mediaObj.getMediaId(),imageObj.getOrientation()))
+                            .into(imageview);
+
+
+//                        Uri imageURI = Uri.withAppendedPath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, Long.toString(mediaObj.getMediaId()));
+//                        Picasso.with(activity)
+//                                .load(imageURI)
+//                                .into(imageview);
+                    break;
+            }
+//
+//
+//            MImageObj imageObj = (MImageObj) mediaObj;
+//            activity.getPicassoForImage()
+//                    .load(PicassoUtils.ImageThumbnailRequestHandler.getUriRequest(mediaObj.getMediaId(),imageObj.getOrientation()))
+//                    .into(imageview);
+
+
+//            BitmapLoaderController.getInstance().loadImage(mediaObj,imageview, activity);
         }
 
         public void setOnClickListener(SingleClickListener listener) {
