@@ -71,11 +71,11 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new MediaPicker.IntentBuilder()
-                        .pick(MediaPicker.Pick.IMAGE)
+                        .pick(MediaPicker.Pick.IMAGE_VIDEO)
                         .from(MediaPicker.From.GALLERY_AND_CAMERA)
                         .selectMultiple(true)
                         .showNumberingStartFrom(3)
-                        .setMaximumCount(5)
+                        .setMaximumImageCount(5)
                         .build(MainActivity.this);
                 startActivityForResult(intent, REQUEST_PICK_MULTIPLE);
             }
@@ -129,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
                         .addCustomFolder(CustomFolder.Builder.generate("Custom folder 2",1,"http://i.imgur.com/DvpvklR.png",CUSTOMALBUM_2))
                         .selectMultiple(true)
                         .showNumberingStartFrom(3)
-                        .setMaximumCount(5)
+                        .setMaximumImageCount(5)
                         .build(MainActivity.this);
                 startActivityForResult(intent, REQUEST_PICK_MULTIPLE);
             }

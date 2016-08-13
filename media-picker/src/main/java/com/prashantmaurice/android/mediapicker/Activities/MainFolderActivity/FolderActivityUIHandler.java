@@ -1,9 +1,11 @@
 package com.prashantmaurice.android.mediapicker.Activities.MainFolderActivity;
 
 import android.app.Activity;
+import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.widget.GridView;
 
+import com.astuetz.PagerSlidingTabStrip;
 import com.prashantmaurice.android.mediapicker.MediaPicker;
 import com.prashantmaurice.android.mediapicker.Models.FolderObj;
 import com.prashantmaurice.android.mediapicker.Models.MLocalFolderObj;
@@ -17,7 +19,7 @@ import java.util.List;
  */
 public class FolderActivityUIHandler {
     private final FolderActivity folderActivity;
-    FolderActivityAdapter adapter;
+//    FolderActivityAdapter adapter;
 
     ViewHolder viewHolder = new ViewHolder();
 
@@ -31,7 +33,9 @@ public class FolderActivityUIHandler {
     private void initializeViews() {
         viewHolder.btn_back = folderActivity.findViewById(R.id.btn_back);
         viewHolder.btn_camera = folderActivity.findViewById(R.id.btn_camera);
-        viewHolder.gridView = (GridView) folderActivity.findViewById(R.id.gridView);
+//        viewHolder.gridView = (GridView) folderActivity.findViewById(R.id.gridView);
+        viewHolder.viewPager = (ViewPager) folderActivity.findViewById(R.id.viewPager);
+        viewHolder.titleStrip = (PagerSlidingTabStrip) folderActivity.findViewById(R.id.tabs);
 
         if(FolderActivity.getConfiguration().getFrom() == MediaPicker.From.GALLERY){
             viewHolder.btn_camera.setVisibility(View.GONE);
@@ -39,13 +43,23 @@ public class FolderActivityUIHandler {
             viewHolder.btn_camera.setVisibility(View.VISIBLE);
         }
 
-        initializeGridView(viewHolder.gridView);
+        initializeViewPager();
+
+
+//        initializeGridView(viewHolder.gridView);
     }
 
-    private void initializeGridView(GridView gridView) {
-        adapter = new FolderActivityAdapter(folderActivity);
-        gridView.setAdapter(adapter);
+    private void initializeViewPager() {
+
+        viewHolder.viewPager.setAdapter(new FolderPagerAdapter(folderActivity.getSupportFragmentManager(),folderActivity));
+        viewHolder.titleStrip.setViewPager(viewHolder.viewPager);
+        viewHolder.titleStrip.setVisibility(folderActivity.getConfiguration().getPick().equals(MediaPicker.Pick.IMAGE_VIDEO)?View.VISIBLE:View.GONE);
     }
+
+//    private void initializeGridView(GridView gridView) {
+//        adapter = new FolderActivityAdapter(folderActivity);
+//        gridView.setAdapter(adapter);
+//    }
 
     private void initializeListeners() {
         viewHolder.btn_back.setOnClickListener(new View.OnClickListener() {
@@ -65,14 +79,16 @@ public class FolderActivityUIHandler {
     }
 
     public void setData(List<FolderObj> foldersList){
-        adapter.setData(foldersList);
-        adapter.notifyDataSetChanged();
+//        adapter.setData(foldersList);
+//        adapter.notifyDataSetChanged();
     }
 
 
     //Main View Holder for all the views in this activity
     class ViewHolder{
         View btn_back, btn_camera;
-        GridView gridView;
+        ViewPager viewPager;
+        com.astuetz.PagerSlidingTabStrip titleStrip;
+//        GridView gridView;
     }
 }

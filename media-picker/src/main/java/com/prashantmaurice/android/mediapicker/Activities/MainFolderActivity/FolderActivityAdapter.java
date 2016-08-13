@@ -81,5 +81,6 @@ public class FolderActivityAdapter extends BaseAdapter {
     public void setData(List<FolderObj> data) {
         folders.clear();
         folders.addAll(data);
+        notifyDataSetChanged();
     }
 }

@@ -87,9 +87,7 @@ public class SubFolderActivityUIHandler {
         int count = FolderActivity.getSelectionController().getSelectedMedias().size();
         int startCount = FolderActivity.getConfiguration().getStartFrom();
 
-        if(count == 1 && !FolderActivity.getConfiguration().isSelectMultiple()){
-            finishActivity(SubFolderActivity.RESULT_OK);
-        } else {
+        if(!checkForFinish()){
             if (count > 0) {
                 viewHolder.actionbar_selected.setVisibility(View.VISIBLE);
                 viewHolder.actionbar_unselected.setVisibility(View.GONE);
@@ -98,7 +96,38 @@ public class SubFolderActivityUIHandler {
                 viewHolder.actionbar_selected.setVisibility(View.GONE);
                 viewHolder.actionbar_unselected.setVisibility(View.VISIBLE);
             }
+        }else{
+            finishActivity(SubFolderActivity.RESULT_OK);
         }
+
+//        if(count == 1 && !FolderActivity.getConfiguration().isSelectMultiple()){
+//            finishActivity(SubFolderActivity.RESULT_OK);
+//        } else if(videocount == 1 && (!FolderActivity.getConfiguration().isSelectMultiple() || FolderActivity.getConfiguration().getMaximumVideoCount()==1)){
+//            finishActivity(SubFolderActivity.RESULT_OK);
+//        }else{
+//            if (count > 0) {
+//                viewHolder.actionbar_selected.setVisibility(View.VISIBLE);
+//                viewHolder.actionbar_unselected.setVisibility(View.GONE);
+//                viewHolder.tv_selected.setText("" + (count + startCount) + " selected");
+//            } else {
+//                viewHolder.actionbar_selected.setVisibility(View.GONE);
+//                viewHolder.actionbar_unselected.setVisibility(View.VISIBLE);
+//            }
+//        }
+    }
+
+    //if we need to finish this module with result
+    public static boolean checkForFinish(){
+        int count = FolderActivity.getSelectionController().getSelectedMedias().size();
+        int videocount = FolderActivity.getSelectionController().getSelectedVideoMedias().size();
+        if(count == 1){
+            if(!FolderActivity.getConfiguration().isSelectMultiple()){
+                return true;
+            }else if(FolderActivity.getConfiguration().getMaximumVideoCount()==1 && videocount == 1){
+                return true;
+            }
+        }
+        return false;
     }
 
 

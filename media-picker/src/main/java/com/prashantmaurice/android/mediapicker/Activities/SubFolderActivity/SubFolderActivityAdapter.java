@@ -74,7 +74,7 @@ public class SubFolderActivityAdapter extends BaseAdapter {
                 }
             }
         });
-        if(FolderActivity.getSelectionController().isSelected(mediaObj) && FolderActivity.getConfiguration().isSelectMultiple()){
+        if(FolderActivity.getSelectionController().isSelected(mediaObj) && !SubFolderActivityUIHandler.checkForFinish()){
             holder.setSelected(FolderActivity.getSelectionController().getSelectNumber(mediaObj));
         }else{
             holder.setUnSelected();

@@ -34,16 +34,21 @@ public class SelectionController implements Parcelable{
     public List<MediaObj> getSelectedMedias() {
         return selected;
     }
+    public List<MediaObj> getSelectedVideoMedias() {
+        List<MediaObj> videos = new ArrayList<>();
+        for(MediaObj m : selected) if(m.getMediaType().equals(MediaPicker.Pick.VIDEO)) videos.add(m);
+        return videos;
+    }
 
     public void toggle(Context context, MediaObj mediaObj) {
         if(selected.contains(mediaObj)){
             selected.remove(mediaObj);
         }else{
-            if(selected.size()>= FolderActivity.getConfiguration().getMaximumCount()){
+            if(selected.size()>= FolderActivity.getConfiguration().getMaximumImageCount()){
                 Configuration config = FolderActivity.getConfiguration();
                 String mediaTypeText = "images";
                 if(config.getPick().equals(MediaPicker.Pick.VIDEO)) mediaTypeText = "videos";
-                int maxcount = FolderActivity.getConfiguration().getMaximumCount();
+                int maxcount = FolderActivity.getConfiguration().getMaximumImageCount();
                 int startCount = FolderActivity.getConfiguration().getStartFrom();
                 String text = "You can only select "+ (maxcount+startCount)+" "+mediaTypeText;
                 ToastMain.showSmarterToast(context,null,text);

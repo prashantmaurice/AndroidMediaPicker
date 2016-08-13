@@ -11,6 +11,7 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 
+import com.prashantmaurice.android.mediapicker.Activities.MainFolderActivity.FolderActivity;
 import com.prashantmaurice.android.mediapicker.MediaPicker;
 import com.prashantmaurice.android.mediapicker.Models.MLocalFolderObj;
 import com.prashantmaurice.android.mediapicker.Models.MImageObj;
@@ -65,8 +66,14 @@ public class SubFolderActivity extends AppCompatActivity implements android.supp
 
     @Override
     public void onBackPressed() {
-        setResult(SubFolderActivity.RESULT_BACKPRESSED);
-        finish();
+        if(isInSelectionMode()){
+            FolderActivity.getSelectionController().clearSelection();
+            uiHandler.adapter.notifyDataSetChanged();
+            uiHandler.refreshActionbarState();
+        }else{
+            setResult(SubFolderActivity.RESULT_BACKPRESSED);
+            finish();
+        }
     }
 
     //    @Override
@@ -206,8 +213,10 @@ public class SubFolderActivity extends AppCompatActivity implements android.supp
     }
 
     @Override
-    public void onLoaderReset(Loader<Cursor> loader) {
+    public void onLoaderReset(Loader<Cursor> loader) {}
 
+    private boolean isInSelectionMode(){
+        return FolderActivity.getSelectionController().getSelectedMedias().size()>0;
     }
 
     public Picasso getPicassoForVideo(){

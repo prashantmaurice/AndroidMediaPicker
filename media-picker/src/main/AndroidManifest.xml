@@ -13,8 +13,7 @@
         <activity
             android:name=".Activities.MainFolderActivity.FolderActivity"
             android:theme="@style/NoActionBar"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="portrait"></activity>
+            android:configChanges="orientation|keyboardHidden|screenSize"></activity>
         <activity
             android:name=".Activities.SubFolderActivity.SubFolderActivity"
             android:theme="@style/NoActionBar"></activity>

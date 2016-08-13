@@ -11,5 +11,6 @@ public class Settings {
 
     public static final boolean showDebugToasts = isDebugMode;
     public static String SDCARD_IMG_FOLDER = "Capture";
-    public static int DEFAULT_MAXCOUNT = 10;
+    public static int DEFAULT_MAXCOUNT_IMAGES = 10;
+    public static int DEFAULT_MAXCOUNT_VIDEO = 1;
 }

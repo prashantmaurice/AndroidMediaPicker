@@ -19,6 +19,7 @@ public class MediaPicker {
     public enum From{GALLERY_AND_CAMERA, GALLERY, CAMERA}
 
     public enum Pick{
+        IMAGE_VIDEO,//whattsapp style
         IMAGE,
         VIDEO,
         AUDIO;
@@ -32,6 +33,7 @@ public class MediaPicker {
 
         public static String getStringMap(Pick pick){
             switch (pick){
+                case IMAGE_VIDEO : return "image_video";
                 case VIDEO : return "video";
                 case IMAGE : return "image";
                 case AUDIO : return "audio";
@@ -68,8 +70,16 @@ public class MediaPicker {
         /**
          * Select maximum images he can select
          */
-        public IntentBuilder setMaximumCount(int maxCount) {
-            config.setMaximumCount(maxCount);
+        public IntentBuilder setMaximumImageCount(int maxCount) {
+            config.setMaximumImageCount(maxCount);
+            return this;
+        }
+
+        /**
+         * Select maximum images he can select
+         */
+        public IntentBuilder setMaximumVideoCount(int maxCount) {
+            config.setMaximumImageCount(maxCount);
             return this;
         }
 

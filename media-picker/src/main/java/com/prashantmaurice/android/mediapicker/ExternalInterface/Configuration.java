@@ -28,7 +28,9 @@ public class Configuration implements Parcelable {
     private static String INTENT_CONFIGURABLE = "maindata";
 
     private boolean selectMultiple = false;//show invite Dialog on open
-    private int maximumCount = Settings.DEFAULT_MAXCOUNT;//default
+    private int maximumImageCount = Settings.DEFAULT_MAXCOUNT_IMAGES;//default
+    private int maximumVideoCount = Settings.DEFAULT_MAXCOUNT_VIDEO;//default
+
     private int startFrom = 0;//default
     private Pick pick = Pick.IMAGE;
     private From from = From.GALLERY_AND_CAMERA;
@@ -47,12 +49,14 @@ public class Configuration implements Parcelable {
     public void setSelectMultiple(boolean selectMultiple) {
         this.selectMultiple = selectMultiple;
     }
-    public void setMaximumCount(int maximumCount) { this.maximumCount = maximumCount;}
+    public void setMaximumImageCount(int maximumCount) { this.maximumImageCount = maximumCount;}
+    public void setMaximumVideoCount(int maximumCount) { this.maximumVideoCount = maximumCount;}
     public void setMaximumFileSize(int maxSize) { this.maxFileSize = maxSize*1024;} // convert to bytes
     public void setStartFrom(int startFrom) { this.startFrom = startFrom;}
     public void addCustomFolders(List<CustomFolder> foldersToAdd) { customFolders.addAll(foldersToAdd); }
     public int getStartFrom() {return this.startFrom;}
-    public int getMaximumCount() {return this.maximumCount;}
+    public int getMaximumImageCount() {return this.maximumImageCount;}
+    public int getMaximumVideoCount() {return this.maximumVideoCount;}
     public boolean isSelectMultiple() { return selectMultiple;}
     public long getMaximumFileSize() {return this.maxFileSize;}
     public List<CustomFolder> getCustomFolders() {return this.customFolders;}
@@ -74,7 +78,8 @@ public class Configuration implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(maximumCount);
+        dest.writeInt(maximumImageCount);
+        dest.writeInt(maximumVideoCount);
         dest.writeInt(startFrom);
         dest.writeSerializable(from);
         dest.writeInt(selectMultiple?1:0);
@@ -84,7 +89,8 @@ public class Configuration implements Parcelable {
     }
 
     public Configuration(Parcel parcel) {
-        maximumCount = parcel.readInt();
+        maximumImageCount = parcel.readInt();
+        maximumVideoCount = parcel.readInt();
         startFrom = parcel.readInt();
         from = (From) parcel.readSerializable();
         selectMultiple = parcel.readInt()==1;
