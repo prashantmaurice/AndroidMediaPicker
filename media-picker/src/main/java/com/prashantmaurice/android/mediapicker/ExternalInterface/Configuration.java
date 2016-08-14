@@ -27,7 +27,6 @@ import static com.prashantmaurice.android.mediapicker.MediaPicker.Pick;
 public class Configuration implements Parcelable {
     private static String INTENT_CONFIGURABLE = "maindata";
 
-    private boolean selectMultiple = false;//show invite Dialog on open
     private int maximumImageCount = Settings.DEFAULT_MAXCOUNT_IMAGES;//default
     private int maximumVideoCount = Settings.DEFAULT_MAXCOUNT_VIDEO;//default
 
@@ -46,9 +45,6 @@ public class Configuration implements Parcelable {
     public void setFrom(From from) {
         this.from = from;
     }
-    public void setSelectMultiple(boolean selectMultiple) {
-        this.selectMultiple = selectMultiple;
-    }
     public void setMaximumImageCount(int maximumCount) { this.maximumImageCount = maximumCount;}
     public void setMaximumVideoCount(int maximumCount) { this.maximumVideoCount = maximumCount;}
     public void setMaximumFileSize(int maxSize) { this.maxFileSize = maxSize*1024;} // convert to bytes
@@ -57,7 +53,6 @@ public class Configuration implements Parcelable {
     public int getStartFrom() {return this.startFrom;}
     public int getMaximumImageCount() {return this.maximumImageCount;}
     public int getMaximumVideoCount() {return this.maximumVideoCount;}
-    public boolean isSelectMultiple() { return selectMultiple;}
     public long getMaximumFileSize() {return this.maxFileSize;}
     public List<CustomFolder> getCustomFolders() {return this.customFolders;}
 
@@ -82,7 +77,6 @@ public class Configuration implements Parcelable {
         dest.writeInt(maximumVideoCount);
         dest.writeInt(startFrom);
         dest.writeSerializable(from);
-        dest.writeInt(selectMultiple?1:0);
         dest.writeString(pick.getStr());
         dest.writeLong(maxFileSize);
         dest.writeString(CustomFolder.encode(customFolders).toString());
@@ -93,7 +87,6 @@ public class Configuration implements Parcelable {
         maximumVideoCount = parcel.readInt();
         startFrom = parcel.readInt();
         from = (From) parcel.readSerializable();
-        selectMultiple = parcel.readInt()==1;
         pick = MediaPicker.Pick.getPickForPickStr(parcel.readString());
         maxFileSize = parcel.readLong();
         try {
@@ -122,4 +115,7 @@ public class Configuration implements Parcelable {
     }
 
 
+    public boolean isSelectMultiple() {
+        return !(maximumImageCount<=1 && maximumVideoCount<=1);
+    }
 }

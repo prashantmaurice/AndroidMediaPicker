@@ -63,7 +63,10 @@ public class MediaPicker {
          * Select multiple media or single media
          */
         public IntentBuilder selectMultiple(boolean selectMultiple) {
-            config.setSelectMultiple(selectMultiple);
+            if(!selectMultiple){
+                config.setMaximumImageCount(1);
+                config.setMaximumVideoCount(1);
+            }
             return this;
         }
 
@@ -79,7 +82,7 @@ public class MediaPicker {
          * Select maximum images he can select
          */
         public IntentBuilder setMaximumVideoCount(int maxCount) {
-            config.setMaximumImageCount(maxCount);
+            config.setMaximumVideoCount(maxCount);
             return this;
         }
 
