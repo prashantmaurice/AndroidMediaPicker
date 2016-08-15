@@ -1,6 +1,7 @@
 package com.prashantmaurice.android.mediapicker.Activities.SubFolderActivity;
 
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.GridView;
 import android.widget.TextView;
 
@@ -15,12 +16,14 @@ import java.util.List;
  */
 public class SubFolderActivityUIHandler {
     private final SubFolderActivity folderActivity;
+    private final List<MediaObj> mediaArr;
     SubFolderActivityAdapter adapter;
 
     ViewHolder viewHolder = new ViewHolder();
 
 
-    public SubFolderActivityUIHandler(SubFolderActivity folderActivity) {
+    public SubFolderActivityUIHandler(SubFolderActivity folderActivity, List<MediaObj> mediaArr) {
+        this.mediaArr = mediaArr;
         this.folderActivity = folderActivity;
         initializeViews();
         initializeListeners();
@@ -43,8 +46,21 @@ public class SubFolderActivityUIHandler {
     }
 
     private void initializeGridView(GridView gridView) {
-        adapter = new SubFolderActivityAdapter(folderActivity);
+        adapter = new SubFolderActivityAdapter(folderActivity, mediaArr);
         gridView.setAdapter(adapter);
+        gridView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if(totalItemCount-firstVisibleItem-visibleItemCount<5){
+                    folderActivity.scrolledToEnd();
+                }
+            }
+        });
     }
 
     private void initializeListeners() {
@@ -78,8 +94,7 @@ public class SubFolderActivityUIHandler {
     public void setTitle(String title){
         viewHolder.tv_title.setText(title);
     }
-    public void setData(List<MediaObj> foldersList){
-        adapter.setData(foldersList);
+    public void notifyDataSetChanged(){
         adapter.notifyDataSetChanged();
     }
 

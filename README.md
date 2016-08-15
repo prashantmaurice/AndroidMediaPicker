@@ -102,7 +102,8 @@ Developed by
 ============
  
   * Prashant Maurice - <sabertoothmaurice@gmail.com> [Linkedin](https://in.linkedin.com/in/prashantmaurice) [Twitter](https://twitter.com/MauricePrashant)
-  
+  * Dipak Bansal
+
 
 # License
 

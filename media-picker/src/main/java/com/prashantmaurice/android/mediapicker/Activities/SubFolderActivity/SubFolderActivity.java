@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
@@ -21,10 +22,8 @@ import com.prashantmaurice.android.mediapicker.R;
 import com.prashantmaurice.android.mediapicker.Utils.Logg;
 import com.prashantmaurice.android.mediapicker.Utils.PermissionController;
 import com.prashantmaurice.android.mediapicker.Utils.PicassoUtils;
-import com.squareup.picasso.Cache;
 import com.squareup.picasso.LruCache;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.RequestHandler;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -33,6 +32,8 @@ import java.util.List;
 public class SubFolderActivity extends AppCompatActivity implements android.support.v4.app.LoaderManager.LoaderCallbacks<Cursor> {
     String TAG = "SUB_FOLDERACTIVITY";
     public static final int RESULT_BACKPRESSED = 400;
+    public static final int PAGESIZE = 3*30;
+    private final List<MediaObj> mediaArr = new ArrayList<>();
     SubFolderActivityUIHandler uiHandler;
     PermissionController permissionController;
     IntentBuilder.IntentData intentData;
@@ -40,6 +41,8 @@ public class SubFolderActivity extends AppCompatActivity implements android.supp
     static Picasso picassoForImage;
     LruCache cache2;
 
+    boolean cursorEndReached = false;
+    boolean ongoingCursorLoad = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,13 +50,14 @@ public class SubFolderActivity extends AppCompatActivity implements android.supp
         setContentView(R.layout.activity_subfolder);
         intentData = IntentBuilder.parseResult(getIntent());
         cache2 = new LruCache(this);
-        uiHandler =  new SubFolderActivityUIHandler(this);
+        uiHandler =  new SubFolderActivityUIHandler(this, mediaArr);
         uiHandler.setTitle(intentData.folderName);
         permissionController = new PermissionController(this);
         permissionController.checkPermissionAndRun(Manifest.permission.READ_EXTERNAL_STORAGE, new PermissionController.TaskCallback(){
             @Override
             public void onGranted() {
-                getSupportLoaderManager().initLoader(1, null, SubFolderActivity.this);
+                loadMedia(0,PAGESIZE);
+//                getSupportLoaderManager().initLoader(1, null, SubFolderActivity.this);
             }
 
             @Override
@@ -209,11 +213,13 @@ public class SubFolderActivity extends AppCompatActivity implements android.supp
             }
         }
 
-        uiHandler.setData(mediaObjs);
+//        uiHandler.setData(mediaObjs);
     }
 
     @Override
-    public void onLoaderReset(Loader<Cursor> loader) {}
+    public void onLoaderReset(Loader<Cursor> loader) {
+        Logg.d(TAG,"onLoaderReset");
+    }
 
     private boolean isInSelectionMode(){
         return FolderActivity.getSelectionController().getSelectedMedias().size()>0;
@@ -243,6 +249,10 @@ public class SubFolderActivity extends AppCompatActivity implements android.supp
 
     public void refreshActionbarState() {
         uiHandler.refreshActionbarState();
+    }
+
+    public void scrolledToEnd() {
+        if(!cursorEndReached) loadMedia(mediaArr.size(),PAGESIZE);
     }
 
     //Use this to build intent for calling this class
@@ -295,6 +305,148 @@ public class SubFolderActivity extends AppCompatActivity implements android.supp
             public String folderPath;
             public MediaPicker.Pick mediaType;
         }
+    }
+
+
+    //Paginated Loaders
+    public void loadMedia(final int offset, final int count){
+        if(cursorEndReached || ongoingCursorLoad) return;
+        ongoingCursorLoad = true;
+        Logg.d(TAG,"loadMedia : "+offset+" : "+count);
+        getSupportLoaderManager().initLoader(2, null, new LoaderManager.LoaderCallbacks<Cursor>() {
+            @Override
+            public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+                if(intentData.mediaType.equals(MediaPicker.Pick.VIDEO)){
+                    Uri u = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
+                    String[] projection = {
+                            MediaStore.Video.VideoColumns.DATA,
+                            MediaStore.Video.Media._ID,
+                            MediaStore.Video.VideoColumns.LATITUDE,
+                            MediaStore.Video.VideoColumns.LONGITUDE,
+                            MediaStore.Video.VideoColumns.DURATION,
+                            MediaStore.Video.VideoColumns.DESCRIPTION,
+                            MediaStore.Video.VideoColumns.WIDTH,
+                            MediaStore.Video.VideoColumns.HEIGHT,
+                            MediaStore.Video.VideoColumns.DATE_TAKEN,
+                            MediaStore.Video.Media.SIZE
+                    };
+                    return new CursorLoader(SubFolderActivity.this, u, projection, null, null, MediaStore.Video.VideoColumns.DATE_TAKEN + " DESC");
+                } else {
+
+                    Uri u = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+                    String[] projection = {
+                            MediaStore.Images.ImageColumns.DATA,
+                            MediaStore.Images.Media._ID,
+                            MediaStore.Images.ImageColumns.LATITUDE,
+                            MediaStore.Images.ImageColumns.LONGITUDE,
+                            MediaStore.Images.ImageColumns.ORIENTATION,
+                            MediaStore.Images.ImageColumns.DESCRIPTION,
+                            MediaStore.Images.ImageColumns.WIDTH,
+                            MediaStore.Images.ImageColumns.HEIGHT,
+                            MediaStore.Images.ImageColumns.DATE_TAKEN,
+                            MediaStore.Images.Media.SIZE
+                    };
+                    return new CursorLoader(SubFolderActivity.this, u, projection, null, null, MediaStore.Images.ImageColumns.DATE_TAKEN + " DESC");
+                }
+            }
+
+            @Override
+            public void onLoadFinished(Loader<Cursor> loader, Cursor c) {
+                List<MediaObj> mediaObjs = new ArrayList<>();
+                if(cursorEndReached) return;
+                c.moveToFirst();
+
+
+//                c.moveToNext();
+//                c.moveToPosition();
+//                for(int i=0;i<offset;i++){
+//                    if(!c.isAfterLast()){
+//                        c.moveToNext();
+//                    }
+//                }
+//                c.move(offset);
+                int skipped = 0;
+                Logg.d(TAG,"getPositionB : "+c.getPosition());
+//                boolean b = c.moveToPosition(offset);
+//                Logg.d(TAG,"moveToPosition : "+offset+" : "+b);
+//                Logg.d(TAG,"getPositionA : "+c.getPosition());
+
+                String logg = "";
+                if(intentData.mediaType == MediaPicker.Pick.VIDEO) {
+                    while (!c.isAfterLast()) {
+                        if(mediaObjs.size()>=offset+count) break;
+                        String fullPath = c.getString(c.getColumnIndex(MediaStore.Video.VideoColumns.DATA));
+                        String tempDir = fullPath.substring(0, fullPath.lastIndexOf("/"));
+
+                        if (intentData.folderPath.equals(tempDir)) {
+                            if(skipped++>=offset){
+                                //Set am imageObj as latest one
+                                long id = c.getLong(c.getColumnIndex(MediaStore.Video.Media._ID));
+                                long dateTaken = c.getLong(c.getColumnIndex(MediaStore.Video.VideoColumns.DATE_TAKEN));
+                                int width = c.getInt(c.getColumnIndex(MediaStore.Video.VideoColumns.WIDTH));
+                                int height = c.getInt(c.getColumnIndex(MediaStore.Video.VideoColumns.HEIGHT));
+                                int duration = c.getInt(c.getColumnIndex(MediaStore.Video.VideoColumns.DURATION));
+                                double lat = c.getDouble(c.getColumnIndex(MediaStore.Video.VideoColumns.LATITUDE));
+                                double longg = c.getDouble(c.getColumnIndex(MediaStore.Video.VideoColumns.LONGITUDE));
+                                String desc = c.getString(c.getColumnIndex(MediaStore.Video.VideoColumns.DESCRIPTION));
+                                long size = c.getLong(c.getColumnIndex(MediaStore.Video.Media.SIZE));
+
+                                MVideoObj mVideoObj = MVideoObj.Builder.generateFromMediaVideoCursor(id, dateTaken, width, height, lat, longg, desc, duration, size);
+                                mediaObjs.add(mVideoObj);
+                                logg+= " : "+id;
+                            }
+                        }
+
+                        c.moveToNext();
+                        if(c.isAfterLast()) cursorEndReached = true;
+                    }
+                } else {
+                    while (!c.isAfterLast()) {
+                        if(mediaObjs.size()>=offset+count) break;
+                        String fullPath = c.getString(c.getColumnIndex(MediaStore.Images.ImageColumns.DATA));
+                        String tempDir = fullPath.substring(0, fullPath.lastIndexOf("/"));
+
+                        if (intentData.folderPath.equals(tempDir)) {
+                            if(skipped++>=offset) {
+                                //Set am imageObj as latest one
+                                long id = c.getLong(c.getColumnIndex(MediaStore.Images.Media._ID));
+                                long dateTaken = c.getLong(c.getColumnIndex(MediaStore.Images.ImageColumns.DATE_TAKEN));
+                                int width = c.getInt(c.getColumnIndex(MediaStore.Images.ImageColumns.WIDTH));
+                                int height = c.getInt(c.getColumnIndex(MediaStore.Images.ImageColumns.HEIGHT));
+                                int orientation = c.getInt(c.getColumnIndex(MediaStore.Images.ImageColumns.ORIENTATION));
+                                double lat = c.getDouble(c.getColumnIndex(MediaStore.Images.ImageColumns.LATITUDE));
+                                double longg = c.getDouble(c.getColumnIndex(MediaStore.Images.ImageColumns.LONGITUDE));
+                                String desc = c.getString(c.getColumnIndex(MediaStore.Images.ImageColumns.DESCRIPTION));
+                                long size = c.getLong(c.getColumnIndex(MediaStore.Images.Media.SIZE));
+
+                                //parse date-taken as in few phones it contained 79870665600000,
+                                if (dateTaken > System.currentTimeMillis() + (1000 * 60 * 60 * 24 * 1000)) {
+                                    dateTaken = (new File(fullPath).lastModified());
+                                    if (dateTaken < 10) dateTaken = System.currentTimeMillis();
+                                }
+
+                                MImageObj mImageObj = MImageObj.Builder.generateFromMediaImageCursor(id, dateTaken, width, height, lat, longg, desc, orientation, size);
+                                mediaObjs.add(mImageObj);
+                                logg += " : " + id;
+                            }
+
+
+                        }
+
+                        c.moveToNext();
+                        if(c.isAfterLast()) cursorEndReached = true;
+                    }
+                }
+                Logg.d(TAG,"added == "+logg);
+                ongoingCursorLoad = false;
+                mediaArr.addAll(mediaObjs);
+                uiHandler.notifyDataSetChanged();
+//                uiHandler.setData(mediaObjs);
+            }
+
+            @Override
+            public void onLoaderReset(Loader<Cursor> loader) {}
+        });
     }
 
 

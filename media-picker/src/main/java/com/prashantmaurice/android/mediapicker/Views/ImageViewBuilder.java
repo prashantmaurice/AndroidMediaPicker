@@ -73,10 +73,12 @@ public class ImageViewBuilder {
 
             switch (mediaObj.getMediaType()){
                 case VIDEO:
-
-                    activity.getPicassoForVideo()
-                            .load(PicassoUtils.VideoThumbnailRequestHandler.SCHEME +"://"+mediaObj.getMediaId())
-                            .into(imageview);
+                    if(imageview.getTag()==null || !imageview.getTag().equals("V:"+mediaObj.getMediaId()) || imageview.getDrawable() == null){
+                        activity.getPicassoForVideo()
+                                .load(PicassoUtils.VideoThumbnailRequestHandler.SCHEME +"://"+mediaObj.getMediaId())
+                                .into(imageview);
+                        imageview.setTag("V:"+mediaObj.getMediaId());
+                    }
 
 //                        Uri videoThumbUri = Uri.withAppendedPath(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, Long.toString(mediaObj.getMediaId()));
 //                        Picasso.with(activity)
@@ -88,9 +90,12 @@ public class ImageViewBuilder {
                 case IMAGE:
 
                     MImageObj imageObj = (MImageObj) mediaObj;
-                    activity.getPicassoForImage()
-                            .load(PicassoUtils.ImageThumbnailRequestHandler.getUriRequest(mediaObj.getMediaId(),imageObj.getOrientation()))
-                            .into(imageview);
+                    if(imageview.getTag()==null || !imageview.getTag().equals("I:"+mediaObj.getMediaId()) || imageview.getDrawable() == null) {
+                        activity.getPicassoForImage()
+                                .load(PicassoUtils.ImageThumbnailRequestHandler.getUriRequest(mediaObj.getMediaId(), imageObj.getOrientation()))
+                                .into(imageview);
+                        imageview.setTag("I:"+mediaObj.getMediaId());
+                    }
 
 
 //                        Uri imageURI = Uri.withAppendedPath(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, Long.toString(mediaObj.getMediaId()));

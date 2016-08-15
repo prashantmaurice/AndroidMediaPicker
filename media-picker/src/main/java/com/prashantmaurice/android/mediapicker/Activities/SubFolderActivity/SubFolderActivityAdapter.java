@@ -17,21 +17,22 @@ import java.util.List;
  * Created by maurice on 01/09/15.
  */
 public class SubFolderActivityAdapter extends BaseAdapter {
-    private final List<MediaObj> folders = new ArrayList<>();
+    private final List<MediaObj> mediaArr;
     private final SubFolderActivity activity;
 
-    public SubFolderActivityAdapter(SubFolderActivity activity) {
+    public SubFolderActivityAdapter(SubFolderActivity activity, List<MediaObj> mediaArr) {
+        this.mediaArr = mediaArr;
         this.activity = activity;
     }
 
     @Override
     public int getCount() {
-        return folders.size();
+        return mediaArr.size();
     }
 
     @Override
     public MediaObj getItem(int position) {
-        return folders.get(position);
+        return mediaArr.get(position);
     }
 
     @Override
@@ -55,7 +56,7 @@ public class SubFolderActivityAdapter extends BaseAdapter {
 
 
         //set view
-        final MediaObj mediaObj = folders.get(position);
+        final MediaObj mediaObj = mediaArr.get(position);
         holder.loadImage(mediaObj);
 
         long maxAllowedSize = FolderActivity.getConfiguration().getMaximumFileSize();
@@ -83,10 +84,10 @@ public class SubFolderActivityAdapter extends BaseAdapter {
         return view;
     }
 
-    public void setData(List<MediaObj> data) {
-        folders.clear();
-        folders.addAll(data);
-    }
+//    public void setData(List<MediaObj> data) {
+//        folders.clear();
+//        mediaArr.addAll(data);
+//    }
 
 
 }
