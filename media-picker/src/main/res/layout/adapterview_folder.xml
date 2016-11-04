@@ -20,6 +20,13 @@
                 android:id="@+id/imageview"
                 android:src="@android:drawable/sym_contact_card"
                 android:scaleType="centerCrop" />
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/camera_black"
+                android:layout_alignParentBottom="false"
+                android:layout_centerInParent="true"
+                android:id="@+id/camera_icon" />
             <LinearLayout
                 android:orientation="horizontal"
                 android:layout_width="match_parent"

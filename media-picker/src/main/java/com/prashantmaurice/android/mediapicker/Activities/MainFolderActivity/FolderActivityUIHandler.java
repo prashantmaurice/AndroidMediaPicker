@@ -3,12 +3,10 @@ package com.prashantmaurice.android.mediapicker.Activities.MainFolderActivity;
 import android.app.Activity;
 import android.support.v4.view.ViewPager;
 import android.view.View;
-import android.widget.GridView;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.prashantmaurice.android.mediapicker.MediaPicker;
 import com.prashantmaurice.android.mediapicker.Models.FolderObj;
-import com.prashantmaurice.android.mediapicker.Models.MLocalFolderObj;
 import com.prashantmaurice.android.mediapicker.R;
 import com.prashantmaurice.android.mediapicker.Utils.BitmapLoaderController;
 
@@ -37,11 +35,12 @@ public class FolderActivityUIHandler {
         viewHolder.viewPager = (ViewPager) folderActivity.findViewById(R.id.viewPager);
         viewHolder.titleStrip = (PagerSlidingTabStrip) folderActivity.findViewById(R.id.tabs);
 
-        if(FolderActivity.getConfiguration().getFrom() == MediaPicker.From.GALLERY){
-            viewHolder.btn_camera.setVisibility(View.GONE);
-        } else {
-            viewHolder.btn_camera.setVisibility(View.VISIBLE);
-        }
+//        if(FolderActivity.getConfiguration().getFrom() == MediaPicker.From.GALLERY){
+//            viewHolder.btn_camera.setVisibility(View.GONE);
+//        } else {
+//            viewHolder.btn_camera.setVisibility(View.VISIBLE);
+//        }
+        viewHolder.btn_camera.setVisibility(View.GONE);
 
         initializeViewPager();
 
@@ -53,7 +52,7 @@ public class FolderActivityUIHandler {
 
         viewHolder.viewPager.setAdapter(new FolderPagerAdapter(folderActivity.getSupportFragmentManager(),folderActivity));
         viewHolder.titleStrip.setViewPager(viewHolder.viewPager);
-        viewHolder.titleStrip.setVisibility(folderActivity.getConfiguration().getPick().equals(MediaPicker.Pick.IMAGE_VIDEO)?View.VISIBLE:View.GONE);
+        viewHolder.titleStrip.setVisibility(FolderActivity.getConfiguration().getPick().equals(MediaPicker.Pick.IMAGE_VIDEO)?View.VISIBLE:View.GONE);
     }
 
 //    private void initializeGridView(GridView gridView) {

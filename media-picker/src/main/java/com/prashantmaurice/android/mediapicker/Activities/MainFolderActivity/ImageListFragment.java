@@ -13,13 +13,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.GridView;
 
-
+import com.prashantmaurice.android.mediapicker.ExternalInterface.CaptureImgFolder;
 import com.prashantmaurice.android.mediapicker.ExternalInterface.CustomFolder;
 import com.prashantmaurice.android.mediapicker.MediaPicker;
 import com.prashantmaurice.android.mediapicker.Models.FolderObj;
 import com.prashantmaurice.android.mediapicker.Models.MImageObj;
 import com.prashantmaurice.android.mediapicker.Models.MLocalFolderObj;
-import com.prashantmaurice.android.mediapicker.Models.MVideoObj;
 import com.prashantmaurice.android.mediapicker.R;
 import com.prashantmaurice.android.mediapicker.Utils.Logg;
 
@@ -139,6 +138,9 @@ public class ImageListFragment extends Fragment implements android.support.v4.ap
         }
 
         List<FolderObj> resultIAV = new ArrayList<>();
+
+        if(FolderActivity.getConfiguration().getFrom().equals(MediaPicker.From.GALLERY_AND_CAMERA)) resultIAV.add(new CaptureImgFolder());
+
         Iterator<MLocalFolderObj> i = folders.values().iterator();
         MLocalFolderObj next;
         while(i.hasNext()){
@@ -147,7 +149,7 @@ public class ImageListFragment extends Fragment implements android.support.v4.ap
         }
 
         //add custom folders
-        for(CustomFolder customFolder : folderActivity.getConfiguration().getCustomFolders()){
+        for(CustomFolder customFolder : FolderActivity.getConfiguration().getCustomFolders()){
             resultIAV.add(customFolder);
         }
 

@@ -6,6 +6,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 import com.prashantmaurice.android.mediapicker.Activities.SubFolderActivity.SubFolderActivity;
+import com.prashantmaurice.android.mediapicker.ExternalInterface.CaptureImgFolder;
 import com.prashantmaurice.android.mediapicker.ExternalInterface.CustomFolder;
 import com.prashantmaurice.android.mediapicker.Models.FolderObj;
 import com.prashantmaurice.android.mediapicker.Models.MLocalFolderObj;
@@ -19,12 +20,12 @@ import java.util.List;
 /**
  * Created by maurice on 01/09/15.
  */
-public class FolderActivityAdapter extends BaseAdapter {
+class FolderActivityAdapter extends BaseAdapter {
 
     private final List<FolderObj> folders = new ArrayList<>();
     private final FolderActivity activity;
 
-    public FolderActivityAdapter(FolderActivity activity) {
+    FolderActivityAdapter(FolderActivity activity) {
         this.activity = activity;
     }
 
@@ -71,6 +72,8 @@ public class FolderActivityAdapter extends BaseAdapter {
                     activity.startActivityForResult(intent, Constants.RequestCodes.FolderActivity.REQUEST_SUBFOLDER);
                 }else if(group instanceof CustomFolder){
                     activity.finishWithCustomFolderSelected(((CustomFolder)group).getCustomFolderId());
+                }else if(group instanceof CaptureImgFolder){
+                    activity.captureFromCamera();
                 }
             }
         });
