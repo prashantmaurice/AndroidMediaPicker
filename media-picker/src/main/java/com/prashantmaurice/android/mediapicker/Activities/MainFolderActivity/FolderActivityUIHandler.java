@@ -15,14 +15,14 @@ import java.util.List;
 /**
  * Created by maurice on 02/06/16.
  */
-public class FolderActivityUIHandler {
+class FolderActivityUIHandler {
     private final FolderActivity folderActivity;
 //    FolderActivityAdapter adapter;
 
-    ViewHolder viewHolder = new ViewHolder();
+    private ViewHolder viewHolder = new ViewHolder();
 
 
-    public FolderActivityUIHandler(FolderActivity folderActivity) {
+    FolderActivityUIHandler(FolderActivity folderActivity) {
         this.folderActivity = folderActivity;
         initializeViews();
         initializeListeners();
@@ -34,14 +34,7 @@ public class FolderActivityUIHandler {
 //        viewHolder.gridView = (GridView) folderActivity.findViewById(R.id.gridView);
         viewHolder.viewPager = (ViewPager) folderActivity.findViewById(R.id.viewPager);
         viewHolder.titleStrip = (PagerSlidingTabStrip) folderActivity.findViewById(R.id.tabs);
-
-//        if(FolderActivity.getConfiguration().getFrom() == MediaPicker.From.GALLERY){
-//            viewHolder.btn_camera.setVisibility(View.GONE);
-//        } else {
-//            viewHolder.btn_camera.setVisibility(View.VISIBLE);
-//        }
         viewHolder.btn_camera.setVisibility(View.GONE);
-
         initializeViewPager();
 
 
@@ -52,7 +45,7 @@ public class FolderActivityUIHandler {
 
         viewHolder.viewPager.setAdapter(new FolderPagerAdapter(folderActivity.getSupportFragmentManager(),folderActivity));
         viewHolder.titleStrip.setViewPager(viewHolder.viewPager);
-        viewHolder.titleStrip.setVisibility(FolderActivity.getConfiguration().getPick().equals(MediaPicker.Pick.IMAGE_VIDEO)?View.VISIBLE:View.GONE);
+        viewHolder.titleStrip.setVisibility(FolderActivity.getConfiguration().getPick().equals(MediaPicker.Pick.IMAGE_VIDEO)||FolderActivity.getConfiguration().getPick().equals(MediaPicker.Pick.VIDEO_IMAGE)?View.VISIBLE:View.GONE);
     }
 
 //    private void initializeGridView(GridView gridView) {

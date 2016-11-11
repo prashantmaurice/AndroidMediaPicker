@@ -19,6 +19,7 @@ public class MediaPicker {
     public enum From{GALLERY_AND_CAMERA, GALLERY, CAMERA}
 
     public enum Pick{
+        VIDEO_IMAGE,
         IMAGE_VIDEO,//whattsapp style
         IMAGE,
         VIDEO,
@@ -33,6 +34,7 @@ public class MediaPicker {
 
         public static String getStringMap(Pick pick){
             switch (pick){
+                case VIDEO_IMAGE : return "video_image";
                 case IMAGE_VIDEO : return "image_video";
                 case VIDEO : return "video";
                 case IMAGE : return "image";

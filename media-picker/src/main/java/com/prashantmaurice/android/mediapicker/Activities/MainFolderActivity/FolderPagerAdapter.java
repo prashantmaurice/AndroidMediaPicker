@@ -9,8 +9,6 @@ import android.widget.LinearLayout;
 
 import com.prashantmaurice.android.mediapicker.MediaPicker;
 
-import java.util.List;
-
 /**
  * Created by saikamisetti on 09/06/16.
  */
@@ -30,6 +28,9 @@ public class FolderPagerAdapter extends FragmentStatePagerAdapter {
     @Override
     public Fragment getItem(int position) {
         switch (activity.getConfiguration().getPick()){
+            case VIDEO_IMAGE:
+                if(position==0) return new VideoListFragment();
+                else return new ImageListFragment();
             case IMAGE_VIDEO:
                 if(position==0) return new ImageListFragment();
                 else return new VideoListFragment();
@@ -45,6 +46,7 @@ public class FolderPagerAdapter extends FragmentStatePagerAdapter {
     @Override
     public int getCount() {
         if(activity.getConfiguration().getPick().equals(MediaPicker.Pick.IMAGE_VIDEO)) return 2;
+        if(activity.getConfiguration().getPick().equals(MediaPicker.Pick.VIDEO_IMAGE)) return 2;
         return 1;
     }
 
@@ -57,6 +59,9 @@ public class FolderPagerAdapter extends FragmentStatePagerAdapter {
     @Override
     public CharSequence getPageTitle(int position) {
         switch (activity.getConfiguration().getPick()){
+            case VIDEO_IMAGE:
+                if(position==0) return "VIDEOS";
+                else return "IMAGES";
             case IMAGE_VIDEO:
                 if(position==0) return "IMAGES";
                 else return "VIDEOS";
