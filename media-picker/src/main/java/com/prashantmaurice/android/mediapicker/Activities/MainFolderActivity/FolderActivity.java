@@ -2,23 +2,17 @@ package com.prashantmaurice.android.mediapicker.Activities.MainFolderActivity;
 
 import android.Manifest;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 
 import com.prashantmaurice.android.mediapicker.ExternalInterface.Configuration;
-import com.prashantmaurice.android.mediapicker.ExternalInterface.CustomFolder;
 import com.prashantmaurice.android.mediapicker.ExternalInterface.ResultData;
 import com.prashantmaurice.android.mediapicker.ExternalInterface.ResultDataBuilder;
 import com.prashantmaurice.android.mediapicker.MediaPicker;
 import com.prashantmaurice.android.mediapicker.Models.FolderObj;
 import com.prashantmaurice.android.mediapicker.Models.MImageObj;
-import com.prashantmaurice.android.mediapicker.Models.MLocalFolderObj;
-import com.prashantmaurice.android.mediapicker.Models.MVideoObj;
 import com.prashantmaurice.android.mediapicker.Models.MediaObj;
 import com.prashantmaurice.android.mediapicker.R;
 import com.prashantmaurice.android.mediapicker.Utils.BitmapLoaderController;
@@ -27,16 +21,12 @@ import com.prashantmaurice.android.mediapicker.Utils.Logg;
 import com.prashantmaurice.android.mediapicker.Utils.PermissionController;
 import com.prashantmaurice.android.mediapicker.Utils.PicassoUtils;
 import com.prashantmaurice.android.mediapicker.Utils.SelectionController;
-import com.prashantmaurice.android.mediapicker.Utils.ToastMain;
+import com.prashantmaurice.android.mediapicker.Utils.ToastMain2;
 import com.prashantmaurice.android.mediapicker.Utils.Utils;
 import com.squareup.picasso.Picasso;
 
-import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import static com.prashantmaurice.android.mediapicker.Activities.SubFolderActivity.SubFolderActivity.RESULT_BACKPRESSED;
 
@@ -147,7 +137,7 @@ public class FolderActivity extends AppCompatActivity {
                         BitmapLoaderController.getInstance().flushCache();
                         finish();
                     }else{
-                        ToastMain.showSmarterToast(this,"CameraUri is empty",null);
+                        ToastMain2.showSmarterToast(this,"CameraUri is empty",null);
                     }
                     break;
                 case RESULT_CANCELED:
@@ -187,7 +177,7 @@ public class FolderActivity extends AppCompatActivity {
         Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
         cameraURI = Utils.FileStorage.getOutputMediaFileUri();
         if(cameraURI ==null){
-            ToastMain.showSmarterToast(this,null,"Error storing image");return;
+            ToastMain2.showSmarterToast(this,null,"Error storing image");return;
         }
         cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, cameraURI);
         startActivityForResult(cameraIntent, Constants.RequestCodes.FolderActivity.REQUEST_CAMERA);

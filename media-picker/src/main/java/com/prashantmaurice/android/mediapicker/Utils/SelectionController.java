@@ -51,7 +51,7 @@ public class SelectionController implements Parcelable{
                 int maxcount = FolderActivity.getConfiguration().getMaximumImageCount();
                 int startCount = FolderActivity.getConfiguration().getStartFrom();
                 String text = "You can only select "+ (maxcount+startCount)+" "+mediaTypeText;
-                ToastMain.showSmarterToast(context,null,text);
+                ToastMain2.showSmarterToast(context,null,text);
             }else{
                 selected.add(mediaObj);
             }

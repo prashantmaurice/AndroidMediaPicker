@@ -7,10 +7,9 @@ import android.widget.BaseAdapter;
 import com.prashantmaurice.android.mediapicker.Activities.MainFolderActivity.FolderActivity;
 import com.prashantmaurice.android.mediapicker.Models.MediaObj;
 import com.prashantmaurice.android.mediapicker.Utils.SingleClickListener;
-import com.prashantmaurice.android.mediapicker.Utils.ToastMain;
+import com.prashantmaurice.android.mediapicker.Utils.ToastMain2;
 import com.prashantmaurice.android.mediapicker.Views.ImageViewBuilder;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -67,7 +66,7 @@ public class SubFolderActivityAdapter extends BaseAdapter {
             public void onSingleClick(View view) {
 
                 if(maxReached){
-                    ToastMain.showSmarterToast(activity, "", "This file is too large to send");
+                    ToastMain2.showSmarterToast(activity, "", "This file is too large to send");
                 } else {
                     FolderActivity.getSelectionController().toggle(activity, mediaObj);
                     notifyDataSetChanged();

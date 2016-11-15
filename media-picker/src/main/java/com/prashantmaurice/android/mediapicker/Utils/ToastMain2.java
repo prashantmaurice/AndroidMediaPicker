@@ -8,7 +8,7 @@ import android.content.Context;
  *
  */
 
-public class ToastMain {
+public class ToastMain2 {
 
     public static void showSmarterToast(Context context, String debugText, String text ){
 
