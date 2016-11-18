@@ -16,13 +16,12 @@ import android.widget.GridView;
 import com.prashantmaurice.android.mediapicker.ExternalInterface.CustomFolder;
 import com.prashantmaurice.android.mediapicker.MediaPicker;
 import com.prashantmaurice.android.mediapicker.Models.FolderObj;
-import com.prashantmaurice.android.mediapicker.Models.MImageObj;
 import com.prashantmaurice.android.mediapicker.Models.MLocalFolderObj;
 import com.prashantmaurice.android.mediapicker.Models.MVideoObj;
 import com.prashantmaurice.android.mediapicker.R;
 import com.prashantmaurice.android.mediapicker.Utils.Logg;
+import com.prashantmaurice.android.mediapicker.Utils.ToastMain2;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -95,6 +94,11 @@ public class VideoListFragment extends Fragment implements android.support.v4.ap
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor c) {
         Logg.d(TAG,"onLoadFinished");
+
+        if(c==null){
+            ToastMain2.showSmarterToast(folderActivity,"Error : Cursor is Empty","Error loading media");
+            return;
+        }
 
         Map<String, MLocalFolderObj> folders = new HashMap<>();
 

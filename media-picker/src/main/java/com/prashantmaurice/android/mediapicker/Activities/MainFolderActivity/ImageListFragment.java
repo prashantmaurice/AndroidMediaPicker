@@ -21,6 +21,7 @@ import com.prashantmaurice.android.mediapicker.Models.MImageObj;
 import com.prashantmaurice.android.mediapicker.Models.MLocalFolderObj;
 import com.prashantmaurice.android.mediapicker.R;
 import com.prashantmaurice.android.mediapicker.Utils.Logg;
+import com.prashantmaurice.android.mediapicker.Utils.ToastMain2;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -95,6 +96,11 @@ public class ImageListFragment extends Fragment implements android.support.v4.ap
     @Override
     public void onLoadFinished(android.support.v4.content.Loader<Cursor> loader, Cursor c) {
         Logg.d(TAG,"onLoadFinished");
+
+        if(c==null){
+            ToastMain2.showSmarterToast(folderActivity,"Error : Cursor is Empty","Error loading media");
+            return;
+        }
 
         Map<String, MLocalFolderObj> folders = new HashMap<>();
 
