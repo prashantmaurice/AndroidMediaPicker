@@ -10,8 +10,8 @@ import android.view.View;
  */
 public abstract class SingleClickListener implements View.OnClickListener {
 
-    long lastTimeCLicked = 0;
-    int MIN_CLICK_SPAN = 1000; //difference between two click times
+    private static long lastTimeCLicked = 0;
+    private final int MIN_CLICK_SPAN = 1000; //difference between two click times
 
     @Override
     public void onClick(View view) {
