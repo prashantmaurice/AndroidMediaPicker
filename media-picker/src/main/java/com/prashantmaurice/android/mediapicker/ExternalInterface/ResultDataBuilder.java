@@ -130,6 +130,7 @@ public class ResultDataBuilder {
                 obj.put("datetaken",selection.datetaken);
                 obj.put("latitude",selection.latitude);
                 obj.put("longitude",selection.longitude);
+                obj.put("orientation",selection.orientation);
                 obj.put("desc",selection.desc);
                 obj.put("uri",selection.getOriginalUri().toString());
                 obj.put("width",selection.width);
@@ -152,6 +153,7 @@ public class ResultDataBuilder {
                     selection.datetaken = obj.has("datetaken")?obj.getLong("datetaken"):0;
                     selection.latitude = obj.has("latitude")?obj.getDouble("latitude"):0;
                     selection.longitude =obj.has("longitude")?obj.getDouble("longitude"):0;
+                    selection.orientation =obj.has("orientation")?obj.getInt("orientation"):0;
                     selection.desc = obj.has("desc")?obj.getString("desc"):null;
                     selection.uri = Uri.parse(obj.getString("uri"));
                     selection.width = obj.has("width")?obj.getInt("width"):0;
