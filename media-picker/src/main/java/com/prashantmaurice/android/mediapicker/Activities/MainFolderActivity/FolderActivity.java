@@ -49,6 +49,7 @@ public class FolderActivity extends AppCompatActivity {
     static Picasso picassoForImage;
 
     public static SelectionController getSelectionController() {
+        if(selectionController == null) selectionController = SelectionController.getInstance(); // @maurice, getSelectionController() returns null sometimes. Check firebase crashes.
         return selectionController;
     }
 
