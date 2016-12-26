@@ -109,7 +109,10 @@ public class ImageListFragment extends Fragment implements android.support.v4.ap
 
         while (!c.isAfterLast()) {
             String fullPath = c.getString(c.getColumnIndex(MediaStore.Images.ImageColumns.DATA));// /storage/emulated/0/TinyStep/TinyStep Images/IMG 1439401529025.jpg
-            if(fullPath==null) fullPath = "";
+            if(fullPath==null) {
+                c.moveToNext();
+                continue;
+            }
             String tempDir = fullPath.substring(0, fullPath.lastIndexOf("/"));
 
             if (!folders.containsKey(tempDir)) {
