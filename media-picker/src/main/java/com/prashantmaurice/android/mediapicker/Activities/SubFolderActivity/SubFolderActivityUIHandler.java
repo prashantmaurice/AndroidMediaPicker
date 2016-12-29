@@ -8,6 +8,7 @@ import android.widget.TextView;
 import com.prashantmaurice.android.mediapicker.Activities.MainFolderActivity.FolderActivity;
 import com.prashantmaurice.android.mediapicker.Models.MediaObj;
 import com.prashantmaurice.android.mediapicker.R;
+import com.prashantmaurice.android.mediapicker.Utils.SelectionController;
 
 import java.util.List;
 
@@ -99,7 +100,7 @@ public class SubFolderActivityUIHandler {
     }
 
     public void refreshActionbarState(){
-        int count = FolderActivity.getSelectionController().getSelectedMedias().size();
+        int count = SelectionController.getInstance().getSelectedMedias().size();
         int startCount = FolderActivity.getConfiguration().getStartFrom();
 
         if(!checkForFinish()){
